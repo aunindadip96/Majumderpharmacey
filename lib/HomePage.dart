@@ -19,58 +19,67 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
 
+
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            Container(
-              height: screenHeight * 0.350,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage("lib/assets/Images/pic2.jpg"),
-                  fit: BoxFit.cover,
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                height: screenHeight * 0.350,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                    image: AssetImage("lib/assets/Images/pic2.jpg"),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.blue,
                 ),
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const <Widget>[
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      Text(
+                        "Hello! " ,
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      Center(
+                        child: Text(
+                          "Let's Find Your Doctor",
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
-                  SizedBox(
-                    height: 160,
-                  ),
-                  Text(
-                    "Hello! ",
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  Text(
-                    "Let's Find Your Doctor",
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ],
+              const SizedBox(
+                height: 5,
               ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const Text(
-              "Categories",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-            SizedBox(height: 20),
-            Futurebuilderforcatagory()
-          ],
+              const Text(
+                "Categories",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              SizedBox(height: 20),
+              Futurebuilderforcatagory()
+            ],
+          ),
         ),
       ),
     );
@@ -96,7 +105,8 @@ class Futurebuilderforcatagory extends StatelessWidget {
 
           }
           if (snapshot.data == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: Text("dad"));
+            
           }
 
           if (snapshot.hasData) {
@@ -111,7 +121,7 @@ class Futurebuilderforcatagory extends StatelessWidget {
                   child: GestureDetector(
                     onTap: (){
                       Get.to(catagoryisedoctorlist(catagorwiseID: snapshot.data[index].id.toString()), transition: Transition.rightToLeftWithFade);
-                      print(snapshot.data[index].id.toString()+"SSS");
+                      print(snapshot.data[index].id.toString());
                       },
                     child: Card(
                       elevation: 2,
@@ -159,7 +169,7 @@ Future<List<catagoryModel>> fetchCategories() async {
     var data = await http.get(url);
     var jsonData = json.decode(data.body);
     final list = jsonData as List<dynamic>;
-    print(jsonData.toString());
+
     return list.map((e) => catagoryModel.fromJson(e)).toList();
   });
 }

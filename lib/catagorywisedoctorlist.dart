@@ -1,10 +1,14 @@
 import 'dart:convert';
-
+import 'package:doctorappointment/sign_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
-
 import 'Modelclasses/modelclassfordoctorlist.dart';
+import 'package:intl/intl.dart';
+
+import 'log_in.dart';
 
 class catagoryisedoctorlist extends StatefulWidget {
   final String catagorwiseID;
@@ -29,18 +33,33 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.data == null) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: Text("sadf"));
               }
+
+              if(snapshot.data.toString()=="[]")
+
+              {
+                return const Center(
+
+                  child:
+                    Text("Sorry No Doctor Available")
+                  ,
+                );
+              }
+
+
               if (snapshot.hasData) {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
+
                         children: [
                           Expanded(
+
                             child: Padding(
                               padding:
-                                  const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2),
+                                  const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8),
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black),
@@ -55,68 +74,95 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        height: 100,
-                                        width: 100,
+
+
+
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(20.0)),
-                                        child: const Image(
-                                          image: AssetImage(
-                                            "lib/assets/Images/pic2.jpg",
+                                                BorderRadius.circular(10.0)),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                          child: const Image(
+                                            image: AssetImage(
+                                              "lib/assets/Images/pic2.jpg",
+                                            ),
+                                            fit: BoxFit.fitHeight,
                                           ),
-                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                       SizedBox(
                                         width: 15,
                                       ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Name: " +
-                                              snapshot.data[index].name),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text("Specealist: " +
-                                              snapshot.data[index].specialist),
-                                          /*Text(snapshot.data[index].appointmentSchedule[index].day)*/
+                                      Center(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Name: " +
+                                                  snapshot.data[index].name,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(
+                                              height: 3,
+                                            ),
+                                            Text(
+                                              "Specealist: " +
+                                                  snapshot.data[index].specialist,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
 
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              for (var i = 0;
-                                                  i <
-                                                      snapshot
-                                                          .data[index]
-                                                          .appointmentSchedule
-                                                          .length;
-                                                  i++)
-                                                Text.rich(
-                                                  TextSpan(
-                                                    text: "Available days " + snapshot.data[index].appointmentSchedule[i].day,
-                                                    style: TextStyle(fontSize: 16),
-                                                    children: [
-                                                      TextSpan(
-                                                        text: "\n",
-                                                        style: TextStyle(height: 1.5),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                  softWrap: false,
-                                                )
-                                            ],
-                                          ),
-                                        ],
+
+                                            const SizedBox(
+                                              height: 3,
+                                            ),
+                                            const Text("Available Days :",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold)),
+                                            const SizedBox(
+                                              height: 3,
+                                            ),
+                                            for (var i = 0; i < snapshot.data[index].schedule.length; i++)
+                                              Text(
+                                                snapshot.data[index].schedule[i]
+                                                        .day +
+                                                    "," +
+                                                    " " +
+                                                    DateFormat('h:mm a').format(
+                                                        DateTime.parse(
+                                                            "1900-01-01 " +
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .schedule[i]
+                                                                    .startingTime)) +
+                                                    " " +
+                                                    "-" +
+                                                    DateFormat('h:mm a').format(
+                                                        DateTime.parse(
+                                                            "1900-01-01 " +
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .schedule[i]
+                                                                    .endingTime)),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                                textAlign: TextAlign.left,
+                                                softWrap: false,
+                                              ),
+
+                                            Center(child: ElevatedButton(onPressed: (){
+                                              Get.to(login(),transition: Transition.leftToRight);
+                                            }, child: Text("Book an Appointment")))
+
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),
@@ -135,11 +181,10 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
 }
 
 Future<List<modelclassfordoctor>> docinfo(String a) async {
-  var url = Uri.parse("https://dms.symbexit.com/api/doctorlist");
+  var url = Uri.parse("https://dms.symbexit.com/api/viewDoctor");
   var data = await http.get(url);
   var jsonData = json.decode(data.body);
   final list = jsonData as List<dynamic>;
-  print(list.toString());
   return list
       .map((e) => modelclassfordoctor.fromJson(e))
       .where((element) => element.specialistId

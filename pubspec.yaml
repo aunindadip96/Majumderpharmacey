@@ -44,12 +44,18 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  intl: ^0.18.0
+  shared_preferences: ^2.0.17
+  connectivity_plus: ^3.0.3
+  flutter_easyloading: ^3.0.5
+  fluttertoast: ^8.0.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -68,6 +74,10 @@ flutter:
   - lib/assets/Images/pic1.jpg
   - lib/assets/Images/pic2.jpg
   - lib/assets/Images/catagory.jpg
+  - lib/assets/Images/Doc.png
+  - lib/assets/Images/Sign_Up.jpg
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
