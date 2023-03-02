@@ -5,12 +5,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'HomePage.dart';
 import 'Modelclasses/SignUpModelclass.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -27,26 +25,24 @@ class _MyRegisterState extends State<MyRegister> {
   TextEditingController phonecontroller = TextEditingController();
   TextEditingController patientName = TextEditingController();
   TextEditingController patientadress = TextEditingController();
+  var Userdata;
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
-
       child: Container(
-
-
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
           ),
           body: Container(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.grey[100],
-
-
             ),
-
-
             child: SingleChildScrollView(
               child: Stack(
                 children: [
@@ -68,16 +64,10 @@ class _MyRegisterState extends State<MyRegister> {
                           child: Column(
                             children: [
                               TextField(
-
                                 keyboardType: TextInputType.number,
-
                                 controller: phonecontroller,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
-
-
-
-
                                     filled: true,
                                     fillColor: Colors.white,
                                     enabledBorder: OutlineInputBorder(
@@ -93,9 +83,8 @@ class _MyRegisterState extends State<MyRegister> {
                                       ),
                                     ),
                                     hintText: "Mobile",
-
-
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
@@ -104,7 +93,6 @@ class _MyRegisterState extends State<MyRegister> {
                                 height: 30,
                               ),
                               TextField(
-
                                 controller: emailcontroller,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
@@ -123,16 +111,16 @@ class _MyRegisterState extends State<MyRegister> {
                                       ),
                                     ),
                                     hintText: "Email",
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
                               ),
-
                               const SizedBox(
                                 height: 30,
-                              ),TextField(
-
+                              ),
+                              TextField(
                                 controller: namecontroller,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
@@ -151,19 +139,16 @@ class _MyRegisterState extends State<MyRegister> {
                                       ),
                                     ),
                                     hintText: "Username Name ",
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
                               ),
-
                               const SizedBox(
                                 height: 30,
                               ),
-
-
                               TextField(
-
                                 controller: patientName,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
@@ -182,7 +167,8 @@ class _MyRegisterState extends State<MyRegister> {
                                       ),
                                     ),
                                     hintText: "Patient Name ",
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
@@ -191,7 +177,6 @@ class _MyRegisterState extends State<MyRegister> {
                                 height: 30,
                               ),
                               TextField(
-
                                 controller: patientadress,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
@@ -210,7 +195,8 @@ class _MyRegisterState extends State<MyRegister> {
                                       ),
                                     ),
                                     hintText: "Address ",
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
@@ -218,12 +204,8 @@ class _MyRegisterState extends State<MyRegister> {
                               const SizedBox(
                                 height: 30,
                               ),
-                              TextFormField (
-
-
-                               controller: passwordcontroller,
-
-
+                              TextFormField(
+                                controller: passwordcontroller,
                                 style: const TextStyle(color: Colors.black),
                                 obscureText: true,
                                 decoration: InputDecoration(
@@ -242,7 +224,8 @@ class _MyRegisterState extends State<MyRegister> {
                                       ),
                                     ),
                                     hintText: "Password",
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
@@ -251,23 +234,13 @@ class _MyRegisterState extends State<MyRegister> {
                                 height: 30,
                               ),
                               TextFormField(
-                                validator: (value){
-
-                                  if(value.toString()!=passwordcontroller){
-
-                                  }
-
+                                validator: (value) {
+                                  if (value.toString() != passwordcontroller) {}
                                 },
-
                                 style: const TextStyle(color: Colors.black),
                                 obscureText: true,
                                 controller: repeatpasswordcontroller,
-
-
-
-
-                                  decoration: InputDecoration(
-
+                                decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
                                     enabledBorder: OutlineInputBorder(
@@ -282,9 +255,9 @@ class _MyRegisterState extends State<MyRegister> {
                                         color: Colors.black,
                                       ),
                                     ),
-
                                     hintText: "Confirm Password",
-                                    hintStyle: const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     )),
@@ -293,7 +266,8 @@ class _MyRegisterState extends State<MyRegister> {
                                 height: 40,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     'Sign Up',
@@ -308,57 +282,44 @@ class _MyRegisterState extends State<MyRegister> {
                                     child: IconButton(
                                         color: Colors.black,
                                         onPressed: () {
-                                          if(phonecontroller.text.toString().isEmpty||emailcontroller.text.toString().isEmpty||namecontroller.text.toString().isEmpty
-                                          ||patientName.text.toString().isEmpty||patientadress.text.toString().isEmpty||passwordcontroller.text.toString().isEmpty||
-                                              repeatpasswordcontroller.text.toString().isEmpty
-                                          )
-                                          {
+                                          if (phonecontroller.text.toString().isEmpty ||
+                                              emailcontroller.text
+                                                  .toString()
+                                                  .isEmpty ||
+                                              namecontroller.text
+                                                  .toString()
+                                                  .isEmpty ||
+                                              patientName.text
+                                                  .toString()
+                                                  .isEmpty ||
+                                              patientadress.text
+                                                  .toString()
+                                                  .isEmpty ||
+                                              passwordcontroller.text
+                                                  .toString()
+                                                  .isEmpty ||
+                                              repeatpasswordcontroller.text
+                                                  .toString()
+                                                  .isEmpty) {
                                             Fluttertoast.showToast(
-                                                msg: "You have to  fill out the whole form",
+                                                msg:
+                                                    "You have to  fill out the whole form",
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.CENTER,
                                                 timeInSecForIosWeb: 1,
                                                 backgroundColor: Colors.black,
                                                 textColor: Colors.white,
                                                 fontSize: 16.0);
-
-
-
+                                          } else {
+                                            SignUp(
+                                                phonecontroller.text.toString(),
+                                                emailcontroller.text.toString(),
+                                                namecontroller.text.toString(),
+                                                passwordcontroller.text
+                                                    .toString(),
+                                                patientName.text.toString(),
+                                                patientadress.text.toString());
                                           }
-
-                                          else(){
-                                            if(passwordcontroller.text.toString()!=repeatpasswordcontroller.text.toString()){
-
-                                              Fluttertoast.showToast(
-                                                  msg: "Sorry your password didnot match",
-                                                  toastLength: Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.CENTER,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.black,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0
-                                              );
-
-                                            }
-
-
-                                            else(){
-                                              SignUp(phonecontroller.text.toString(),emailcontroller.text.toString(),
-                                                  namecontroller.text.toString(),passwordcontroller.text.toString(),
-                                                  patientName.text.toString(),patientadress.text.toString());
-                                            };
-
-                                          };
-
-
-
-
-
-
-
-
-
-
                                         },
                                         icon: const Icon(
                                           Icons.arrow_forward,
@@ -371,14 +332,11 @@ class _MyRegisterState extends State<MyRegister> {
                                 height: 40,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
-                                    onPressed: () {
-
-
-
-                                    },
+                                    onPressed: () {},
                                     style: const ButtonStyle(),
                                     child: const Text(
                                       'Sign In',
@@ -406,85 +364,122 @@ class _MyRegisterState extends State<MyRegister> {
     );
   }
 
-  SignUp(String phone,email,username,password,patient,address) async {
-    /*if (emailcontroller.text.isNotEmpty &&
-        passwordcontroller.text.isNotEmpty &&
-        repeatpasswordcontroller.text.isNotEmpty) {
+  SignUp(String phone, email, username, password, patient, address) async {
+    if (passwordcontroller.text.toString() !=
+        repeatpasswordcontroller.text.toString()) {
+      Fluttertoast.showToast(
+          msg: "Sorry your password didnot match",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
       showDialog(
           context: context,
           builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          });*/
+            return const AbsorbPointer(
+                child: Center(child: CircularProgressIndicator()));
+          });
 
-    int otp = Random().nextInt(999999);
-    int noOfOtpDigit = 6;
-    while (otp
-        .toString()
-        .length != noOfOtpDigit) {
-      otp = Random().nextInt(999999);
-    }
-    String otpString = otp.toString();
+      int otp = Random().nextInt(999999);
+      int noOfOtpDigit = 6;
+      while (otp.toString().length != noOfOtpDigit) {
+        otp = Random().nextInt(999999);
+      }
+      String otpString = otp.toString();
 
+      SharedPreferences sharedPreferences =
+      await SharedPreferences.getInstance();
 
-    SharedPreferences localstorage = await SharedPreferences.getInstance();
-
-
-    Signup signup = Signup(
+      Signup signup = Signup(
         address: address,
         phone: phone,
         email: email,
         username: username,
         password: password,
-      patient_id: otpString,
+        patient_id: otpString,
         patient: patient,
+      );
+
+      var url = Uri.parse("https://dms.symbexit.com/api/createpatientlist");
+
+      var response = await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: jsonEncode(signup.toJson()));
+
+      var body = json.decode(response.body);
+      print("FADSE"+response.body.toString());
+
+
+      if (response.statusCode == 201) {
+
+
+
+        sharedPreferences.setString('user', jsonEncode(body['patient']));
+        var userJson = sharedPreferences.getString('user');
+        var user = jsonDecode(userJson!);
+        Userdata = user;
+
+
+          print(jsonEncode(response.body));
 
 
 
 
-    );
-    print(jsonEncode(signup.toJson()));
 
 
 
 
 
 
-    var url = Uri.parse("https://dms.symbexit.com/api/createpatientlist");
-
-    EasyLoading.show(status: "sending..");
-    var response = await http.post(
-      url,
-      headers: {"Content-type": "application/json"},
-      body: jsonEncode(signup.toJson()));
+          Future.delayed(Duration(seconds: 2), () {
 
 
 
+            Navigator.of(context).pop();
 
-    var body = json.decode(response.body);
-
-      if (response.statusCode == 201)
-      {
+            Get.to(() => MyHomePage(), transition: Transition.leftToRight);
 
 
-        Get.to(MyHomePage(),transition: Transition.leftToRight);
 
-        print("created");
+            // code to be executed after 1 second delay
+          });
+
+
+
+
+
+
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+
+          Get.to(() => MyHomePage(), transition: Transition.leftToRight);
+
+          print(response.statusCode.toString() + "sadad");
+
+
+          // code to be executed after 1 second delay
+        });
+      } else if(response.statusCode != 201) {
+        Navigator.of(context).pop();
+
+
+
+
+        print(response.statusCode.toString() + "safa");
+        print("FADSE"+response.body.toString());
+
+        Fluttertoast.showToast(
+            msg: "Something went wrong ",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
-      else if (response.statusCode != 201)
-      {
-        print(body.toString());
-        print(response.statusCode);
-
-        print(response.body.toString());
-
-      }
-      else{
-        print(response.statusCode.toString());
-      }
-
-
     }
-
-
   }
-
+}

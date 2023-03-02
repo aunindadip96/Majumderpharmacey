@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'Modelclasses/creatappointmentmodelclass.dart';
 import 'Modelclasses/modelclassfordoctorlist.dart';
 import 'package:intl/intl.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'log_in.dart';
 
 class catagoryisedoctorlist extends StatefulWidget {
@@ -21,8 +22,25 @@ class catagoryisedoctorlist extends StatefulWidget {
 
 class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
   @override
+  @override
+  var User;
+  void initState() {
+    _getuserinfo();
+    super.initState();
+  }
+
+  void _getuserinfo() async {
+    SharedPreferences localstorage = await SharedPreferences.getInstance();
+    var userJson = localstorage.getString('user');
+    var user = jsonDecode(userJson!);
+    setState(() {
+      User = user;
+    });
+  }
+
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    var dength;
 
     return Scaffold(
         appBar: AppBar(),
@@ -36,27 +54,19 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                 return const Center(child: Text("sadf"));
               }
 
-              if(snapshot.data.toString()=="[]")
-
-              {
+              if (snapshot.data.toString() == "[]") {
                 return const Center(
-
-                  child:
-                    Text("Sorry No Doctor Available")
-                  ,
+                  child: Text("Sorry No Doctor Available"),
                 );
               }
-
 
               if (snapshot.hasData) {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
-
                         children: [
                           Expanded(
-
                             child: Padding(
                               padding:
                                   const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8),
@@ -79,14 +89,12 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-
-
-
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10.0)),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(20.0),
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
                                           child: const Image(
                                             image: AssetImage(
                                               "lib/assets/Images/pic2.jpg",
@@ -114,22 +122,26 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                             ),
                                             Text(
                                               "Specealist: " +
-                                                  snapshot.data[index].specialist,
+                                                  snapshot
+                                                      .data[index].specialist,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-
-
                                             const SizedBox(
                                               height: 3,
                                             ),
                                             const Text("Available Days :",
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             const SizedBox(
                                               height: 3,
                                             ),
-                                            for (var i = 0; i < snapshot.data[index].schedule.length; i++)
+                                            for (var i = 0;
+                                                i <
+                                                    snapshot.data[index]
+                                                        .schedule.length;
+                                                i++)
                                               Text(
                                                 snapshot.data[index].schedule[i]
                                                         .day +
@@ -152,18 +164,59 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                                                     .schedule[i]
                                                                     .endingTime)),
                                                 style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                                 textAlign: TextAlign.left,
                                                 softWrap: false,
                                               ),
+                                            Center(
+                                                child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Get.to(login(),
+                                                          transition: Transition
+                                                              .leftToRight);
+                                                    },
+                                                    child: Text("LogIn"))),
+                                            Center(
+                                                child: ElevatedButton(
+                                                    onPressed: () {
+                                                      creatappointmentmodelclass
+                                                          obj =
+                                                          creatappointmentmodelclass(
+                                                              p_id: User["Id"],
+                                                              d_id: snapshot
+                                                                  .data[index]
+                                                                  .specialist,
+                                                              s_id: snapshot
+                                                                  .data[index]
+                                                                  .specialistId
+                                                                  .toString(),
+                                                              appointment_date:
+                                                                  "2023-2-23",
+                                                              d_number: snapshot
+                                                                  .data[index]
+                                                                  .schedule
+                                                                  .length
+                                                                  .toString(),
+                                                              token: " ");
 
-                                            Center(child: ElevatedButton(onPressed: (){
-                                              Get.to(login(),transition: Transition.leftToRight);
-                                            }, child: Text("Book an Appointment")))
-
+                                                      print(jsonEncode(obj));
+                                                    },
+                                                    child: const Text(
+                                                        "Book Appointment")))
                                           ],
                                         ),
-                                      )
+                                      ),
+                                      ElevatedButton(onPressed: ()async{
+
+
+                                        SharedPreferences sharedPreferences =
+                                            await SharedPreferences.getInstance();
+                                        sharedPreferences.remove("user");
+                                        Get.to(login());
+
+
+                                      }, child: Text("LogOut"))
                                     ],
                                   ),
                                 ),

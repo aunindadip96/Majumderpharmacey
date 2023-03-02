@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'HomePage.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -17,10 +20,14 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
-  var emailController = TextEditingController();
+  var mobilecontroller = TextEditingController();
   var passwordController = TextEditingController();
 
   bool _isHidden = true;
+  var Userdata;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +71,15 @@ class _loginState extends State<login> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: TextField(
+                          keyboardType: TextInputType.number,
 
-                          controller: emailController,
+                          controller: mobilecontroller,
+
                           decoration: const InputDecoration(
+
                             prefixIcon: Icon(Icons.email),
                             border: InputBorder.none,
-                            hintText: "Email",
+                            hintText: "Phone Number",
                           ),
                         ),
                       ),
@@ -120,7 +130,7 @@ class _loginState extends State<login> {
                     onTap: ()async {
                       var connectivityResult = await (Connectivity().checkConnectivity());
                       if (connectivityResult == ConnectivityResult.mobile||connectivityResult == ConnectivityResult.wifi)
-                      { SignIn(emailController.text.toString(),
+                      { SignIn(mobilecontroller.text.toString(),
                           passwordController.text.toString());
                         // I am connected to a mobile or Wifi network.
                       } else if (connectivityResult==ConnectivityResult.none) {
@@ -190,7 +200,7 @@ class _loginState extends State<login> {
 
   }
 
-  SignIn(String email, String password) async {
+  SignIn(String mobile, String password) async {
 
 
 
@@ -198,7 +208,7 @@ class _loginState extends State<login> {
 
 
 
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+    if (mobilecontroller.text.isNotEmpty && passwordController.text.isNotEmpty) {
 
       showDialog(
           context: context,
@@ -212,19 +222,46 @@ class _loginState extends State<login> {
 
 
 
-      Map data = {'email': email, 'password': password};
+      Map data = {'username': mobile, 'password': password};
 
       SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
-      var url = Uri.parse("https://www.ecommerce.symbexit.com/api/login");
+      var url = Uri.parse("https://dms.symbexit.com/api/patientlogin");
       var response = await http.post(url, body: data);
       if (response.statusCode == 201) {
 
         var body = json.decode(response.body);
         setState(() {
-          sharedPreferences.setString('token', body['token']);
-          sharedPreferences.setString('user', jsonEncode(body['user']));
-          Navigator.of(context).pop();
+
+
+
+
+
+
+
+
+
+
+
+          sharedPreferences.setString('user', jsonEncode(body['patient']));
+          var userJson = sharedPreferences.getString('user');
+          var user = jsonDecode(userJson!);
+
+
+          Userdata = user;
+
+
+
+
+
+
+
+
+
+
+
+
+          Get.to(() => MyHomePage(), transition: Transition.leftToRight);
 
 
 
@@ -232,10 +269,22 @@ class _loginState extends State<login> {
       } else if(response.statusCode!=201){
 
         Navigator.of(context).pop();
+        print(response.body.toString());
+
+        Fluttertoast.showToast(
+            msg: response.body,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0);
+
+
 
       }
     }
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+    if (mobilecontroller.text.isEmpty || passwordController.text.isEmpty) {
 
     }
   }

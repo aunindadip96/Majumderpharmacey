@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'Modelclasses/viewSpecialistModel.dart';
 import 'catagorywisedoctorlist.dart';
 
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
@@ -15,9 +16,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
+
+
+
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+
+
+
+
+
+
 
 
     return Scaffold(
@@ -159,7 +168,10 @@ class Futurebuilderforcatagory extends StatelessWidget {
           }
         });
   }
+
+
 }
+
 
 
 
@@ -172,5 +184,9 @@ Future<List<catagoryModel>> fetchCategories() async {
 
     return list.map((e) => catagoryModel.fromJson(e)).toList();
   });
+
+
+
 }
+
 
