@@ -417,13 +417,13 @@ class _MyRegisterState extends State<MyRegister> {
 
 
 
-        sharedPreferences.setString('user', jsonEncode(body['patient']));
+        sharedPreferences.setString('user', jsonEncode(body['patientLogin']));
         var userJson = sharedPreferences.getString('user');
         var user = jsonDecode(userJson!);
         Userdata = user;
+        print(Userdata);
 
 
-          print(jsonEncode(response.body));
 
 
 

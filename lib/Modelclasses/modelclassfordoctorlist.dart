@@ -1,14 +1,16 @@
 class modelclassfordoctor {
   String? name;
+  int?id;
   String? specialist;
   int? specialistId;
   List<Schedule>? schedule;
 
   modelclassfordoctor(
-      {this.name, this.specialist, this.specialistId, this.schedule});
+      {this.name, this.id,this.specialist, this.specialistId, this.schedule});
 
   modelclassfordoctor.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    id=json['id'];
     specialist = json['specialist'];
     specialistId = json['specialist_id'];
     if (json['schedule'] != null) {
@@ -22,6 +24,7 @@ class modelclassfordoctor {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['id']=this.id;
     data['specialist'] = this.specialist;
     data['specialist_id'] = this.specialistId;
     if (this.schedule != null) {

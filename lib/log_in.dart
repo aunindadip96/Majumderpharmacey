@@ -261,7 +261,10 @@ class _loginState extends State<login> {
 
 
 
+
           Get.to(() => MyHomePage(), transition: Transition.leftToRight);
+          print(Userdata.toString());
+
 
 
 

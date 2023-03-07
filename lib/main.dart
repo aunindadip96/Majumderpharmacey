@@ -4,11 +4,17 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import 'Controllers/availavldayscontroller.dart';
 import 'HomePage.dart';
 
 void main() {
+  Get.lazyPut(()=>controller());
+
   runApp(const MyApp());
+
   configLoading();
+
+
 }
 
 void configLoading() {
@@ -34,6 +40,7 @@ void configLoading() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
 
 
   @override
