@@ -4,16 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'Apicalls/Catagorywisedoclist.dart';
-
 import 'Controllers/availavldayscontroller.dart';
 import 'Controllers/availavldayscontroller.dart';
 import 'Modelclasses/creatappointmentmodelclass.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'HomePage.dart';
 import 'Modelclasses/modelclassfordoctorlist.dart';
 import 'log_in.dart';
 import 'package:http/http.dart' as http;
+import 'Apicalls/Notifications_API.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:doctorappointment/MyAppointments.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'Apicalls/Postappointment.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class catagoryisedoctorlist extends StatefulWidget {
   final String catagorwiseID;
@@ -28,13 +36,14 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
   @override
   var User;
   List<String> daysList = [];
-/*
-final controller availabledays=Get.find();
-*/
+  var daynumber;
   var Datetoappointment;
+  final sucesscontroller Sucesscontroller = Get.find();
+
   void initState() {
     _getuserinfo();
     super.initState();
+    Noti.initialize(flutterLocalNotificationsPlugin);
   }
 
   void _getuserinfo() async {
@@ -45,19 +54,6 @@ final controller availabledays=Get.find();
       User = user;
     });
   }
-
-/*
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime selectedDate = DateTime.now();
-
-    // Retrieve available dates from API
-    List<DateTime> availableDates = await _getAvailableDates();
-
-    // Create a SelectableDayPredicate function that only allows available dates to be selectable
-    final bool Function(DateTime) isAvailableDate = (DateTime day) {
-      return availableDates.contains(day);
-    };
-*/
 
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -200,8 +196,11 @@ final controller availabledays=Get.find();
                                                 textAlign: TextAlign.left,
                                                 softWrap: false,
                                               ),
+                                            SizedBox(
+                                              height: 3,
+                                            ),
                                             Center(
-                                                child: ElevatedButton(
+                                                child: TextButton(
                                                     onPressed: () async {
                                                       for (var i = 0;
                                                           i <
@@ -215,79 +214,50 @@ final controller availabledays=Get.find();
                                                             .schedule[i]
                                                             .day);
 
-                                                      print(
-                                                          daysList.toString());
+                                                      DateTime now =
+                                                          DateTime.now();
+                                                      DateTime
+                                                          firstSelectableDate =
+                                                          now;
 
-                                                      String dddd = "Sunday";
-
-                                                      DateTime now = DateTime.now();
-                                                      DateTime firstSelectableDate = now;
-
-                                                      for (int i = 0; i < 7; i++) {
-                                                        if (daysList.contains(DateFormat('EEEE').format(firstSelectableDate))) {
+                                                      for (int i = 0;
+                                                          i < 7;
+                                                          i++) {
+                                                        if (daysList.contains(
+                                                            DateFormat('EEEE')
+                                                                .format(
+                                                                    firstSelectableDate))) {
                                                           break;
                                                         }
-                                                        firstSelectableDate = firstSelectableDate.add(Duration(days: 1));
+                                                        firstSelectableDate =
+                                                            firstSelectableDate
+                                                                .add(Duration(
+                                                                    days: 1));
                                                       }
+                                                      Sucesscontroller.DocName =
+                                                          RxString(snapshot
+                                                              .data[index]
+                                                              .name);
+                                                      String doctorID = snapshot
+                                                          .data[index].id
+                                                          .toString();
+                                                      String SpecalistID =
+                                                        snapshot.data[index]
+                                                              .specialistId
+                                                              .toString();
 
-
-                                                      await showDatePicker(
-                                                        context: context,
-                                                        initialDate:
-                                                        firstSelectableDate,
-                                                        firstDate:
-                                                            DateTime.now(),
-                                                        lastDate: DateTime.now()
-                                                            .add(Duration(
-                                                                days: 10)),
-                                                        selectableDayPredicate:
-                                                            (DateTime date) {
-                                                          final weekday =
-                                                              DateFormat('EEEE')
-                                                                  .format(date);
-
-                                                          // Disable dates that are in the _disabledDates list
-                                                          return daysList
-                                                              .contains(
-                                                                  weekday);
-                                                        },
-                                                      ).then((date) {
-                                                        setState(() {
-                                                          Datetoappointment =
-                                                              DateFormat(
-                                                                      "yyyy-MM-dd")
-                                                                  .format(
-                                                                      date!);
-                                                        });
-                                                      });
-
-                                                      creatappointmentmodelclass
-                                                          obj =
-                                                          creatappointmentmodelclass(
-                                                              p_id: User["id"]
-                                                                  .toString(),
-                                                              d_id: snapshot
-                                                                  .data[index]
-                                                                  .id
-                                                                  .toString(),
-                                                              s_id: snapshot
-                                                                  .data[index]
-                                                                  .specialistId
-                                                                  .toString(),
-                                                              appointment_date:
-                                                                  Datetoappointment,
-                                                              d_number: snapshot
-                                                                  .data[index]
-                                                                  .schedule
-                                                                  .length
-                                                                  .toString(),
-                                                              token: " ");
-
-                                                      print(jsonEncode(
-                                                          obj.toJson()));
+                                                      bookbutton(
+                                                          firstSelectableDate,
+                                                          doctorID,
+                                                          SpecalistID);
                                                     },
                                                     child: const Text(
-                                                        "Book Appointment")))
+                                                      "Book Appointment",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20),
+                                                    )))
                                           ],
                                         ),
                                       ),
@@ -300,7 +270,12 @@ final controller availabledays=Get.find();
                                             sharedPreferences.remove("user");
                                             Get.to(login());
                                           },
-                                          child: Text("Sign Out"))
+                                          child: Text("Sign Out")),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Get.to(Myappointment());
+                                          },
+                                          child: Text("My Appointments"))
                                     ],
                                   ),
                                 ),
@@ -316,17 +291,59 @@ final controller availabledays=Get.find();
             }));
   }
 
-  Future<List<modelclassfordoctor>> docinfo(String a) async {
-    var url = Uri.parse("https://dms.symbexit.com/api/viewDoctor");
-    var data = await http.get(url);
-    var jsonData = json.decode(data.body);
-    final list = jsonData as List<dynamic>;
-    return list
-        .map((e) => modelclassfordoctor.fromJson(e))
-        .where((element) => element.specialistId
-            .toString()
-            .toLowerCase()
-            .contains(a.toString().toLowerCase()))
-        .toList();
+  bookbutton(DateTime firstSelectableDate, String Docid, specalistid) async {
+    await showDatePicker(
+      context: context,
+      initialDate: firstSelectableDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 7)),
+      selectableDayPredicate: (DateTime date) {
+        final weekday = DateFormat('EEEE').format(date);
+
+        // Disable dates that are in the _disabledDates list
+        return daysList.contains(weekday);
+      },
+    ).then((date) {
+      Sucesscontroller.SelectDate =
+          RxString(DateFormat("yyyy-MM-dd").format(date!).toString());
+
+      Datetoappointment = DateFormat("yyyy-MM-dd").format(date!);
+      daynumber = date.weekday;
+      Sucesscontroller.appointday = RxString(DateFormat('EEEE').format(date));
+
+      Sucesscontroller.date = RxString(DateFormat("yyyy-MM-dd").format(date!));
+    });
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Appointment Booked!'),
+          content: Text(
+              'Your appointment has been successfully booked for $Datetoappointment with Dr. ${Sucesscontroller.DocName.toString()}'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                // Here you can add any code that should be executed when the user taps on the "Cancel" button
+                print('User tapped on "Cancel" button');
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('OK'),
+              onPressed: () {
+                postappointment objtopost = new postappointment();
+                objtopost.placeappointment(User["patient_key"].toString(),
+                    Docid, specalistid, daynumber.toString());
+                // Here you can add any code that should be executed when the user taps on the "ok" button
+                print('User tapped on "ok" button');
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -26,9 +26,6 @@ class _loginState extends State<login> {
   bool _isHidden = true;
   var Userdata;
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +52,8 @@ class _loginState extends State<login> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  const Text("You Have been Missed", style: TextStyle(fontSize: 20)),
+                  const Text("You Have been Missed",
+                      style: TextStyle(fontSize: 20)),
                   const SizedBox(
                     height: 30,
                   ),
@@ -72,11 +70,8 @@ class _loginState extends State<login> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: TextField(
                           keyboardType: TextInputType.number,
-
                           controller: mobilecontroller,
-
                           decoration: const InputDecoration(
-
                             prefixIcon: Icon(Icons.email),
                             border: InputBorder.none,
                             hintText: "Phone Number",
@@ -99,7 +94,6 @@ class _loginState extends State<login> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: TextField(
-
                           obscureText: _isHidden,
                           controller: passwordController,
                           decoration: InputDecoration(
@@ -127,24 +121,18 @@ class _loginState extends State<login> {
                   ),
 
                   InkWell(
-                    onTap: ()async {
-                      var connectivityResult = await (Connectivity().checkConnectivity());
-                      if (connectivityResult == ConnectivityResult.mobile||connectivityResult == ConnectivityResult.wifi)
-                      { SignIn(mobilecontroller.text.toString(),
-                          passwordController.text.toString());
+                    onTap: () async {
+                      var connectivityResult =
+                          await (Connectivity().checkConnectivity());
+                      if (connectivityResult == ConnectivityResult.mobile ||
+                          connectivityResult == ConnectivityResult.wifi) {
+                        SignIn(mobilecontroller.text.toString(),
+                            passwordController.text.toString());
                         // I am connected to a mobile or Wifi network.
-                      } else if (connectivityResult==ConnectivityResult.none) {
-
-
+                      } else if (connectivityResult ==
+                          ConnectivityResult.none) {
                         // No Internet
                       }
-
-
-
-
-
-
-
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -175,7 +163,8 @@ class _loginState extends State<login> {
                       const Text('Not a Member ?'),
                       InkWell(
                         onTap: () {
-                          Get.to(MyRegister(),transition: Transition.leftToRight);
+                          Get.to(MyRegister(),
+                              transition: Transition.leftToRight);
                         },
                         child: const Text(
                           " Sign Up Now ",
@@ -191,25 +180,12 @@ class _loginState extends State<login> {
               ),
             ),
           ),
-        )
-    );
-
-
-
-
-
+        ));
   }
 
   SignIn(String mobile, String password) async {
-
-
-
-
-
-
-
-    if (mobilecontroller.text.isNotEmpty && passwordController.text.isNotEmpty) {
-
+    if (mobilecontroller.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
       showDialog(
           context: context,
           builder: (context) {
@@ -219,58 +195,25 @@ class _loginState extends State<login> {
             );
           });
 
-
-
-
       Map data = {'username': mobile, 'password': password};
 
       SharedPreferences sharedPreferences =
-      await SharedPreferences.getInstance();
+          await SharedPreferences.getInstance();
       var url = Uri.parse("https://dms.symbexit.com/api/patientlogin");
       var response = await http.post(url, body: data);
       if (response.statusCode == 201) {
-
         var body = json.decode(response.body);
         setState(() {
-
-
-
-
-
-
-
-
-
-
-
           sharedPreferences.setString('user', jsonEncode(body['patient']));
           var userJson = sharedPreferences.getString('user');
           var user = jsonDecode(userJson!);
 
-
           Userdata = user;
-
-
-
-
-
-
-
-
-
-
-
-
 
           Get.to(() => MyHomePage(), transition: Transition.leftToRight);
           print(Userdata.toString());
-
-
-
-
         });
-      } else if(response.statusCode!=201){
-
+      } else if (response.statusCode != 201) {
         Navigator.of(context).pop();
         print(response.body.toString());
 
@@ -282,17 +225,10 @@ class _loginState extends State<login> {
             backgroundColor: Colors.black,
             textColor: Colors.white,
             fontSize: 16.0);
-
-
-
       }
     }
-    if (mobilecontroller.text.isEmpty || passwordController.text.isEmpty) {
-
-    }
+    if (mobilecontroller.text.isEmpty || passwordController.text.isEmpty) {}
   }
-
-
 
   void _togglePasswordView() {
     setState(() {
@@ -300,10 +236,3 @@ class _loginState extends State<login> {
     });
   }
 }
-
-
-
-
-
-
-

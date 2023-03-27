@@ -7,12 +7,18 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'Controllers/availavldayscontroller.dart';
 import 'HomePage.dart';
 
+
+
 void main() {
-  Get.lazyPut(()=>controller());
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Get.put(sucesscontroller());
 
   runApp(const MyApp());
 
   configLoading();
+
 
 
 }
@@ -43,6 +49,7 @@ class MyApp extends StatelessWidget {
 
 
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -50,8 +57,9 @@ class MyApp extends StatelessWidget {
 
 
 
-
     return GetMaterialApp(
+
+
       title: 'Flutter Demo',
       theme: ThemeData(
 
