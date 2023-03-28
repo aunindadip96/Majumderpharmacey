@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'Modelclasses/viewSpecialistModel.dart';
+import 'NavbBar/UpperTopDrwaer.dart';
+import 'NavbBar/bottompartnavbar.dart';
 import 'catagorywisedoctorlist.dart';
 
 
@@ -90,9 +92,44 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
+
+
       ),
+
+      drawer:  Drawer(
+
+        child: SingleChildScrollView(
+          child: Column(
+
+            children: [
+              myprofildrwaer(),
+              myDrwaerlist()
+
+
+
+
+            ],
+
+
+          ),
+
+
+
+        ),
+
+
+         /* */
+
+
+      ),
+
     );
+
+
   }
+}
+
+class MyDrwaerlist {
 }
 class Futurebuilderforcatagory extends StatelessWidget {
    Futurebuilderforcatagory({Key? key,}) : super(key: key);

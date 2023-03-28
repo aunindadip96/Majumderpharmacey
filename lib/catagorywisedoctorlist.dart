@@ -91,198 +91,204 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.white,
-                                      offset: Offset(5.0, 5.0), //(x,y)
-                                      blurRadius: 8.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
+                      return SingleChildScrollView(
+
+                        scrollDirection: Axis.vertical,
+
+                        physics: BouncingScrollPhysics(),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(5.0, 5.0), //(x,y)
+                                        blurRadius: 8.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          child: ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(10.0)),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          child: const Image(
-                                            image: AssetImage(
-                                              "lib/assets/Images/pic2.jpg",
+                                                BorderRadius.circular(20.0),
+                                            child: const Image(
+                                              image: AssetImage(
+                                                "lib/assets/Images/pic2.jpg",
+                                              ),
+                                              fit: BoxFit.fitHeight,
                                             ),
-                                            fit: BoxFit.fitHeight,
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Center(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Name: " +
-                                                  snapshot.data[index].name,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              height: 3,
-                                            ),
-                                            Text(
-                                              "Specealist: " +
-                                                  snapshot
-                                                      .data[index].specialist,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              height: 3,
-                                            ),
-                                            const Text("Available Days :",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            const SizedBox(
-                                              height: 3,
-                                            ),
-                                            for (var i = 0;
-                                                i <
-                                                    snapshot.data[index]
-                                                        .schedule.length;
-                                                i++)
-                                              Text(
-                                                snapshot.data[index].schedule[i]
-                                                        .day +
-                                                    "," +
-                                                    " " +
-                                                    DateFormat('h:mm a').format(
-                                                        DateTime.parse(
-                                                            "1900-01-01 " +
-                                                                snapshot
-                                                                    .data[index]
-                                                                    .schedule[i]
-                                                                    .startingTime)) +
-                                                    " " +
-                                                    "-" +
-                                                    DateFormat('h:mm a').format(
-                                                        DateTime.parse(
-                                                            "1900-01-01 " +
-                                                                snapshot
-                                                                    .data[index]
-                                                                    .schedule[i]
-                                                                    .endingTime)),
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.left,
-                                                softWrap: false,
-                                              ),
-                                            SizedBox(
-                                              height: 3,
-                                            ),
-                                            Center(
-                                                child: TextButton(
-                                                    onPressed: () async {
-                                                      for (var i = 0;
-                                                          i <
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .schedule
-                                                                  .length;
-                                                          i++)
-                                                        daysList.add(snapshot
-                                                            .data[index]
-                                                            .schedule[i]
-                                                            .day);
-
-                                                      DateTime now =
-                                                          DateTime.now();
-                                                      DateTime
-                                                          firstSelectableDate =
-                                                          now;
-
-                                                      for (int i = 0;
-                                                          i < 7;
-                                                          i++) {
-                                                        if (daysList.contains(
-                                                            DateFormat('EEEE')
-                                                                .format(
-                                                                    firstSelectableDate))) {
-                                                          break;
-                                                        }
-                                                        firstSelectableDate =
-                                                            firstSelectableDate
-                                                                .add(Duration(
-                                                                    days: 1));
-                                                      }
-                                                      Sucesscontroller.DocName =
-                                                          RxString(snapshot
-                                                              .data[index]
-                                                              .name);
-                                                      String doctorID = snapshot
-                                                          .data[index].id
-                                                          .toString();
-                                                      String SpecalistID =
-                                                        snapshot.data[index]
-                                                              .specialistId
-                                                              .toString();
-
-                                                      bookbutton(
-                                                          firstSelectableDate,
-                                                          doctorID,
-                                                          SpecalistID);
-                                                    },
-                                                    child: const Text(
-                                                      "Book Appointment",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20),
-                                                    )))
-                                          ],
+                                        SizedBox(
+                                          width: 15,
                                         ),
-                                      ),
-                                      ElevatedButton(
-                                          onPressed: () async {
-                                            SharedPreferences
-                                                sharedPreferences =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            sharedPreferences.remove("user");
-                                            Get.to(login());
-                                          },
-                                          child: Text("Sign Out")),
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            Get.to(Myappointment());
-                                          },
-                                          child: Text("My Appointments"))
-                                    ],
+                                        Center(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Name: " +
+                                                    snapshot.data[index].name,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Text(
+                                                "Specealist: " +
+                                                    snapshot
+                                                        .data[index].specialist,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              const Text("Available Days :",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              for (var i = 0;
+                                                  i <
+                                                      snapshot.data[index]
+                                                          .schedule.length;
+                                                  i++)
+                                                Text(
+                                                  snapshot.data[index].schedule[i]
+                                                          .day +
+                                                      "," +
+                                                      " " +
+                                                      DateFormat('h:mm a').format(
+                                                          DateTime.parse(
+                                                              "1900-01-01 " +
+                                                                  snapshot
+                                                                      .data[index]
+                                                                      .schedule[i]
+                                                                      .startingTime)) +
+                                                      " " +
+                                                      "-" +
+                                                      DateFormat('h:mm a').format(
+                                                          DateTime.parse(
+                                                              "1900-01-01 " +
+                                                                  snapshot
+                                                                      .data[index]
+                                                                      .schedule[i]
+                                                                      .endingTime)),
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.left,
+                                                  softWrap: false,
+                                                ),
+                                              SizedBox(
+                                                height: 3,
+                                              ),
+                                              Center(
+                                                  child: TextButton(
+                                                      onPressed: () async {
+                                                        for (var i = 0;
+                                                            i <
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .schedule
+                                                                    .length;
+                                                            i++)
+                                                          daysList.add(snapshot
+                                                              .data[index]
+                                                              .schedule[i]
+                                                              .day);
+
+                                                        DateTime now =
+                                                            DateTime.now();
+                                                        DateTime
+                                                            firstSelectableDate =
+                                                            now;
+
+                                                        for (int i = 0;
+                                                            i < 7;
+                                                            i++) {
+                                                          if (daysList.contains(
+                                                              DateFormat('EEEE')
+                                                                  .format(
+                                                                      firstSelectableDate))) {
+                                                            break;
+                                                          }
+                                                          firstSelectableDate =
+                                                              firstSelectableDate
+                                                                  .add(Duration(
+                                                                      days: 1));
+                                                        }
+                                                        Sucesscontroller.DocName =
+                                                            RxString(snapshot
+                                                                .data[index]
+                                                                .name);
+                                                        String doctorID = snapshot
+                                                            .data[index].id
+                                                            .toString();
+                                                        String SpecalistID =
+                                                          snapshot.data[index]
+                                                                .specialistId
+                                                                .toString();
+
+                                                        bookbutton(
+                                                            firstSelectableDate,
+                                                            doctorID,
+                                                            SpecalistID);
+                                                      },
+                                                      child: const Text(
+                                                        "Book Appointment",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 20),
+                                                      )))
+                                            ],
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                              SharedPreferences
+                                                  sharedPreferences =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              sharedPreferences.remove("user");
+                                              Get.to(login());
+                                            },
+                                            child: Text("Sign Out")),
+                                        ElevatedButton(
+                                            onPressed: () {
+
+                                            },
+                                            child: Text("My Appointments"))
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     });
               } else {
@@ -299,18 +305,15 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
       lastDate: DateTime.now().add(Duration(days: 7)),
       selectableDayPredicate: (DateTime date) {
         final weekday = DateFormat('EEEE').format(date);
-
         // Disable dates that are in the _disabledDates list
         return daysList.contains(weekday);
       },
     ).then((date) {
       Sucesscontroller.SelectDate =
           RxString(DateFormat("yyyy-MM-dd").format(date!).toString());
-
       Datetoappointment = DateFormat("yyyy-MM-dd").format(date!);
       daynumber = date.weekday;
       Sucesscontroller.appointday = RxString(DateFormat('EEEE').format(date));
-
       Sucesscontroller.date = RxString(DateFormat("yyyy-MM-dd").format(date!));
     });
 

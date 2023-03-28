@@ -81,8 +81,10 @@ class _MyappointmentState extends State<Myappointment>
                           ),
                           child: Column(
                             children: [
-                              Text(snapshot.data[index].appointmentDate),
+
                               Text(snapshot.data[index].d.doctor),
+                              SizedBox(height: 3,),
+                              Text(snapshot.data[index].appointmentDate),
 
                             ],
                           ),
