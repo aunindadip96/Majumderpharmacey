@@ -1,5 +1,8 @@
 class creatappointmentmodelclass {
-  String? p_id, d_id, s_id, appointment_date, d_number, token;
+  String? p_id,
+      d_id,
+      s_id,
+      appointment_date, d_number, token;
 
   creatappointmentmodelclass(
       {this.p_id,

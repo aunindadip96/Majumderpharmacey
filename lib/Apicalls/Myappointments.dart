@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../Modelclasses/Viewappointmentmodelclass.dart';
 
 class Myappointments{
@@ -10,7 +9,7 @@ class Myappointments{
     var data = await http.get(url);
     var jsonData = json.decode(data.body);
     final list = jsonData as List<dynamic>;
-    print(list.toString());
+    print (list.toString());
 
     return list
         .map((e) => viewappoinment.fromJson(e))

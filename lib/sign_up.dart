@@ -5,10 +5,13 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'HomePage.dart';
 import 'Modelclasses/SignUpModelclass.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'Otp_Verfiy.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -25,18 +28,13 @@ class _MyRegisterState extends State<MyRegister> {
   TextEditingController phonecontroller = TextEditingController();
   TextEditingController patientName = TextEditingController();
   TextEditingController patientadress = TextEditingController();
-  var Userdata;
 
-
-
-
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       child: Container(
         child: Scaffold(
           appBar: AppBar(
+            title: Text("Majumdar Pharmacy"),
             elevation: 0,
           ),
           body: Container(
@@ -138,7 +136,7 @@ class _MyRegisterState extends State<MyRegister> {
                                         color: Colors.black,
                                       ),
                                     ),
-                                    hintText: "Username Name ",
+                                    hintText: "Username ",
                                     hintStyle:
                                         const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
@@ -311,7 +309,16 @@ class _MyRegisterState extends State<MyRegister> {
                                                 textColor: Colors.white,
                                                 fontSize: 16.0);
                                           } else {
-                                            SignUp(
+                                            /*SignUp(
+                                                phonecontroller.text.toString(),
+                                                emailcontroller.text.toString(),
+                                                namecontroller.text.toString(),
+                                                passwordcontroller.text
+                                                    .toString(),
+                                                patientName.text.toString(),
+                                                patientadress.text.toString());*/
+
+                                            otpstart(
                                                 phonecontroller.text.toString(),
                                                 emailcontroller.text.toString(),
                                                 namecontroller.text.toString(),
@@ -364,7 +371,7 @@ class _MyRegisterState extends State<MyRegister> {
     );
   }
 
-  SignUp(String phone, email, username, password, patient, address) async {
+  otpstart(String mobile, email, username, password, patient, address) async {
     if (passwordcontroller.text.toString() !=
         repeatpasswordcontroller.text.toString()) {
       Fluttertoast.showToast(
@@ -380,105 +387,58 @@ class _MyRegisterState extends State<MyRegister> {
           context: context,
           builder: (context) {
             return const AbsorbPointer(
-                child: Center(child: CircularProgressIndicator()));
+              absorbing: true,
+              child: Center(child: CircularProgressIndicator()),
+            );
           });
 
-      int otp = Random().nextInt(999999);
-      int noOfOtpDigit = 6;
-      while (otp.toString().length != noOfOtpDigit) {
-        otp = Random().nextInt(999999);
-      }
-      String otpString = otp.toString();
+      var url = Uri.parse("https://dms.symbexit.com/api/checkPhone/$mobile");
+      var data = await http.get(url);
+      var jsonData = json.decode(data.body);
 
-      SharedPreferences sharedPreferences =
-      await SharedPreferences.getInstance();
-
-      Signup signup = Signup(
-        address: address,
-        phone: phone,
-        email: email,
-        username: username,
-        password: password,
-        patient_id: otpString,
-        patient: patient,
-      );
-
-      var url = Uri.parse("https://dms.symbexit.com/api/createpatientlist");
-
-      var response = await http.post(url,
-          headers: {"Content-type": "application/json"},
-          body: jsonEncode(signup.toJson()));
-
-      var body = json.decode(response.body);
-      print("FADSE"+response.body.toString());
-
-
-      if (response.statusCode == 201) {
-
-
-
-        sharedPreferences.setString('user', jsonEncode(body['patientLogin']));
-        var userJson = sharedPreferences.getString('user');
-        var user = jsonDecode(userJson!);
-        Userdata = user;
-        print(Userdata);
-
-
-
-
-
-
-
-
-
-
-
-
-          Future.delayed(Duration(seconds: 2), () {
-
-
-
-            Navigator.of(context).pop();
-
-            Get.to(() => MyHomePage(), transition: Transition.leftToRight);
-
-
-
-            // code to be executed after 1 second delay
-          });
-
-
-
-
-
-
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop();
-
-          Get.to(() => MyHomePage(), transition: Transition.leftToRight);
-
-          print(response.statusCode.toString() + "sadad");
-
-
-          // code to be executed after 1 second delay
-        });
-      } else if(response.statusCode != 201) {
-        Navigator.of(context).pop();
-
-
-
-
-        print(response.statusCode.toString() + "safa");
-        print("FADSE"+response.body.toString());
-
+      if (jsonData.toString() == "401") {
         Fluttertoast.showToast(
-            msg: "Something went wrong ",
+            msg: "This number is already Registered".toString(),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.black,
             textColor: Colors.white,
             fontSize: 16.0);
+
+        Navigator.of(context).pop();
+      }
+
+      if (jsonData.toString() == "201") {
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: "+88 $mobile",
+          verificationCompleted: (PhoneAuthCredential credential) {},
+          verificationFailed: (FirebaseAuthException e) {
+            Fluttertoast.showToast(
+                msg: " Your number is Not Correct".toString(),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.of(context).pop();
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            Get.to(
+                MyVerify(
+                  verification: verificationId.toString(),
+                  email: email,
+                  username: username,
+                  password: password,
+                  patient: patient,
+                  address: address,
+                  phone: phonecontroller.text.toString(),
+                ),
+                transition: Transition.leftToRight);
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {},
+        );
       }
     }
   }

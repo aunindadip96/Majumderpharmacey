@@ -23,19 +23,19 @@ class Noti{
     var initializationsSettings = new InitializationSettings(android: androidInitialize,
         iOS: iOSInitialize);
     await flutterLocalNotificationsPlugin.initialize(initializationsSettings, onSelectNotification: (String? payload) async {
-     /* Get.to(AppointmentSucess(),transition: Transition.upToDown);*/
+      /* Get.to(AppointmentSucess(),transition: Transition.upToDown);*/
 
       Get.dialog(
         AlertDialog(
           title: Text('Doctor Appointment ',style: TextStyle(
-            color: Colors.blueAccent
+              color: Colors.blueAccent
           ),),
           content: Text(
             "Doctor Name : ${Sucesscontroller.DocName}\n"
-              "Day and Date :${Sucesscontroller.appointday},${Sucesscontroller.date}\n"
-              "Token Number : ${Sucesscontroller.Tokennum} "
+                "Day and Date :${Sucesscontroller.appointday},${Sucesscontroller.date}\n"
+                "Token Number : ${Sucesscontroller.Tokennum} "
             ,style: TextStyle(
-            fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold
           ),),
           actions: [
             TextButton(
@@ -71,6 +71,16 @@ class Noti{
         iOS: IOSNotificationDetails()
     );
     await fln.show(0, title, body,not );
+
+
+
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+
+
+
+
+
 
 
 

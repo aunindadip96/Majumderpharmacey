@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,79 +5,94 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../MyAppointments.dart';
+import '../MyProfile.dart';
+import '../MytodaysAppointment.dart';
 import '../log_in.dart';
 
 myDrwaerlist() {
-  return Container(
-    padding: EdgeInsets.all(10),
-    child: Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextButton.icon(
-          icon: Icon(
-            Icons.star_border_sharp,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ExpansionTile(
+        leading: const Icon(
+          Icons.schedule,
+          color: Colors.black,
+        ),
+        title: const Text(
+          'My Appointments',
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 16,
             color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
-          onPressed: () {
-            Get.to(Myappointment());
+        ),
+        children: [
+          ListTile(
+            title: Text('Today Appointment'),
+            onTap: () {
+              Get.to(const todaysappointment());
+            },
+          ),
+          ListTile(
+            title: Text('All Appointments'),
+            onTap: () {
+              Get.to(const Myappointment());
 
+            },
+          ),
+        ],
+      ),
+
+
+      TextButton.icon(
+        onPressed: ()  {
+          Get.to(Myprofile());
 
           },
-          label: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                "My Apponitments ",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-
-        TextButton.icon(
-            icon: Icon(
-              Icons.animation,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-            label: const Text(
+        icon: Icon(Icons.logout,
+          color: Colors.black,),
+        label: Row(
+          children: [
+            SizedBox(
+                width: 40.0), // add some spacing between the icon and the text
+            Text(
               "My Profile",
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 16),
-            )),
-
-        TextButton.icon(
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 16,
+              ),
             ),
-            onPressed: () async{
-              SharedPreferences
-              sharedPreferences =
-              await SharedPreferences
-                  .getInstance();
-              sharedPreferences.remove("user");
-              Get.to(login());
-            },
-            label: const Text(
-              "SignOut",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 16),
-            )),
+          ],
+        ),
+      ),
 
-      ],
-    ),
+      TextButton.icon(
+        onPressed: () async {
+          SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+          sharedPreferences.remove("user");
+          Get.to(login());
+          },
+        icon: Icon(Icons.logout,
+          color: Colors.black,),
+        label: Row(
+          children: [
+            SizedBox(
+                width: 40.0), // add some spacing between the icon and the text
+            Text(
+              "Sign Out",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+    ],
   );
 }

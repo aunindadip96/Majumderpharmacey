@@ -1,8 +1,8 @@
 class viewappoinment {
-  int? id;
-  int? pId;
-  int? dId;
-  int? sId;
+  String? id;
+  String? pId;
+  String? dId;
+  String? sId;
   String? appointmentDate;
   String? dNumber;
   Null? appointmentTime;
@@ -35,17 +35,17 @@ class viewappoinment {
         this.s});
 
   viewappoinment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    pId = json['p_id'];
-    dId = json['d_id'];
-    sId = json['s_id'];
-    appointmentDate = json['appointment_date'];
-    dNumber = json['d_number'];
+    id = json['id'].toString();
+    pId = json['p_id'].toString();
+    dId = json['d_id'].toString();
+    sId = json['s_id'].toString();
+    appointmentDate = json['appointment_date'].toString();
+    dNumber = json['d_number'].toString();
     appointmentTime = json['appointment_time'];
     startingTime = json['starting_time'];
     endingTime = json['ending_time'];
     appointmentStatus = json['appointment_status'];
-    token = json['token'];
+    token = json['token'].toString();
     deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -80,9 +80,9 @@ class viewappoinment {
 }
 
 class D {
-  int? id;
+  String? id;
   String? doctor;
-  int? specialistId;
+  String? specialistId;
   String? fees;
   String? earning;
   String? scheduleGap;
@@ -114,20 +114,20 @@ class D {
         this.updatedAt});
 
   D.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    doctor = json['doctor'];
-    specialistId = json['specialist_id'];
-    fees = json['fees'];
-    earning = json['earning'];
-    scheduleGap = json['schedule_gap'];
-    appointmentTime = json['appointment_time'];
-    degree = json['degree'];
-    description = json['description'];
-    phone = json['phone'];
-    email = json['email'];
-    doctorId = json['doctor_id'];
+    id = json['id'].toString();
+    doctor = json['doctor'].toString();
+    specialistId = json['specialist_id'].toString();
+    fees = json['fees'].toString();
+    earning = json['earning'].toString();
+    scheduleGap = json['schedule_gap'].toString();
+    appointmentTime = json['appointment_time'].toString();
+    degree = json['degree'].toString();
+    description = json['description'].toString();
+    phone = json['phone'].toString();
+    email = json['email'].toString();
+    doctorId = json['doctor_id'].toString();
     deletedAt = json['deleted_at'];
-    createdAt = json['created_at'];
+    createdAt = json['created_at'].toString();
     updatedAt = json['updated_at'];
   }
 

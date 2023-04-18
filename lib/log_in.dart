@@ -1,16 +1,18 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:doctorappointment/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'HomePage.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'Otp_Verfiy.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -22,16 +24,24 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   var mobilecontroller = TextEditingController();
   var passwordController = TextEditingController();
-
+  final String oneSignalAppId = "330cb2d5-55cf-4d23-baa5-08a3a3fae337";
   bool _isHidden = true;
   var Userdata;
+
+  Future<void> initPlatformState(String extid) async {
+    OneSignal.shared.setExternalUserId(extid);
+    OneSignal.shared.setAppId(oneSignalAppId);
+    OneSignal.shared
+        .promptUserForPushNotificationPermission()
+        .then((accepted) {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
-          title: const Text("E-Commerce"),
+          title: const Text("Majumdar Pharmacy"),
         ),
         body: SafeArea(
           child: Center(
@@ -163,7 +173,7 @@ class _loginState extends State<login> {
                       const Text('Not a Member ?'),
                       InkWell(
                         onTap: () {
-                          Get.to(MyRegister(),
+                          Get.to(const MyRegister(),
                               transition: Transition.leftToRight);
                         },
                         child: const Text(
@@ -175,7 +185,7 @@ class _loginState extends State<login> {
                         ),
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -202,21 +212,35 @@ class _loginState extends State<login> {
       var url = Uri.parse("https://dms.symbexit.com/api/patientlogin");
       var response = await http.post(url, body: data);
       if (response.statusCode == 201) {
+        int otp2 = Random().nextInt(999999);
+        int noOfOtpDigit = 6;
+        while (otp2.toString().length != noOfOtpDigit) {
+          otp2 = Random().nextInt(999999);
+        }
+
+
+        /*print(response.body);
+        print(response.statusCode);*/
         var body = json.decode(response.body);
         setState(() {
           sharedPreferences.setString('user', jsonEncode(body['patient']));
           var userJson = sharedPreferences.getString('user');
           var user = jsonDecode(userJson!);
+          print(user);
+
+
+          initPlatformState(jsonEncode(body['patient']['external_id']
+              .toString()
+              .replaceAll(RegExp(r'[^\d]+'),"").replaceAll('"', '')));
+
 
           Userdata = user;
 
           Get.to(() => MyHomePage(), transition: Transition.leftToRight);
-          print(Userdata.toString());
+
         });
       } else if (response.statusCode != 201) {
         Navigator.of(context).pop();
-        print(response.body.toString());
-
         Fluttertoast.showToast(
             msg: response.body,
             toastLength: Toast.LENGTH_SHORT,
