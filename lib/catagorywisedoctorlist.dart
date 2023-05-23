@@ -20,6 +20,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'Apicalls/Postappointment.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -39,7 +40,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
   List<String> daysList = [];
   var daynumber;
   var Datetoappointment;
-  final sucesscontroller Sucesscontroller = Get.find();
+  final sucesscontroller Sucesscontroller = Get.find<sucesscontroller>();
   Timer? _timer;
 
   @override
@@ -88,10 +89,169 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Container(
+                  height: screenHeight * .55,
+
+                  child: Column(
+                      children:[
+                        Container(
+
+                          child: Image.asset("lib/assets/Images/error.jpg",
+                            fit: BoxFit.fill
+                            ,),
+                        ),
+                        Text("Something Went Wrong ",style: TextStyle(
+                            fontSize: 20,fontWeight: FontWeight.bold
+                        ),),
+
+
+                      ]
+
+
+                    /*Image.asset(
+                    "lib/assets/Images/error.jpg",
+                    fit: BoxFit.cover,
+                  ),*/
+
+                  ),
+
+
+                );
+
+
+
+
+
+
+
+
+
+
+
+                  /*Text('Error: ${snapshot.error}')*/
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 80),
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * .3,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  "lib/assets/Images/sorry_no_doc.jpg"),
+                              fit: BoxFit.contain),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        "Sorrry no Doctor is,",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text(
+                        "Available",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40.00),
+                        child: Container(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              /*Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const homepage()),
+                              );*/
+                            },
+                            child: const Text(
+                              "Back to Hompage ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
+
               if (snapshot.data == null) {
-                return const Center(child: Text("sadf"));
-              }
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 80),
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * .3,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  "lib/assets/Images/sorry_no_doc.jpg"),
+                                   fit: BoxFit.contain),
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      const Text("Sorrry no Doctor is,",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
+                      ),
+                      const SizedBox(height: 5,),
+                      const Text("Available",
+                        style: TextStyle
+                          (
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40.00),
+                        child: Container(
+                          child: ElevatedButton(
+                            onPressed: ()
+                            {
+                              Navigator.of(context).pop();
+
+                            },
+                            child: const Text(
+                              "Back to Hompage ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              };
 
               if (snapshot.data.toString() == "[]") {
                 return Scaffold(
@@ -158,10 +318,16 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                 );
               }
 
+
+
+
+
               if (snapshot.hasData) {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
+                      Sucesscontroller.setLoadingStates(snapshot.data.length);
+
                       return SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         physics: BouncingScrollPhysics(),
@@ -213,15 +379,15 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                             children: [
                                               Text(
                                                 "Name: " + snapshot.data[index].name,
-                                                style: const TextStyle(fontWeight: FontWeight.bold
-                                                ),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 3,
                                               ),
-                                              Text(
-                                                "Specealist: " + snapshot.data[index].specialist,
-                                                style: TextStyle(fontWeight: FontWeight.bold),
+                                              Text("Specealist: " + snapshot.data[index].specialist,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 3,
@@ -234,10 +400,13 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                                 height: 3,
                                               ),
                                               for (var i = 0; i < snapshot.data[index].schedule.length; i++)
-                                                Text(snapshot.data[index].schedule[i].day + "," + " " + DateFormat('h:mm a')
-                                                    .format(DateTime.parse("1900-01-01 " + snapshot.data[index].schedule[i].startingTime)) +
-                                                      " " + "-" + DateFormat('h:mm a').format(DateTime.parse("1900-01-01 " + snapshot.data[index].schedule[i].endingTime)),
-                                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                                Text(snapshot.data[index].schedule[i].day +
+                                                      "," + " " +
+                                                      DateFormat('h:mm a').format(DateTime.parse("1900-01-01 " + snapshot.data[index].schedule[i].startingTime)) +
+                                                      " " + "-" + DateFormat('h:mm a')
+                                                    .format(DateTime.parse("1900-01-01 " + snapshot.data[index].schedule[i].endingTime)),
+                                                  style: const TextStyle(
+                                                      fontWeight: FontWeight.bold),
                                                   textAlign: TextAlign.left,
                                                   softWrap: false,
                                                 ),
@@ -245,53 +414,97 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                                 height: 3,
                                               ),
                                               Center(
-                                                  child: TextButton(
-                                                      onPressed: () async {
-                                                        for (var i = 0; i < snapshot.data[index].schedule.length; i++)
-                                                          daysList.add(snapshot.data[index].schedule[i].day);
-                                                          daysList.add("2023-04-21");
-                                                          DateTime now = DateTime.now();
-                                                          DateTime firstSelectableDate = now;
+                                                  child: ElevatedButton(
+                                                  onPressed: () async {
+                                                  Sucesscontroller.loadingList[index].value = true;
+                                                  await Future.delayed(Duration(seconds: 2));
 
-                                                        for (int i = 0; i < 7; i++)
-                                                        {
-                                                          if (daysList.contains(DateFormat('EEEE').format(firstSelectableDate)) ||
-                                                              daysList.contains(DateFormat('yyyy-MM-dd').format(firstSelectableDate)))
-                                                          {
-                                                            break;
+                                                    for (var i = 0; i < snapshot.data[index].schedule.length; i++)
+                                                    daysList.add(snapshot.data[index].schedule[i].day);
+                                                    DateTime now = DateTime.now();
+                                                    DateTime firstSelectableDate = now;
+
+                                                    for (int i = 0; i < 7; i++) {
+                                                    if
+                                                    (daysList.contains(DateFormat('EEEE').format(firstSelectableDate)) ||
+                                                        daysList.contains(DateFormat('yyyy-MM-dd').format(firstSelectableDate)))
+                                                    {
+                                                      break;
+                                                    }
+                                                    firstSelectableDate = firstSelectableDate.add(Duration(days: 1));
+                                                  }
+                                                  Sucesscontroller.DocName = RxString(snapshot.data[index].name);
+                                                  String doctorID = snapshot.data[index].id.toString();
+                                                  String SpecalistID = snapshot.data[index].specialistId.toString();
+
+                                                   bool isDateSelectable(
+                                                      DateTime? date) { if(date == null)
+
+                                                  {
+                                                      return false;
+                                                    }
+                                                    final weekday = DateFormat('EEEE').format(date);
+                                                    final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+                                                    // add individual date values to forbiddenDates list
+                                                    List<DateTime>
+                                                        forbiddenDates = [];
+                                                    for (var dateObject in snapshot.data[index].dates) {
+                                                      if (dateObject is Dates && dateObject.date is List<String>) {
+                                                        List<String> dateStringList = dateObject.date as List<String>;
+                                                        for (var dateString in dateStringList) {
+                                                          try {DateTime date = DateTime.parse(dateString);
+                                                            forbiddenDates.add(date);
+                                                          } catch (e) {
+                                                            Fluttertoast.showToast(
+                                                                msg: 'Sorry,Something Went Wrong',
+                                                                toastLength: Toast.LENGTH_SHORT,
+                                                                gravity: ToastGravity.CENTER,
+                                                                timeInSecForIosWeb: 1,
+                                                                backgroundColor: Colors.black,
+                                                                textColor: Colors.white,
+                                                                fontSize: 16.0);
                                                           }
-                                                          firstSelectableDate = firstSelectableDate.add(Duration(days: 1));
                                                         }
-                                                        Sucesscontroller.DocName = RxString(snapshot.data[index].name);
-                                                        String doctorID = snapshot.data[index].id.toString();
-                                                        String SpecalistID = snapshot.data[index].specialistId.toString();
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                            msg: 'Sorry,Something Went Wrong',
+                                                            toastLength: Toast.LENGTH_SHORT,
+                                                            gravity: ToastGravity.CENTER,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.black,
+                                                            textColor: Colors.white,
+                                                            fontSize: 16.0);
+                                                      }
+                                                    }
 
-                                                        bool isDateSelectable(DateTime? date) {
-                                                          if (date == null) {
-                                                            return false;
-                                                          }
-                                                          final weekday = DateFormat('EEEE').format(date);
-                                                          final formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
-                                                          final forbiddenDates = ['2023-04-23', '2023-05-02'];
-                                                          // specify the dates you want to exclude here
+                                                    if (forbiddenDates.contains(date) || forbiddenDates.contains(DateTime(date.year, date.month, date.day)))
+                                                    {
+                                                      return false;
+                                                    }
+                                                    return daysList.contains(weekday) || daysList.contains(formattedDate);
+                                                  }
 
-                                                          if (forbiddenDates.contains(formattedDate)) {
-                                                            return false;
-                                                          }
-
-                                                          return daysList.contains(weekday) || daysList.contains(formattedDate);
-                                                        }
-
-                                                        bookbutton(DateTime.now(), firstSelectableDate, doctorID, SpecalistID, isDateSelectable);
-                                                      },
-                                                      child: const Text(
-                                                        "Book Appointment",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 20),
-                                                      )))
+                                                   Sucesscontroller.loadingList[index].value = false;
+                                                   await bookbutton(DateTime.now(), firstSelectableDate, doctorID, SpecalistID, isDateSelectable);
+                                                },
+                                                  child: Obx(() {
+                                                  return Sucesscontroller.loadingList[index].value ?
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: CircularProgressIndicator(color: Colors.white),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text("Checking available dates")
+                                                    ],
+                                                  )
+                                                      : Text("Available Dates ");
+                                                }),
+                                              ))
                                             ],
                                           ),
                                         ),
@@ -311,62 +524,79 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
             }));
   }
 
-  bookbutton(DateTime firstSelectableDate, DateTime initialDate, String Docid,
-      specalistid, bool Function(DateTime?) isDateSelectable) async {
+  Future<void> bookbutton(
+      DateTime firstSelectableDate,
+      DateTime initialDate,
+      String Docid,
+      String specalistid,
+      bool Function(DateTime?) isDateSelectable) async {
     DateTime startDate = initialDate;
     if (!isDateSelectable(startDate)) {
       startDate = firstSelectableDate;
       while (!isDateSelectable(startDate)) {
-        startDate = startDate.add(Duration(days: 1));
+        startDate = startDate.add(const Duration(days: 1));
       }
     }
 
-    await showDatePicker(
-            context: context,
-            initialDate: startDate,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(Duration(days: 60)),
-            selectableDayPredicate: isDateSelectable)
-        .then((date) {
+    DateTime? selectedDate;
+    try {
+         selectedDate = await showDatePicker(
+          context: context,
+          initialDate: startDate,
+          firstDate: DateTime.now(),
+          lastDate: DateTime.now().add(const Duration(days: 120)),
+          selectableDayPredicate: isDateSelectable);
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg: 'Sorry this Doctor is not Available',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+
+    if (selectedDate != null) {
       Sucesscontroller.SelectDate =
-          RxString(DateFormat("yyyy-MM-dd").format(date!).toString());
-      Datetoappointment = DateFormat("yyyy-MM-dd").format(date);
-      daynumber = date.weekday;
-      Sucesscontroller.appointday = RxString(DateFormat('EEEE').format(date));
-      Sucesscontroller.date = RxString(DateFormat("yyyy-MM-dd").format(date));
-    });
+          RxString(DateFormat('yyyy-MM-dd').format(selectedDate).toString());
+      Datetoappointment = DateFormat('yyyy-MM-dd').format(selectedDate);
+      daynumber = selectedDate.weekday;
+      Sucesscontroller.appointday =
+          RxString(DateFormat('EEEE').format(selectedDate));
+      Sucesscontroller.date =
+          RxString(DateFormat('yyyy-MM-dd').format(selectedDate));
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Appointment Booked!'),
-          content: Text(
-              'Do you want to make an appointment on  $Datetoappointment with Dr. ${Sucesscontroller.DocName.toString()}'),
-          actions: <Widget>[
-            ElevatedButton(
-              child: Text('No'),
-              onPressed: () {
-                // Here you can add any code that should be executed when the user taps on the "Cancel" button
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Appointment Booked!'),
+            content: Text(
+                'Do you want to make an appointment on  $Datetoappointment with Dr. '
+                    '${Sucesscontroller.DocName.toString()}'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Yes'),
+                onPressed: () {
+                  postappointment objtopost = postappointment();
+                  objtopost.placeAppointment(User['patient_key'].toString(),
+                      Docid, specalistid, daynumber.toString());
 
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: Text('Yes'),
-              onPressed: () {
-                postappointment objtopost = new postappointment();
-                objtopost.placeappointment(User["patient_key"].toString(),
-                    Docid, specalistid, daynumber.toString());
-                // Here you can add any code that should be executed when the user taps on the "ok" button
-                print('User tapped on "ok" button');
-
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {}
   }
 }

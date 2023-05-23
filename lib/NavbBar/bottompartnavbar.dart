@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../MyAppointments.dart';
 import '../MyProfile.dart';
 import '../MytodaysAppointment.dart';
@@ -29,13 +28,13 @@ myDrwaerlist() {
         ),
         children: [
           ListTile(
-            title: Text('Today Appointment'),
+            title: const Text('Today Appointment'),
             onTap: () {
               Get.to(const todaysappointment());
             },
           ),
           ListTile(
-            title: Text('All Appointments'),
+            title: const Text('All Appointments'),
             onTap: () {
               Get.to(const Myappointment());
 
@@ -50,10 +49,10 @@ myDrwaerlist() {
           Get.to(Myprofile());
 
           },
-        icon: Icon(Icons.logout,
+        icon: const Icon(Icons.logout,
           color: Colors.black,),
         label: Row(
-          children: [
+          children: const [
             SizedBox(
                 width: 40.0), // add some spacing between the icon and the text
             Text(
@@ -73,12 +72,12 @@ myDrwaerlist() {
           SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
           sharedPreferences.remove("user");
-          Get.to(login());
+          Get.offAll(const login());
           },
-        icon: Icon(Icons.logout,
+        icon: const Icon(Icons.logout,
           color: Colors.black,),
         label: Row(
-          children: [
+          children: const [
             SizedBox(
                 width: 40.0), // add some spacing between the icon and the text
             Text(

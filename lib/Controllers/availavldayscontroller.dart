@@ -9,5 +9,14 @@ class sucesscontroller extends GetxController
   RxString date=' ' .obs;
   RxString Tokennum=' '.obs;
   RxString SelectDate=''.obs;
+  RxList<RxBool> loadingList = <RxBool>[].obs;
+  RxBool loginbool=false.obs;
+
+  void setLoadingStates(int length) {
+    loadingList.clear();
+    for (int i = 0; i < length; i++) {
+      loadingList.add(RxBool(false));
+    }
+  }
 
 }

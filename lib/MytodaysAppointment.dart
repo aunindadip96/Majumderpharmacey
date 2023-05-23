@@ -52,8 +52,64 @@ class _todaysappointmentState extends State<todaysappointment> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.data == null) {
-                  return const Center(child: Text("sadf"));
+                if (snapshot.data.toString() == "[]") {
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 80),
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * .3,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "lib/assets/Images/Appointment .jpg"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          "No Appointment ",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          "For Today",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(40.00),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                            },
+                            child: const Text(
+                              "Back to Homepage ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 if (snapshot.hasData) {
@@ -123,9 +179,63 @@ class _todaysappointmentState extends State<todaysappointment> {
                         );
                       });
                 } else {
-                  return (const Center(
-                    child: Text("Something Went Wrong "),
-                  ));
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 80),
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * .3,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "lib/assets/Images/Appointment .jpg"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          "No Appointment ",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          "For Today",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(40.00),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                            },
+                            child: const Text(
+                              "Back to Homepage ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 }
               }),
     );

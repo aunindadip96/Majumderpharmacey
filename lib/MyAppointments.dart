@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
-
 class Myappointment extends StatefulWidget {
   const Myappointment({super.key});
 
@@ -20,7 +18,9 @@ class _MyappointmentState extends State<Myappointment> {
   void initState() {
     _getuserinfo();
     super.initState();
+
   }
+
 
   void _getuserinfo() async {
     SharedPreferences localstorage = await SharedPreferences.getInstance();
@@ -32,8 +32,12 @@ class _MyappointmentState extends State<Myappointment> {
   }
 
   Myappointments obj = new Myappointments();
+
   @override
+
   Widget build(BuildContext context) {
+    print(User["patient_key"].toString()+"Dipsaha");
+
     return Scaffold(
       appBar: AppBar(
         title: Text("My Appointments"),
@@ -41,13 +45,132 @@ class _MyappointmentState extends State<Myappointment> {
       body: User == null
           ? Center(child: CircularProgressIndicator())
           : FutureBuilder(
+
               future: obj.Myappointment(User["patient_key"].toString()),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
+                print(snapshot.toString());
+
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.data == null) {
-                  return const Center(child: Text("sadf"));
+                   return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 80),
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * .3,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "lib/assets/Images/Appointment .jpg"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          "No Appointment ,",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          "Yet",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(40.00),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                            },
+                            child: const Text(
+                              "Back to Homepage ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                if (snapshot.data.toString() == "[]") {
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 80),
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * .3,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "lib/assets/Images/Appointment .jpg"),
+                                fit: BoxFit.contain),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          "No Appointment ,",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          "Yet",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(40.00),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+
+                            },
+                            child: const Text(
+                              "Back to Homepage ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 if (snapshot.hasData) {
@@ -56,9 +179,6 @@ class _MyappointmentState extends State<Myappointment> {
                       itemBuilder: (BuildContext context, int index) {
                         return DefaultTabController(
                           length: 2,
-
-
-
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -82,19 +202,19 @@ class _MyappointmentState extends State<Myappointment> {
                                     Text(
                                       "Doctor Name: " +
                                           snapshot.data[index].d.doctor,
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 3,
                                     ),
                                     Text(
                                       "Specialist:" +
                                           snapshot.data[index].s.specialist,
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 3,
                                     ),
                                     Text(
@@ -102,15 +222,14 @@ class _MyappointmentState extends State<Myappointment> {
                                           DateTime.parse(snapshot
                                               .data[index].appointmentDate
                                               .replaceAll(
-                                              "T00:00:00.000000Z", ""))),
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold),
+                                                  "T00:00:00.000000Z", ""))),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      "Token Number :  " +
-                                          snapshot.data[index].token.toString(),
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold),
+                                      "Token Number :  ${snapshot.data[index].token}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -120,7 +239,7 @@ class _MyappointmentState extends State<Myappointment> {
                         );
                       });
                 } else {
-                  return (Center(
+                  return (const Center(
                     child: Text("Something Went Wrong "),
                   ));
                 }

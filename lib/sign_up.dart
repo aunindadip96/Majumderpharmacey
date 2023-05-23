@@ -406,7 +406,6 @@ class _MyRegisterState extends State<MyRegister> {
             textColor: Colors.white,
             fontSize: 16.0);
 
-        Navigator.of(context).pop();
       }
 
       if (jsonData.toString() == "201") {

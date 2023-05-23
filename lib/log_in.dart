@@ -1,18 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+import 'dart:io';
 import 'package:doctorappointment/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'Controllers/availavldayscontroller.dart';
 import 'HomePage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'Otp_Verfiy.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -27,236 +27,324 @@ class _loginState extends State<login> {
   final String oneSignalAppId = "330cb2d5-55cf-4d23-baa5-08a3a3fae337";
   bool _isHidden = true;
   var Userdata;
+  final sucesscontroller Sucesscontroller = Get.find<sucesscontroller>();
+
 
   Future<void> initPlatformState(String extid) async {
-    OneSignal.shared.setExternalUserId(extid);
+    print(extid);
+
+    OneSignal.shared.setExternalUserId(extid.replaceAll(RegExp(r'[^\d]+'), "")
+        .replaceAll('"', ''));
     OneSignal.shared.setAppId(oneSignalAppId);
     OneSignal.shared
         .promptUserForPushNotificationPermission()
         .then((accepted) {});
   }
 
+  Future<bool?> showWarnig(BuildContext context) async => showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Do You Want To Exit "),
+      actions: [
+        ElevatedButton(
+          child: const Text("No"),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        ElevatedButton(
+          child: const Text("Yes"),
+          onPressed: () =>
+            SystemNavigator.pop(),
+
+        ),
+      ],
+    ),
+  );
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          title: const Text("Majumdar Pharmacy"),
-        ),
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.whatshot,
-                    size: 70,
-                    color: Colors.blueAccent,
-                  ),
+    return WillPopScope(
+        onWillPop: () async {
 
-                  const Text(
-                    " Welcome Back !!!",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  const Text("You Have been Missed",
-                      style: TextStyle(fontSize: 20)),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  //PasswordTextfield
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12.00)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          controller: mobilecontroller,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.email),
-                            border: InputBorder.none,
-                            hintText: "Phone Number",
+
+
+
+
+
+          final sholdpop = await showWarnig(context);
+          return sholdpop ?? false;
+        },
+        child: Scaffold(
+            backgroundColor: Colors.grey[300],
+            appBar: AppBar(
+
+              title: const Text("Majumdar Pharmacy"),
+            ),
+            body: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.whatshot,
+                        size: 70,
+                        color: Colors.blueAccent,
+                      ),
+
+                      const Text(
+                        " Welcome Back !!!",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      const Text("You Have been Missed",
+                          style: TextStyle(fontSize: 20)),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      //PasswordTextfield
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(12.00)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: mobilecontroller,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.email),
+                                border: InputBorder.none,
+                                hintText: "Phone Number",
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                      const SizedBox(
+                        height: 10,
+                      ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12.00)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: TextField(
-                          obscureText: _isHidden,
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.password_rounded),
-                            border: InputBorder.none,
-                            hintText: "Password",
-                            suffix: InkWell(
-                              onTap: _togglePasswordView,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  _isHidden
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(12.00)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: TextField(
+                              obscureText: _isHidden,
+                              controller: passwordController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.password_rounded),
+                                border: InputBorder.none,
+                                hintText: "Password",
+                                suffix: InkWell(
+                                  onTap: _togglePasswordView,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      _isHidden
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                      const SizedBox(
+                        height: 10,
+                      ),
 
-                  InkWell(
-                    onTap: () async {
-                      var connectivityResult =
-                          await (Connectivity().checkConnectivity());
-                      if (connectivityResult == ConnectivityResult.mobile ||
-                          connectivityResult == ConnectivityResult.wifi) {
-                        SignIn(mobilecontroller.text.toString(),
-                            passwordController.text.toString());
-                        // I am connected to a mobile or Wifi network.
-                      } else if (connectivityResult ==
-                          ConnectivityResult.none) {
-                        // No Internet
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(20.00),
-                        decoration: BoxDecoration(
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(12.0)),
-                        child: const Center(
-                          child: Text(
-                            "Log In",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
+                      InkWell(
+                        onTap: () async {
+                          if (mobilecontroller.text.isEmpty || passwordController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                              msg: 'Please enter both mobile and password',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                            );
+                          } else {
+                            signIn(
+                              mobilecontroller.text.toString(),
+                              passwordController.text.toString(),
+                            );
+                          }
+
+
+
+
+
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(20.00),
+                            decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(12.0)),
+                            child: const Center(
+                              child: Text(
+                                "Log In",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
+                      const SizedBox(
+                        height: 25,
+                      ),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Not a Member ?'),
-                      InkWell(
-                        onTap: () {
-                          Get.to(const MyRegister(),
-                              transition: Transition.leftToRight);
-                        },
-                        child: const Text(
-                          " Sign Up Now ",
-                          style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Not a Member ?'),
+                          InkWell(
+                            onTap: () {
+                              Get.to(const MyRegister(),
+                                  transition: Transition.leftToRight);
+                            },
+                            child: const Text(
+                              " Sign Up Now ",
+                              style: TextStyle(
+                                color: Colors.blueAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ));
+            )));
   }
 
-  SignIn(String mobile, String password) async {
-    if (mobilecontroller.text.isNotEmpty &&
-        passwordController.text.isNotEmpty) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return const AbsorbPointer(
-              absorbing: true,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          });
 
+
+   Future<void>signIn(String mobile, String password) async {
+
+     Sucesscontroller.loginbool.value = true;
+
+     showDialog(
+       context: context,
+       builder: (context) => AbsorbPointer(
+         absorbing: true,
+         child: GestureDetector(
+           onTap: () {
+             // Disable any tap events while the progress indicator is shown
+           },
+           child: Container(
+             color: Colors.transparent, // Use a transparent color to cover the screen
+             child: const Center(
+               child: AbsorbPointer(
+                 absorbing: true,
+                 child: CircularProgressIndicator(),
+               ),
+             ),
+           ),
+         ),
+       ),
+     );
       Map data = {'username': mobile, 'password': password};
 
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       var url = Uri.parse("https://dms.symbexit.com/api/patientlogin");
-      var response = await http.post(url, body: data);
-      if (response.statusCode == 201) {
-        int otp2 = Random().nextInt(999999);
-        int noOfOtpDigit = 6;
-        while (otp2.toString().length != noOfOtpDigit) {
-          otp2 = Random().nextInt(999999);
-        }
+
+      try {
+        var response = await http.post(url, body: data).timeout(Duration( seconds: 30));
+
+        if (response.statusCode == 201) {
+          var body = json.decode(response.body);
+
+          setState(() {
+            sharedPreferences.setString('user', jsonEncode(body['patient']));
+            var userJson = sharedPreferences.getString('user');
+            var user = jsonDecode(userJson!);
 
 
-        /*print(response.body);
-        print(response.statusCode);*/
-        var body = json.decode(response.body);
-        setState(() {
-          sharedPreferences.setString('user', jsonEncode(body['patient']));
-          var userJson = sharedPreferences.getString('user');
-          var user = jsonDecode(userJson!);
-          print(user);
+            String Eid=(jsonEncode(body['patient']['external_id'].toString()));
+            initPlatformState(Eid);
 
 
-          initPlatformState(jsonEncode(body['patient']['external_id']
-              .toString()
-              .replaceAll(RegExp(r'[^\d]+'),"").replaceAll('"', '')));
 
 
-          Userdata = user;
 
-          Get.to(() => MyHomePage(), transition: Transition.leftToRight);
+            Userdata = user;
 
-        });
-      } else if (response.statusCode != 201) {
-        Navigator.of(context).pop();
-        Fluttertoast.showToast(
+            Get.to(() => MyHomePage(), transition: Transition.leftToRight);
+          });
+
+          // handle success case
+        } else if (response.statusCode != 201) {
+          Fluttertoast.showToast(
             msg: response.body,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.black,
             textColor: Colors.white,
-            fontSize: 16.0);
+            fontSize: 16.0,
+          );
+        }
+      } on TimeoutException catch (e) {
+        Fluttertoast.showToast(
+          msg: 'Request timed out. Please try again later.',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } on SocketException catch (e) {
+        Fluttertoast.showToast(
+          msg: 'Failed to connect to server. Please check your internet connection and try again.',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: 'An error occurred. Please try again later.',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     }
-    if (mobilecontroller.text.isEmpty || passwordController.text.isEmpty) {}
-  }
 
   void _togglePasswordView() {
     setState(() {
       _isHidden = !_isHidden;
     });
   }
+
 }
+
+
+

@@ -65,6 +65,9 @@ dev_dependencies:
   pinput: ^2.2.21
   firebase_auth: ">=4.4.0 <5.0.0"
   firebase_auth_web: "^5.3.0"
+  dio: ^5.1.1
+  shimmer: ^2.0.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -87,6 +90,11 @@ flutter:
   - lib/assets/Images/Sign_Up.jpg
   - lib/assets/Images/sorry_no_doc.jpg
   - lib/assets/Images/otp.png
+  - lib/assets/Images/Appointment .jpg
+  - lib/assets/Images/error.jpg
+
+
+
 
 
 
