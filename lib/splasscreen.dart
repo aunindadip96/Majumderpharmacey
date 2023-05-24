@@ -22,7 +22,7 @@ class _splashscreeenState extends State<splashscreeen> {
   void initState() {
     validation().whenComplete(() async {
       Timer(Duration(seconds: 4),
-          () => Get.to(Userdata == null ? login() : MyHomePage()));
+          () => Get.to(Userdata == null ? const login() : const MyHomePage()));
     });
 
     super.initState();

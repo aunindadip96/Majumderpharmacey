@@ -12,10 +12,13 @@ class Myappointments{
    print (list.toString());
 
     return list
-        .map((e) => viewappoinment.fromJson(e))
+        .map((e) => viewappoinment.fromJson(e)).where((element) =>
+    element.appointmentStatus.toString()!="2")
+    
         .toList();
 
   }
+
 
 
 }

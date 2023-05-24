@@ -231,6 +231,18 @@ class _MyappointmentState extends State<Myappointment> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
+
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    if (snapshot.data[index].appointmentStatus.toString()=="1")
+                                      ( Text("This appointment is Completed",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueAccent),))
+
+
+
+
+
+
                                   ],
                                 ),
                               ),

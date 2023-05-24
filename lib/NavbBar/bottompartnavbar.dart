@@ -73,6 +73,8 @@ myDrwaerlist() {
           await SharedPreferences.getInstance();
           sharedPreferences.remove("user");
           Get.offAll(const login());
+          print(sharedPreferences.toString());
+
           },
         icon: const Icon(Icons.logout,
           color: Colors.black,),

@@ -15,7 +15,7 @@ class daytoday{
     return list
         .map((e) => viewappoinment.fromJson(e))
         .where((element) => element.appointmentDate.toString()
-         .replaceAll("T00:00:00.000000Z", " ").contains(date.toString()))
+         .replaceAll("T00:00:00.000000Z", " ").contains(date.toString()) && element.appointmentStatus!="2")
         .toList();
 
 
