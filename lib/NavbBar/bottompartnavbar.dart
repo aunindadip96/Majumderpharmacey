@@ -7,6 +7,8 @@ import '../MyAppointments.dart';
 import '../MyProfile.dart';
 import '../MytodaysAppointment.dart';
 import '../log_in.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+
 
 myDrwaerlist() {
   return Column(
@@ -74,6 +76,7 @@ myDrwaerlist() {
           sharedPreferences.remove("user");
           Get.offAll(const login());
           print(sharedPreferences.toString());
+
 
           },
         icon: const Icon(Icons.logout,

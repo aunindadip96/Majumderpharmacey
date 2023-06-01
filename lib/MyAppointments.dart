@@ -177,6 +177,7 @@ class _MyappointmentState extends State<Myappointment> {
                   return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
+
                         return DefaultTabController(
                           length: 2,
                           child: Padding(
@@ -235,8 +236,15 @@ class _MyappointmentState extends State<Myappointment> {
                                     const SizedBox(
                                       height: 3,
                                     ),
-                                    if (snapshot.data[index].appointmentStatus.toString()=="1")
-                                      ( Text("This appointment is Completed",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueAccent),))
+
+
+                                  if (snapshot.data[index].appointmentStatus.toString()=="1")
+                                      ( Text("Appointment Status : Completed ",
+                                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.greenAccent),)),
+                                    if (snapshot.data[index].appointmentStatus.toString()=="2")
+                                      ( Text("Appointment Status : Canceled ",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.redAccent),)),
+                                    if (snapshot.data[index].appointmentStatus=="null" )
+                                      ( Text("Appointment Status : Pending ",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueAccent),)),
 
 
 

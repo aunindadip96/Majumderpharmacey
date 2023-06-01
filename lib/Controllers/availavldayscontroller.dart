@@ -11,6 +11,12 @@ class sucesscontroller extends GetxController
   RxString SelectDate=''.obs;
   RxList<RxBool> loadingList = <RxBool>[].obs;
   RxBool loginbool=false.obs;
+  RxBool mobilenumcheck=false.obs;
+  RxBool otpinput=false.obs;
+  RxBool SignUpbool=false.obs;
+
+
+
 
   void setLoadingStates(int length) {
     loadingList.clear();

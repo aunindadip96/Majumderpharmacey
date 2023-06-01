@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:doctorappointment/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -12,6 +11,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'Controllers/availavldayscontroller.dart';
 import 'HomePage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+
+import 'SignUp/Phone_Number_Entry.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -209,7 +210,11 @@ class _loginState extends State<login> {
                               );
                             }
 
-                            await signIn(
+
+                           await Future.delayed(Duration(seconds: 2));
+
+
+                             signIn(
                               mobilecontroller.text.toString(),
                               passwordController.text.toString(),
                             );
@@ -244,7 +249,7 @@ class _loginState extends State<login> {
                           const Text('Not a Member ?'),
                           InkWell(
                             onTap: () {
-                              Get.to(const MyRegister(),
+                              Get.to(const MyPhone(),
                                   transition: Transition.leftToRight);
                             },
                             child: const Text(
@@ -254,7 +259,9 @@ class _loginState extends State<login> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          )
+                          ),
+
+
                         ],
                       ),
                     ],
@@ -276,22 +283,35 @@ class _loginState extends State<login> {
       var response = await http.post(url, body: data).timeout(Duration(seconds: 30));
 
       if (response.statusCode == 201) {
+
+        Fluttertoast.showToast(
+          msg: 'Log in Was Successful',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+
+
         var body = json.decode(response.body);
 
         sharedPreferences.setString('user', jsonEncode(body['patient']));
         var userJson = sharedPreferences.getString('user');
         var user = jsonDecode(userJson!);
-        print("Done");
 
         String Eid = (jsonEncode(body['patient']['external_id'].toString()));
         initPlatformState(Eid);
-        print("Done" + "2");
         Userdata = user;
         Get.to(() => const MyHomePage(), transition: Transition.leftToRight);
-        print("What the ");
+
+        Sucesscontroller.loginbool.value = false;
+
 
         hasNavigatedToHomePage = true; // Set the flag to true after navigation
       } else if (response.statusCode != 201) {
+
         Fluttertoast.showToast(
           msg: response.body,
           toastLength: Toast.LENGTH_SHORT,
@@ -301,6 +321,9 @@ class _loginState extends State<login> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+        Sucesscontroller.loginbool.value = false;
+
+
       }
     } on TimeoutException catch (e) {
       Fluttertoast.showToast(
@@ -312,7 +335,15 @@ class _loginState extends State<login> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+
+      Sucesscontroller.loginbool.value = false;
+
     } on SocketException catch (e) {
+
+
+
+
+
       Fluttertoast.showToast(
         msg: 'Failed to connect to server. Please check your internet connection and try again.',
         toastLength: Toast.LENGTH_SHORT,
@@ -322,6 +353,8 @@ class _loginState extends State<login> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      Sucesscontroller.loginbool.value = false;
+
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'An error occurred. Please try again later.',
@@ -333,6 +366,7 @@ class _loginState extends State<login> {
         fontSize: 16.0,
       );
     } finally {
+
       // Handle the cleanup or navigation logic here
       if (!hasNavigatedToHomePage && dialogContext != null) {
         Navigator.pop(dialogContext);

@@ -11,11 +11,7 @@ class Myappointments{
     final list = jsonData as List<dynamic>;
    print (list.toString());
 
-    return list
-        .map((e) => viewappoinment.fromJson(e)).where((element) =>
-    element.appointmentStatus.toString()!="2")
-    
-        .toList();
+    return list.map((e) => viewappoinment.fromJson(e)).toList();
 
   }
 
