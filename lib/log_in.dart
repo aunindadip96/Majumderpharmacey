@@ -11,7 +11,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'Controllers/availavldayscontroller.dart';
 import 'HomePage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
 import 'SignUp/Phone_Number_Entry.dart';
 
 class login extends StatefulWidget {
@@ -32,7 +31,6 @@ class _loginState extends State<login> {
   late BuildContext dialogContext; // Add this line
 
   Future<void> initPlatformState(String extid) async {
-    print(extid);
 
     OneSignal.shared.setExternalUserId(
         extid.replaceAll(RegExp(r'[^\d]+'), "").replaceAll('"', ''));
@@ -80,7 +78,7 @@ class _loginState extends State<login> {
         child: Scaffold(
             backgroundColor: Colors.grey[300],
             appBar: AppBar(
-              title: const Text("Majumdar Pharmacy"),
+              title: Center(child: const Text("Majumdar Pharmacy")),
             ),
             body: SafeArea(
               child: Center(
@@ -182,7 +180,6 @@ class _loginState extends State<login> {
                           } else {
                             Sucesscontroller.loginbool.value = true;
 
-                            print(Sucesscontroller.loginbool.value.toString());
 
                             if (Sucesscontroller.loginbool.value) {
                               showDialog(
@@ -285,7 +282,7 @@ class _loginState extends State<login> {
       if (response.statusCode == 201) {
 
         Fluttertoast.showToast(
-          msg: 'Log in Was Successful',
+          msg: 'Log in Is Successful',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,

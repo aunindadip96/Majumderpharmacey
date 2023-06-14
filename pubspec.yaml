@@ -67,6 +67,9 @@ dev_dependencies:
   firebase_auth_web: "^5.3.0"
   dio: ^5.1.1
   shimmer: ^2.0.0
+  draggable_scrollbar: ^0.1.0
+
+
 
 
 # For information on the generic Dart part of this file, see the

@@ -109,10 +109,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                       ]
 
 
-                    /*Image.asset(
-                    "lib/assets/Images/error.jpg",
-                    fit: BoxFit.cover,
-                  ),*/
+
 
                   ),
 
@@ -129,7 +126,6 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
 
 
 
-                  /*Text('Error: ${snapshot.error}')*/
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Scaffold(
                   backgroundColor: Colors.white,
@@ -546,17 +542,28 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
           firstDate: DateTime.now(),
           lastDate: DateTime.now().add(const Duration(days: 120)),
           selectableDayPredicate: isDateSelectable);
-    } catch (e) {
-      Fluttertoast.showToast(
-          msg: 'Sorry this Doctor is not Available',
+    }
+
+
+
+
+    catch (e) {
+      if (mounted) {
+        // Handle other exceptions or show an error message
+        Fluttertoast.showToast(
+          msg: 'Sorry, this Doctor is not available',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.black,
           textColor: Colors.white,
-          fontSize: 16.0);
+          fontSize: 16.0,
+        );
+      }
       return;
     }
+
+
 
     if (selectedDate != null) {
       Sucesscontroller.SelectDate =

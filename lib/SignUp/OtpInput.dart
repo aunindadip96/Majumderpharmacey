@@ -100,7 +100,6 @@ class _OtpverifyState extends State<Otpverify> {
                 // submittedPinTheme: submittedPinTheme,
 
                 showCursor: true,
-                /* onCompleted: (pin) => print(pin),*/
 
                 onChanged: (value) {
                   code = value;

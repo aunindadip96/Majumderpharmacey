@@ -20,7 +20,7 @@ class _MyPhoneState extends State<MyPhone> {
   @override
   void initState() {
     // TODO: implement initState
-    countryController.text = "+88";
+    countryController.text = "+91";
     super.initState();
   }
 
@@ -39,7 +39,9 @@ class _MyPhoneState extends State<MyPhone> {
                 'lib/assets/Images/otp.png',
                 width: 150,
                 height: 150,
+
               ),
+
               const SizedBox(
                 height: 25,
               ),
@@ -51,7 +53,7 @@ class _MyPhoneState extends State<MyPhone> {
                 height: 10,
               ),
               const Text(
-                "We need to register your phone without getting started!",
+                "We need to register your phone before getting started!",
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -162,7 +164,7 @@ class _MyPhoneState extends State<MyPhone> {
                                 Text("Validating you Number")
                               ],
                             )
-                          : Text("Send Otp");
+                          : Text("Send OTP");
                     }),
                   ))
             ],

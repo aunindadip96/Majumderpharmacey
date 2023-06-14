@@ -97,7 +97,6 @@ class postappointment {
         appointment_date: successController.date.toString(),
         d_number: daynumber,
         token: " ");
-    print(jsonEncode(obj.toJson()));
 
     final url = Uri.parse("https://dms.symbexit.com/api/make_appointment");
     EasyLoading.show(status: "sending..");
@@ -109,7 +108,6 @@ class postappointment {
         body: json.encode(obj.toJson()),
       );
 
-      print(response.statusCode);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
 
@@ -151,14 +149,12 @@ class postappointment {
         EasyLoading.dismiss();
         Get.offAll(MyHomePage());
 
-        print(response.body);
       }
     } catch (e) {
       EasyLoading.showError("Something Went Wrong");
       EasyLoading.dismiss();
       Get.offAll(MyHomePage());
 
-      print(e.toString());
     }
   }
 }

@@ -71,11 +71,11 @@ myDrwaerlist() {
 
       TextButton.icon(
         onPressed: () async {
-          SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
+          OneSignal.shared.removeExternalUserId();
+          SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
           sharedPreferences.remove("user");
           Get.offAll(const login());
-          print(sharedPreferences.toString());
+
 
 
           },

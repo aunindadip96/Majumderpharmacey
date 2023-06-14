@@ -10,12 +10,10 @@ class daytoday{
     var data = await http.get(url);
     var jsonData = json.decode(data.body);
     final list = jsonData as List<dynamic>;
-    print(list.toString());
-
     return list
         .map((e) => viewappoinment.fromJson(e))
         .where((element) => element.appointmentDate.toString()
-         .replaceAll("T00:00:00.000000Z", " ").contains(date.toString()) && element.appointmentStatus!="2")
+         .replaceAll("T00:00:00.000000Z", " ").contains(date.toString()) )
         .toList();
 
 

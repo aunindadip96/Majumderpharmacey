@@ -315,7 +315,6 @@ class _CreatPatientState extends State<CreatPatient> {
        );
       var url = Uri.parse("https://dms.symbexit.com/api/createpatientlist");
 
-      print(jsonEncode(signup.toJson()));
 
       try {
         var response = await Future.delayed(Duration(seconds: 2), () {
@@ -357,7 +356,6 @@ class _CreatPatientState extends State<CreatPatient> {
 
         } else if (response.statusCode != 201) {
 
-          print(response.body);
           Fluttertoast.showToast(
             msg: "Something went wrong ",
             toastLength: Toast.LENGTH_SHORT,

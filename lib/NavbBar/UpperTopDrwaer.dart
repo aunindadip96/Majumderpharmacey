@@ -25,7 +25,6 @@ class _myprofildrwaerState extends State<myprofildrwaer> {
 
     setState(() {
       Userdata = user;
-      print(user.toString());
     });
   }
 

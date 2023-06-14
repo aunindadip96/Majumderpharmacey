@@ -4,6 +4,8 @@ import 'Apicalls/fetchcatagories.dart';
 import 'Ctagories.dart';
 import 'NavbBar/UpperTopDrwaer.dart';
 import 'NavbBar/bottompartnavbar.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -13,6 +15,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  ScrollController _controller = ScrollController();
+
   bool _isRefreshing = false;
 
   Future<void> _onRefresh() async {
@@ -35,6 +39,18 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
+
+      drawer: Drawer(
+          child: ListView(
+
+              children: [
+                const myprofildrwaer(),
+                myDrwaerlist(),
+              ],
+            ),
+
+        ),
+
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: WillPopScope(
@@ -42,11 +58,17 @@ class _MyHomePageState extends State<MyHomePage> {
             // To disable the back button, simply return false
             return false;
           },
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: BouncingScrollPhysics(),
-            child: Center(
-              child: Column(
+          child: DraggableScrollbar.rrect(heightScrollThumb: 100,
+            alwaysVisibleScrollThumb: false,
+            backgroundColor: Colors.blueAccent,
+            controller: _controller,
+
+
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              controller: _controller,
+
+
                 children: [
                   Container(
                     height: screenHeight * 0.350,
@@ -90,23 +112,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(
                     height: 5,
                   ),
-                  const Text(
-                    "Categories",
-                    style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                  Center(
+                    child: const Text(
+                      "Categories",
+                      style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Futurebuilderforcatagory(),
+
+
                   if (_isRefreshing) const SizedBox(height: 20),
+
                 ],
-              ),
-            ),
-          ),
+
+
+
         ),
+          ),
 
 
       ),
-      drawer: Drawer(
+     /* drawer: Drawer(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -115,7 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-      ),
+      ),*/
+      )
     );
   }
 }

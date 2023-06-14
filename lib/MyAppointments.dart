@@ -1,9 +1,13 @@
 import 'package:doctorappointment/Apicalls/Myappointments.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'HomePage.dart';
 
 class Myappointment extends StatefulWidget {
   const Myappointment({super.key});
@@ -36,10 +40,17 @@ class _MyappointmentState extends State<Myappointment> {
   @override
 
   Widget build(BuildContext context) {
-    print(User["patient_key"].toString()+"Dipsaha");
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+
+            Get.to(() => const MyHomePage(), transition: Transition.rightToLeftWithFade);            // Handle navigation here
+          },
+        ),
         title: Text("My Appointments"),
       ),
       body: User == null
@@ -48,7 +59,6 @@ class _MyappointmentState extends State<Myappointment> {
 
               future: obj.Myappointment(User["patient_key"].toString()),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                print(snapshot.toString());
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

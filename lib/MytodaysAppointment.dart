@@ -171,6 +171,15 @@ class _todaysappointmentState extends State<todaysappointment> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    if (snapshot.data[index].appointmentStatus.toString()=="1")
+                                      ( Text("Appointment Status : Completed ",
+                                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.greenAccent),)),
+                                    if (snapshot.data[index].appointmentStatus.toString()=="2")
+                                      ( Text("Appointment Status : Canceled ",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.redAccent),)),
+                                    if (snapshot.data[index].appointmentStatus=="null" )
+                                      ( Text("Appointment Status : Pending ",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueAccent),)),
+
+
                                   ],
                                 ),
                               ),
