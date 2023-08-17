@@ -26,7 +26,8 @@ class Noti{
 
       Get.dialog(
         AlertDialog(
-          title: Text('Doctor Appointment ',style: TextStyle(
+          title: Text('Doctor Appointment ',
+            style: TextStyle(
               color: Colors.blueAccent
           ),),
           content: Text(
@@ -54,12 +55,9 @@ class Noti{
     var payload, required FlutterLocalNotificationsPlugin fln
   } ) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-    new AndroidNotificationDetails(
+    const AndroidNotificationDetails(
       'you_can_name_it_whatever1',
       'channel_name',
-
-      /*   playSound: true,
-      sound: RawResourceAndroidNotificationSound('notification'),*/
       importance: Importance.max,
       priority: Priority.high,
 

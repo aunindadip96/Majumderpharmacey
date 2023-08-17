@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(
                       image: const DecorationImage(
                         image: AssetImage("lib/assets/Images/pic2.jpg"),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.blue,
@@ -134,16 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
       ),
-     /* drawer: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const myprofildrwaer(),
-              myDrwaerlist(),
-            ],
-          ),
-        ),
-      ),*/
+
       )
     );
   }

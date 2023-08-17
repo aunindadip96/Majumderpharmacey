@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:http/http.dart' as http;
-
 import '../Controllers/availavldayscontroller.dart';
 import '../HomePage.dart';
 
@@ -39,11 +38,11 @@ class _CreatPatientState extends State<CreatPatient> {
 
   final String oneSignalAppId = "330cb2d5-55cf-4d23-baa5-08a3a3fae337";
 
-  Future<void> initPlatformState(String extid) async {
+  Future<void> initPlatformState(String extid) async
+  {
     OneSignal.shared.setExternalUserId(extid);
     OneSignal.shared.setAppId(oneSignalAppId);
-    OneSignal.shared.promptUserForPushNotificationPermission()
-        .then((accepted) {});
+    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {});
   }
 
 
@@ -54,14 +53,14 @@ class _CreatPatientState extends State<CreatPatient> {
         appBar: AppBar(),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text(
                       "Please fill up this form to SignUp",
                       style: TextStyle(
@@ -70,7 +69,7 @@ class _CreatPatientState extends State<CreatPatient> {
                           fontSize: 30),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
                   TextField(
@@ -79,16 +78,16 @@ class _CreatPatientState extends State<CreatPatient> {
                     decoration: InputDecoration(
                         hintText: "Please Enter your Name",
                         labelText: "Name",
-                        icon: Icon(Icons.person),
+                        icon: const Icon(Icons.person),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2),
+                              const BorderSide(color: Colors.blueAccent, width: 2),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15))),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextField(
@@ -96,16 +95,16 @@ class _CreatPatientState extends State<CreatPatient> {
                     decoration: InputDecoration(
                         hintText: "Please enter your Email(optional)",
                         labelText: "Email(optional)",
-                        icon: Icon(Icons.email),
+                        icon: const Icon(Icons.email),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2),
+                              const BorderSide(color: Colors.blueAccent, width: 2),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15))),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextField(
@@ -113,11 +112,11 @@ class _CreatPatientState extends State<CreatPatient> {
                     decoration: InputDecoration(
                         hintText: "Please enter your Address",
                         labelText: "Address",
-                        icon: Icon(Icons.home),
+                        icon: const Icon(Icons.home),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2),
+                              const BorderSide(color: Colors.blueAccent, width: 2),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15))),
@@ -144,16 +143,16 @@ class _CreatPatientState extends State<CreatPatient> {
                         ),
 
 
-                        icon: Icon(Icons.password_rounded),
+                        icon: const Icon(Icons.password_rounded),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2),
+                              const BorderSide(color: Colors.blueAccent, width: 2),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15))),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextField(
@@ -175,16 +174,16 @@ class _CreatPatientState extends State<CreatPatient> {
                           ),
                         ),
 
-                        icon: Icon(Icons.password),
+                        icon: const Icon(Icons.password),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2),
+                              const BorderSide(color: Colors.blueAccent, width: 2),
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15))),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   ElevatedButton(
@@ -216,18 +215,11 @@ class _CreatPatientState extends State<CreatPatient> {
                             textColor: Colors.white,
                             fontSize: 16.0,
                           );
-                        }
-
-
-
-
-                        else
+                        } else
                         {
                          await  sendtosignup();
-
                         }
-
-                      },
+                        },
                       child: Obx(() {
                         return Signpubool.SignUpbool.value ?
                         Row(
@@ -269,40 +261,31 @@ class _CreatPatientState extends State<CreatPatient> {
 
     if (password.text.toString()!=repetpasswordcontroller.text.toString())
     {
-      Fluttertoast.showToast(
-          msg:
-          "Your Passwords did not Matched ",
+      Fluttertoast.showToast
+        (
+          msg: "Your Passwords did not Matched ",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.black,
           textColor: Colors.white,
-          fontSize: 16.0);
-
-
+          fontSize: 16.0
+      );
 
     }
      else{
       Signpubool.SignUpbool.value=true;
-
-
-
-
-
       int otp = Random().nextInt(999999999);
       int noOfOtpDigit = 9;
-      while (otp.toString().length != noOfOtpDigit) {
+      while (otp.toString().length != noOfOtpDigit)
+      {
         otp = Random().nextInt(999999999);
       }
       String otpString = otp.toString();
 
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-
-
-
-
-       Signup signup=Signup(
+      Signup signup=Signup(
          patient_id: otpString,
          patient: namecontroller.text.toString(),
          address: Addresscontroller.text.toString(),
@@ -395,11 +378,9 @@ class _CreatPatientState extends State<CreatPatient> {
         }
         Signpubool.SignUpbool.value=false;
 
-      } finally {
+      } finally
+      {
         Signpubool.SignUpbool.value=false;
-
-
-
       }
     }
 

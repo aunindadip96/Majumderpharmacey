@@ -13,13 +13,6 @@ void main() async {
   Get.put(sucesscontroller());
   EasyLoading.init(); // Add this line
 
-
-
-
-
-
-
-
   runApp(const MyApp());
 
   configLoading();

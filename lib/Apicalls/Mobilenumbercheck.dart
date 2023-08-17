@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
@@ -7,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../Controllers/availavldayscontroller.dart';
 import '../SignUp/OtpInput.dart';
 
@@ -82,7 +80,8 @@ Future<void> sendOtp(String mobile) async {
     }
   } catch (e) {
     // Exception handling
-    Fluttertoast.showToast(
+    Fluttertoast.showToast
+      (
       msg: 'An error occurred. Please try again later.',
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
