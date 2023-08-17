@@ -15,7 +15,7 @@ Future<void> sendOtp(String mobile) async {
 
 
   try {
-    var url = Uri.parse("https://dms.symbexit.com/api/checkPhone/$mobile");
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/checkPhone/$mobile");
     var data = await http.get(url);
     var jsonData = json.decode(data.body);
 

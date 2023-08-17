@@ -272,7 +272,7 @@ class _loginState extends State<login> {
     Map data = {'username': mobile, 'password': password};
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var url = Uri.parse("https://dms.symbexit.com/api/patientlogin");
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/patientlogin");
 
     bool hasNavigatedToHomePage = false; // Flag to track navigation
 

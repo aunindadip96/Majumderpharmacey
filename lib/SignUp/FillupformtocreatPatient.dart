@@ -296,7 +296,7 @@ class _CreatPatientState extends State<CreatPatient> {
          external_id: otpString,
 
        );
-      var url = Uri.parse("https://dms.symbexit.com/api/createpatientlist");
+      var url = Uri.parse("https://pharmacy.symbexbd.com/api/createpatientlist");
 
 
       try {

@@ -10,7 +10,7 @@ import 'dart:convert';
 class futurefordoclist{
 
  Future<List<ModelClassForDoctorList>> docinfo(String a) async {
-   var url = Uri.parse("https://dms.symbexit.com/api/viewDoctor");
+   var url = Uri.parse("https://pharmacy.symbexbd.com/api/viewDoctor");
    try {
      var data = await http.get(url).timeout(Duration(seconds: 10));
      var jsonData = json.decode(data.body);

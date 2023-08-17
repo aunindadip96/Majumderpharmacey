@@ -27,7 +27,7 @@ class postappointment
         appointment_date: Sucesscontroller.appointday.toString(),
         d_number: daynumber,
         token: " ");
-    var url = Uri.parse("https://dms.symbexit.com/api/make_appointment");
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/make_appointment");
     EasyLoading.show(status: "sending..");
 
     var response = await http.post(
@@ -98,7 +98,7 @@ class postappointment {
         d_number: daynumber,
         token: " ");
 
-    final url = Uri.parse("https://dms.symbexit.com/api/make_appointment");
+    final url = Uri.parse("https://pharmacy.symbexbd.com/api/make_appointment");
     EasyLoading.show(status: "sending..");
 
     try {
