@@ -70,22 +70,26 @@ class Futurebuilderforcatagory extends StatelessWidget {
                   },
                   child: Card(
                     elevation: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Stack(
+                      fit: StackFit.expand,
                       children: [
-                        Expanded(
-                          child: Image.asset(
-                            "lib/assets/Images/catagory.jpg",
-                            fit: BoxFit.cover,
-                          ),
+                        Image.asset(
+                          "lib/assets/Images/catagory.jpg",
+                          fit: BoxFit.cover,
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            snapshot.data[index].specialist,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            color: Colors.black54, // Add background color for better readability
+                            child: Text(
+                              snapshot.data[index].specialist,
+                              style: const TextStyle(
+                                color: Colors.white, // Text color
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -94,6 +98,7 @@ class Futurebuilderforcatagory extends StatelessWidget {
                   ),
                 ),
               );
+
             },
           );
         }
