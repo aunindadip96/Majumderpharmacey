@@ -1,4 +1,4 @@
-package com.example.doctorappointment;
+package com.majumder.pharmacy;
 
 import io.flutter.embedding.android.FlutterActivity;
 

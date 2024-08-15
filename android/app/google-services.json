@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "68986001780",
-    "project_id": "doctor-s-appointment-8589f",
-    "storage_bucket": "doctor-s-appointment-8589f.appspot.com"
+    "project_number": "268434144883",
+    "project_id": "majumder-pharmacy-bfda2",
+    "storage_bucket": "majumder-pharmacy-bfda2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:68986001780:android:a11a8ae2af0076589af421",
+        "mobilesdk_app_id": "1:268434144883:android:1dff68171c61b7d7583406",
         "android_client_info": {
-          "package_name": "com.example.doctorappointment"
+          "package_name": "com.majumder.pharmacy"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "68986001780-vbnjl9o3tmmlit6avqj2l39ikikdfias.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBHaNqymc-GRAmvALgUgEc8MRIDmKPj0nQ"
+          "current_key": "AIzaSyCLBDO8OImCj4wZRRwyoiF9VYqtaKTFpTY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "68986001780-vbnjl9o3tmmlit6avqj2l39ikikdfias.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

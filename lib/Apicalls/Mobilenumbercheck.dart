@@ -38,7 +38,7 @@ Future<void> sendOtp(String mobile) async {
     if (jsonData.toString() == "201") {
       await FirebaseAuth.instance.verifyPhoneNumber(
 
-        phoneNumber: "+91 $mobile",
+        phoneNumber: "+880$mobile",
 
 
     /*  phoneNumber: "+8801675758519",*/
@@ -47,8 +47,8 @@ Future<void> sendOtp(String mobile) async {
 
 
           Fluttertoast.showToast(
-            msg: "Your number is not correct",
-            toastLength: Toast.LENGTH_SHORT,
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.black,
@@ -56,6 +56,9 @@ Future<void> sendOtp(String mobile) async {
             fontSize: 16.0,
 
           );
+
+          print( e.toString());
+
 
 
           vailditaionoftext.mobilenumcheck.value=false;
