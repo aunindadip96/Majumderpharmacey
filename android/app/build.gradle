@@ -55,6 +55,12 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file("C:/Users/Symbex-Dip/.android/debug.keystore")
+            storePassword "majumder"
+            keyAlias "androiddebugkey"
+            keyPassword "majumder"
+        }
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
