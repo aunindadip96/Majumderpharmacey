@@ -1,26 +1,51 @@
 {
   "project_info": {
-    "project_number": "268434144883",
-    "project_id": "majumder-pharmacy-bfda2",
-    "storage_bucket": "majumder-pharmacy-bfda2.appspot.com"
+    "project_number": "964249519406",
+    "project_id": "doc-appointment-bb23b",
+    "storage_bucket": "doc-appointment-bb23b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:268434144883:android:1dff68171c61b7d7583406",
+        "mobilesdk_app_id": "1:964249519406:android:fcc67c205ce96d9c4ce6bf",
         "android_client_info": {
           "package_name": "com.majumder.pharmacy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "964249519406-3o9dfbi1of77jhvpaokj3n2r2k2fkh07.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.majumder.pharmacy",
+            "certificate_hash": "dac416d3e80ca62b3681d082278982203da8a8ae"
+          }
+        },
+        {
+          "client_id": "964249519406-5qn4e03diquhcnofs146ftafrfbv4fhs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCLBDO8OImCj4wZRRwyoiF9VYqtaKTFpTY"
+          "current_key": "AIzaSyA5B_4RFDgg9i2j0eWBfenmkN27HqquUoY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964249519406-5qn4e03diquhcnofs146ftafrfbv4fhs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "964249519406-4fr9d8svcnkqhhk8tho53okdpj7h4tkv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.majumder.pharmacy"
+              }
+            }
+          ]
         }
       }
     }

@@ -41,49 +41,53 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBHcV5fBFUXyF-Fp2tM3R3S1EgFGfYbG8c',
-    appId: '1:268434144883:web:3763f6c4fd286d60583406',
-    messagingSenderId: '268434144883',
-    projectId: 'majumder-pharmacy-bfda2',
-    authDomain: 'majumder-pharmacy-bfda2.firebaseapp.com',
-    storageBucket: 'majumder-pharmacy-bfda2.appspot.com',
-    measurementId: 'G-3N6HP1EVFF',
+    apiKey: 'AIzaSyDfK66MuF_aYXW6Sec5oAl154eD2HvGVhs',
+    appId: '1:964249519406:web:f8a59d805cd17c144ce6bf',
+    messagingSenderId: '964249519406',
+    projectId: 'doc-appointment-bb23b',
+    authDomain: 'doc-appointment-bb23b.firebaseapp.com',
+    storageBucket: 'doc-appointment-bb23b.appspot.com',
+    measurementId: 'G-RZQPKWRL9D',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCLBDO8OImCj4wZRRwyoiF9VYqtaKTFpTY',
-    appId: '1:268434144883:android:1dff68171c61b7d7583406',
-    messagingSenderId: '268434144883',
-    projectId: 'majumder-pharmacy-bfda2',
-    storageBucket: 'majumder-pharmacy-bfda2.appspot.com',
+    apiKey: 'AIzaSyA5B_4RFDgg9i2j0eWBfenmkN27HqquUoY',
+    appId: '1:964249519406:android:fcc67c205ce96d9c4ce6bf',
+    messagingSenderId: '964249519406',
+    projectId: 'doc-appointment-bb23b',
+    storageBucket: 'doc-appointment-bb23b.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBYQFCHYuUiDDfdaBCw5Sb5b8yqYvVJrcY',
-    appId: '1:268434144883:ios:03c85349399134ed583406',
-    messagingSenderId: '268434144883',
-    projectId: 'majumder-pharmacy-bfda2',
-    storageBucket: 'majumder-pharmacy-bfda2.appspot.com',
+    apiKey: 'AIzaSyDexS7dZQPbCV7xTTAKBDEwJHoQvv_q7GY',
+    appId: '1:964249519406:ios:1c75d94e4eb467aa4ce6bf',
+    messagingSenderId: '964249519406',
+    projectId: 'doc-appointment-bb23b',
+    storageBucket: 'doc-appointment-bb23b.appspot.com',
+    androidClientId: '964249519406-3o9dfbi1of77jhvpaokj3n2r2k2fkh07.apps.googleusercontent.com',
+    iosClientId: '964249519406-4fr9d8svcnkqhhk8tho53okdpj7h4tkv.apps.googleusercontent.com',
     iosBundleId: 'com.majumder.pharmacy',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBYQFCHYuUiDDfdaBCw5Sb5b8yqYvVJrcY',
-    appId: '1:268434144883:ios:03c85349399134ed583406',
-    messagingSenderId: '268434144883',
-    projectId: 'majumder-pharmacy-bfda2',
-    storageBucket: 'majumder-pharmacy-bfda2.appspot.com',
+    apiKey: 'AIzaSyDexS7dZQPbCV7xTTAKBDEwJHoQvv_q7GY',
+    appId: '1:964249519406:ios:1c75d94e4eb467aa4ce6bf',
+    messagingSenderId: '964249519406',
+    projectId: 'doc-appointment-bb23b',
+    storageBucket: 'doc-appointment-bb23b.appspot.com',
+    androidClientId: '964249519406-3o9dfbi1of77jhvpaokj3n2r2k2fkh07.apps.googleusercontent.com',
+    iosClientId: '964249519406-4fr9d8svcnkqhhk8tho53okdpj7h4tkv.apps.googleusercontent.com',
     iosBundleId: 'com.majumder.pharmacy',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBHcV5fBFUXyF-Fp2tM3R3S1EgFGfYbG8c',
-    appId: '1:268434144883:web:a7d23de621c4f3a1583406',
-    messagingSenderId: '268434144883',
-    projectId: 'majumder-pharmacy-bfda2',
-    authDomain: 'majumder-pharmacy-bfda2.firebaseapp.com',
-    storageBucket: 'majumder-pharmacy-bfda2.appspot.com',
-    measurementId: 'G-P3CCCSBH6Y',
+    apiKey: 'AIzaSyDfK66MuF_aYXW6Sec5oAl154eD2HvGVhs',
+    appId: '1:964249519406:web:a48204f1495fae724ce6bf',
+    messagingSenderId: '964249519406',
+    projectId: 'doc-appointment-bb23b',
+    authDomain: 'doc-appointment-bb23b.firebaseapp.com',
+    storageBucket: 'doc-appointment-bb23b.appspot.com',
+    measurementId: 'G-PDFGXBQJHW',
   );
 
 }

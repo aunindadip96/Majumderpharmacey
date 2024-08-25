@@ -565,14 +565,14 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                                   return Sucesscontroller
                                                           .loadingList[index]
                                                           .value
-                                                      ? Row(
+                                                      ? const Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .center,
                                                           children: [
                                                             Padding(
                                                               padding:
-                                                                  const EdgeInsets
+                                                                  EdgeInsets
                                                                       .all(8.0),
                                                               child: CircularProgressIndicator(
                                                                   color: Colors

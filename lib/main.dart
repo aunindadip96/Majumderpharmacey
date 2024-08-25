@@ -17,7 +17,7 @@ void main() async {
   EasyLoading.init(); // Add this line
 
 
-  OneSignal.shared.setAppId("330cb2d5-55cf-4d23-baa5-08a3a3fae33708a3a3fae337");
+  OneSignal.shared.setAppId("6c073550-8001-433c-9fb3-b58d77189d6e");
 
   OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
     final notification = result.notification;

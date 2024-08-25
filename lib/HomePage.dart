@@ -81,11 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.blue,
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const <Widget>[
+                        children: <Widget>[
                           SizedBox(
                             height: 20,
                           ),
@@ -112,8 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Center(
-                    child: const Text(
+                  const Center(
+                    child: Text(
                       "Categories",
                       style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 22),

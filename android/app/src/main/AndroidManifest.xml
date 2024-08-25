@@ -9,6 +9,8 @@
         android:label="Majumder Pharmacy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"> <!-- Ensure this line is present -->
+
 
        >
         <activity

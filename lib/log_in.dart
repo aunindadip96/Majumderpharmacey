@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'Controllers/availavldayscontroller.dart';
 import 'HomePage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'Modelclasses/SignUpModelclass.dart';
 import 'SignUp/Phone_Number_Entry.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -23,12 +27,17 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   var mobilecontroller = TextEditingController();
   var passwordController = TextEditingController();
-  final String oneSignalAppId = "330cb2d5-55cf-4d23-baa5-08a3a3fae337";
+  final String oneSignalAppId = "6c073550-8001-433c-9fb3-b58d77189d6e";
   bool _isHidden = true;
   var Userdata;
   final sucesscontroller Sucesscontroller = Get.find<sucesscontroller>();
 
-  late BuildContext dialogContext; // Add this line
+  late BuildContext dialogContext; //
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  // Add this line
 
   Future<void> initPlatformState(String extid) async {
 
@@ -240,6 +249,20 @@ class _loginState extends State<login> {
                         height: 25,
                       ),
 
+
+                      ElevatedButton(onPressed: ()async{
+
+
+                        print("ssssdddddd");
+
+
+
+                      signInWithGoogle();
+
+
+                      }, child: Text("Sign in with google ")),
+
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -267,6 +290,124 @@ class _loginState extends State<login> {
               ),
             )));
   }
+
+
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // User canceled the sign-in
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+        // Handle the case where authentication tokens are null
+        throw Exception('Google authentication tokens are null');
+      }
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+      if (userCredential.user == null) {
+        throw Exception('Failed to sign in with Google');
+      }
+
+      // User information
+      String name = userCredential.user!.displayName ?? '';
+      String email = userCredential.user!.email ?? '';
+      String googleId = userCredential.user!.uid;
+      String? phone = userCredential.user!.phoneNumber ?? '' ;
+
+
+      // Now send this information to your backend
+
+      await sendGoogleUserToBackend(name, email, googleId,phone);
+
+
+
+    } catch (e) {
+      print('Error signing in with Google: $e');
+      Fluttertoast.showToast(
+        msg: 'Error signing in with Google: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  Future<void> sendGoogleUserToBackend(String name, String email, String googleId,String mobile) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Signup signup = Signup(
+      patient_id: googleId,
+      patient: name,
+      address: '111111', // You can prompt the user for this later or set a default value
+      phone: "2222", // You can prompt the user for this later or set a default value
+      email: email,
+      username: name,
+      password: '111111', // Since it's a Google sign-in, you might not need this
+      external_id: googleId,
+    );
+
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/createpatientlist");
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {"Content-type": "application/json"},
+        body: jsonEncode(signup.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        var body = json.decode(response.body);
+        sharedPreferences.setString('user', jsonEncode(body['patientLogin']));
+        Userdata = jsonDecode(sharedPreferences.getString('user')!);
+
+        initPlatformState(googleId);
+
+
+        Get.to(() => const MyHomePage(), transition: Transition.leftToRight);
+
+        Fluttertoast.showToast(
+          msg: "Signed in and data sent successfully!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        print(response.body);
+
+        Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: error.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
 
   Future<void> signIn(String mobile, String password) async {
     Map data = {'username': mobile, 'password': password};
@@ -338,6 +479,9 @@ class _loginState extends State<login> {
     } on SocketException catch (e) {
 
 
+      print(e.toString());
+
+
 
 
 
@@ -376,4 +520,10 @@ class _loginState extends State<login> {
       _isHidden = !_isHidden;
     });
   }
+
+
+
+
+
+
 }

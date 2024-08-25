@@ -5,7 +5,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'Apicalls/fetchcatagories.dart';
 import 'catagorywisedoctorlist.dart';
 
-
 class Futurebuilderforcatagory extends StatelessWidget {
   Futurebuilderforcatagory({Key? key}) : super(key: key);
 
@@ -29,10 +28,7 @@ class Futurebuilderforcatagory extends StatelessWidget {
                   fit: BoxFit.fill,
                 ),
                 const Expanded(
-
-
-                  child:
-                  Text(
+                  child: Text(
                     "Something Went Wrong",
                     style: TextStyle(
                       fontSize: 20,
@@ -63,29 +59,35 @@ class Futurebuilderforcatagory extends StatelessWidget {
                     Get.to(
                       catagoryisedoctorlist(
                         catagorwiseID: snapshot.data[index].id.toString(),
-                        catagoryName: snapshot.data[index].specialist.toString(),
+                        catagoryName:
+                        snapshot.data[index].specialist.toString(),
                       ),
                       transition: Transition.rightToLeftWithFade,
                     );
                   },
                   child: Card(
                     elevation: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Stack(
                       children: [
-                        Expanded(
+                        Positioned.fill(
                           child: Image.asset(
                             "lib/assets/Images/catagory.jpg",
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            snapshot.data[index].specialist,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            color: Colors.black.withOpacity(0.5),
+                            child: Text(
+                              snapshot.data[index].specialist,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),

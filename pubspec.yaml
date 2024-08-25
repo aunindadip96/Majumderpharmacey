@@ -70,6 +70,7 @@ dev_dependencies:
   draggable_scrollbar: ^0.1.0
   cloud_firestore: ^4.5.1
   email_auth: ^2.0.0
+  google_sign_in: ^6.2.1
 
 
 
