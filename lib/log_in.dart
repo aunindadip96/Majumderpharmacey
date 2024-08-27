@@ -126,7 +126,7 @@ class _loginState extends State<login> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: TextField(
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.emailAddress,
                               controller: mobilecontroller,
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.email),
@@ -179,8 +179,7 @@ class _loginState extends State<login> {
 
                       InkWell(
                         onTap: () async {
-                          if (mobilecontroller.text.isEmpty ||
-                              passwordController.text.isEmpty) {
+                          if (mobilecontroller.text.isEmpty ) {
                             Fluttertoast.showToast(
                               msg: 'Please enter both mobile and password',
                               toastLength: Toast.LENGTH_SHORT,
@@ -222,7 +221,6 @@ class _loginState extends State<login> {
 
                              signIn(
                               mobilecontroller.text.toString(),
-                              passwordController.text.toString(),
                             );
                           }
                         },
@@ -349,7 +347,7 @@ class _loginState extends State<login> {
       patient_id: googleId,
       patient: name,
       address: '111111', // You can prompt the user for this later or set a default value
-      phone: "2222", // You can prompt the user for this later or set a default value
+      phone: "ssssss", // You can prompt the user for this later or set a default value
       email: email,
       username: name,
       password: '111111', // Since it's a Google sign-in, you might not need this
@@ -388,13 +386,29 @@ class _loginState extends State<login> {
         print(response.body);
 
         Fluttertoast.showToast(
-          msg: e.toString(),
+          msg:"This account is already in use",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.CENTER,
           backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0,
         );
+
+
+        final GoogleSignIn _googleSignIn = GoogleSignIn();
+        await _googleSignIn.signOut();
+        print('User signed out from Google');
+
+        // Remove external user ID from OneSignal
+        OneSignal.shared.removeExternalUserId();
+
+        // Clear user data from SharedPreferences
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.remove("user");
+
+        // Navigate to the login screen
+        Get.offAll(const login());
+
       }
     } catch (error) {
       Fluttertoast.showToast(
@@ -409,16 +423,20 @@ class _loginState extends State<login> {
   }
 
 
-  Future<void> signIn(String mobile, String password) async {
-    Map data = {'username': mobile, 'password': password};
+  Future<void> signIn(String mobile) async {
+    Map data = {'email': mobile};
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var url = Uri.parse("https://pharmacy.symbexbd.com/api/patientlogin");
 
+
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/patientlogin");
+print(url.toString());
     bool hasNavigatedToHomePage = false; // Flag to track navigation
 
     try {
       var response = await http.post(url, body: data).timeout(Duration(seconds: 30));
+      print(response.body.toString());
+
 
       if (response.statusCode == 201) {
 
@@ -451,7 +469,7 @@ class _loginState extends State<login> {
       } else if (response.statusCode != 201) {
 
         Fluttertoast.showToast(
-          msg: response.body,
+          msg: "Please Sign in Using google ID ",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
