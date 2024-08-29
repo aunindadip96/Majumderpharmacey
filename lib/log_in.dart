@@ -359,7 +359,7 @@ class _loginState extends State<login> {
     try {
       var response = await http.post(
         url,
-        headers: {"Content-type": "application/json"},
+        headers: {"Content-type": "ap chplication/json"},
         body: jsonEncode(signup.toJson()),
       );
 
