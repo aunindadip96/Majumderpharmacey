@@ -242,7 +242,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                               );*/
                             },
                             child: const Text(
-                              "Back to Hompage ",
+                              "Back to Homepage ",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,

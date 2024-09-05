@@ -350,7 +350,7 @@ class _loginState extends State<login> {
       phone: "ssssss", // You can prompt the user for this later or set a default value
       email: email,
       username: name,
-      password: '111111', // Since it's a Google sign-in, you might not need this
+      password: googleId, // Since it's a Google sign-in, you might not need this
       external_id: googleId,
     );
 
@@ -359,11 +359,11 @@ class _loginState extends State<login> {
     try {
       var response = await http.post(
         url,
-        headers: {"Content-type": "ap chplication/json"},
+        headers: {"Content-type": "application/json"},
         body: jsonEncode(signup.toJson()),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201|| response.statusCode ==200) {
         var body = json.decode(response.body);
         sharedPreferences.setString('user', jsonEncode(body['patientLogin']));
         Userdata = jsonDecode(sharedPreferences.getString('user')!);
@@ -383,17 +383,6 @@ class _loginState extends State<login> {
           fontSize: 16.0,
         );
       } else {
-        print(response.body);
-
-        Fluttertoast.showToast(
-          msg:"This account is already in use",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Colors.black,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-
 
         final GoogleSignIn _googleSignIn = GoogleSignIn();
         await _googleSignIn.signOut();
@@ -408,6 +397,19 @@ class _loginState extends State<login> {
 
         // Navigate to the login screen
         Get.offAll(const login());
+
+        print(response.body);
+
+        Fluttertoast.showToast(
+          msg:"This account is already in use",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+
+
 
       }
     } catch (error) {
@@ -424,7 +426,7 @@ class _loginState extends State<login> {
 
 
   Future<void> signIn(String mobile) async {
-    Map data = {'email': mobile};
+    Map data = {'email': "symbexit@gmail.com"};
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

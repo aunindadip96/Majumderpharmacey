@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../MyAppointments.dart';
+import '../Appointments/MyAppointments.dart';
 import '../MyProfile.dart';
-import '../MytodaysAppointment.dart';
+import '../Appointments/MytodaysAppointment.dart';
+import '../Notice/Notice_Screen.dart';
 import '../log_in.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -74,6 +75,36 @@ myDrwaerlist() {
                 width: 40.0), // add some spacing between the icon and the text
             Text(
               "My Profile",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+
+
+
+
+
+
+
+      TextButton.icon(
+        onPressed: ()  {
+          Get.to(NoticeListScreen());
+
+        },
+        icon: const Icon(Icons.logout,
+          color: Colors.black,),
+        label: Row(
+          children: const [
+            SizedBox(
+                width: 40.0), // add some spacing between the icon and the text
+            Text(
+              "Notice",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
