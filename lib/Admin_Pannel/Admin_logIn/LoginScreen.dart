@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -9,28 +10,28 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'Admin_Pannel/Admin_logIn/LoginScreen.dart';
-import 'Controllers/availavldayscontroller.dart';
-import 'HomePage.dart';
+
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'Modelclasses/SignUpModelclass.dart';
-import 'SignUp/Phone_Number_Entry.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class login extends StatefulWidget {
-  const login({Key? key}) : super(key: key);
+import '../../Controllers/availavldayscontroller.dart';
+import '../../HomePage.dart';
+import '../AdminHompage/AdminHompage.dart';
+
+class AdminLogIn extends StatefulWidget {
+  const AdminLogIn({Key? key}) : super(key: key);
 
   @override
-  _loginState createState() => _loginState();
+  _AdminLogIn createState() => _AdminLogIn();
 }
 
-class _loginState extends State<login> {
+class _AdminLogIn extends State<AdminLogIn> {
   var mobilecontroller = TextEditingController();
   var passwordController = TextEditingController();
   final String oneSignalAppId = "6c073550-8001-433c-9fb3-b58d77189d6e";
   bool _isHidden = true;
-  var Userdata;
   final sucesscontroller Sucesscontroller = Get.find<sucesscontroller>();
 
   late BuildContext dialogContext; //
@@ -40,31 +41,24 @@ class _loginState extends State<login> {
 
   // Add this line
 
-  Future<void> initPlatformState(String extid) async {
-    OneSignal.shared.setExternalUserId(
-        extid);
-    OneSignal.shared.setAppId(oneSignalAppId);
-    OneSignal.shared
-        .promptUserForPushNotificationPermission()
-        .then((accepted) {});
-  }
+
 
   Future<bool?> showWarnig(BuildContext context) async => showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Do You Want To Exit "),
-          actions: [
-            ElevatedButton(
-              child: const Text("No"),
-              onPressed: () => Navigator.pop(context, false),
-            ),
-            ElevatedButton(
-              child: const Text("Yes"),
-              onPressed: () => SystemNavigator.pop(),
-            ),
-          ],
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Do You Want To Exit "),
+      actions: [
+        ElevatedButton(
+          child: const Text("No"),
+          onPressed: () => Navigator.pop(context, false),
         ),
-      );
+        ElevatedButton(
+          child: const Text("Yes"),
+          onPressed: () => SystemNavigator.pop(),
+        ),
+      ],
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +125,7 @@ class _loginState extends State<login> {
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.email),
                                 border: InputBorder.none,
-                                hintText: "Phone Number",
+                                hintText: "Email Address",
                               ),
                             ),
                           ),
@@ -179,7 +173,7 @@ class _loginState extends State<login> {
 
                       InkWell(
                         onTap: () async {
-                          if (mobilecontroller.text.isEmpty) {
+                          if (mobilecontroller.text.isEmpty ) {
                             Fluttertoast.showToast(
                               msg: 'Please enter both mobile and password',
                               toastLength: Toast.LENGTH_SHORT,
@@ -187,6 +181,7 @@ class _loginState extends State<login> {
                             );
                           } else {
                             Sucesscontroller.loginbool.value = true;
+
 
                             if (Sucesscontroller.loginbool.value) {
                               showDialog(
@@ -214,12 +209,11 @@ class _loginState extends State<login> {
                               );
                             }
 
+
                             await Future.delayed(Duration(seconds: 2));
 
-                            signIn(
-                              mobilecontroller.text.toString(),
-                            );
-                            print(mobilecontroller.text.toString());
+
+                            AdminsignIn();
                           }
                         },
                         child: Padding(
@@ -246,49 +240,15 @@ class _loginState extends State<login> {
                       ),
 
 
-                      ElevatedButton(
-                        onPressed: (){
-
-                          Get.to(() => const AdminLogIn(), transition: Transition.leftToRight);
 
 
-
-                        },
-                        child: const Text("Use As A Employee"),
-                      ),
-
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      ElevatedButton(
-                        onPressed: continueWithGoogle,
-                        child: const Text("Continue with Google"),
-                      ),
-
-                      ElevatedButton(
-                          onPressed: () async {
-
-                            signInWithGoogle();
-                          },
-                          child: const Text("Sign in with google ")),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Not a Member ?'),
-                          InkWell(
-                            onTap: () {
-                              /* Get.to(const MyPhone(),
-                                  transition: Transition.leftToRight);*/
-                            },
-                            child: const Text(
-                              " Sign Up Now ",
-                              style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          const Text('For Account Contact With Proper Authority '),
+                       
+
                         ],
                       ),
                     ],
@@ -298,80 +258,22 @@ class _loginState extends State<login> {
             )));
   }
 
-  Future<void> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        // User canceled the sign-in
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        // Handle the case where authentication tokens are null
-        throw Exception('Google authentication tokens are null');
-      }
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential = await _auth.signInWithCredential(credential);
-      if (userCredential.user == null) {
-        throw Exception('Failed to sign in with Google');
-      }
-
-      // User information
-      String name = userCredential.user!.displayName ?? '';
-      String email = userCredential.user!.email ?? '';
-      String googleId = userCredential.user!.uid;
-
-      // Now send this information to your backend
 
 
-      Get.to(
-        () => MyPhone(name: name, email: email, googleId: googleId),
-        transition: Transition.leftToRight,
-      );
-    } catch (e) {
-      print('Error signing in with Google: $e');
-      Fluttertoast.showToast(
-        msg: 'Error signing in with Google: $e',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-  }
-  Future<void> signIn(String mobile) async {
-    Map data = {'email': mobile};
-    print(mobile);
+
+  Future<void> AdminsignIn() async {
+    Map data = {
+      'username': mobilecontroller.text.toString(),
+      'password': passwordController.text.toString()
+    };
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var url = Uri.parse("https://pharmacy.symbexbd.com/api/patientlogin");
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/userlogin");
     print(url.toString());
-
-    bool hasNavigatedToHomePage = false;
-
-    // Show loading dialog
-    BuildContext? dialogContext;
-    showDialog(
-      context: Get.context!,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        dialogContext = context;
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+    bool hasNavigatedToHomePage = false; // Flag to track navigation
 
     try {
-      var response =
-      await http.post(url, body: data).timeout(Duration(seconds: 30));
+      var response = await http.post(url, body: data).timeout(Duration(seconds: 30));
       print(response.body.toString());
 
       if (response.statusCode == 201) {
@@ -379,7 +281,6 @@ class _loginState extends State<login> {
           msg: 'Log in Is Successful',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
           backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0,
@@ -387,31 +288,30 @@ class _loginState extends State<login> {
 
         var body = json.decode(response.body);
 
-        sharedPreferences.setString('user', jsonEncode(body['patient']));
-        var userJson = sharedPreferences.getString('user');
-        var user = jsonDecode(userJson!);
+        // Store the response in SharedPreferences under 'adminuserinfo'
+        await sharedPreferences.setString('adminuserinfo', jsonEncode(body));
 
-        String Eid = (jsonEncode(body['patient']['external_id'].toString()));
-        initPlatformState(Eid);
-        Userdata = user;
+        // Retrieve and print the stored data
+        var adminUserInfo = sharedPreferences.getString('adminuserinfo');
+        if (adminUserInfo != null) {
+          print('Stored adminuserinfo: $adminUserInfo');
 
-        hasNavigatedToHomePage = true;
-
-        // Dismiss the loading dialog before navigating
-        if (dialogContext != null) {
-          Navigator.pop(dialogContext!);
+          // Optionally, decode and print the JSON data
+          var user = jsonDecode(adminUserInfo);
+          print('Decoded adminuserinfo: $user');
+        } else {
+          print('No adminuserinfo found in SharedPreferences.');
         }
 
-        // Navigate to the home page
-        Get.to(() => const MyHomePage(), transition: Transition.leftToRight);
-
+        Get.to(() => const AdminMyHomePage(), transition: Transition.leftToRight);
         Sucesscontroller.loginbool.value = false;
-      } else {
+
+        hasNavigatedToHomePage = true; // Set the flag to true after navigation
+      } else if (response.statusCode != 201) {
         Fluttertoast.showToast(
-          msg: "Please Sign in Using Google ID",
+          msg: "Please Sign in Using google ID",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
           backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0,
@@ -423,18 +323,18 @@ class _loginState extends State<login> {
         msg: 'Request timed out. Please try again later.',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0,
       );
       Sucesscontroller.loginbool.value = false;
     } on SocketException catch (e) {
+      print(e.toString());
+
       Fluttertoast.showToast(
         msg: 'Failed to connect to server. Please check your internet connection and try again.',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -445,77 +345,26 @@ class _loginState extends State<login> {
         msg: 'An error occurred. Please try again later.',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0,
       );
     } finally {
-      // Ensure the loading dialog is closed in case of failure
       if (!hasNavigatedToHomePage && dialogContext != null) {
-        Navigator.pop(dialogContext!);
+        Navigator.pop(dialogContext);
       }
     }
   }
-  Future<void> continueWithGoogle() async {
-    try {
-      // Google sign-in
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        Fluttertoast.showToast(
-          msg: 'Google sign-in was cancelled',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-        return; // User cancelled sign-in
-      }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        throw Exception('Google authentication tokens are null');
-      }
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      if (userCredential.user == null) {
-        throw Exception('Failed to sign in with Google');
-      }
-
-      // Google user details
-      String name = userCredential.user!.displayName ?? '';
-      String email = userCredential.user!.email ?? '';
-      String googleId = userCredential.user!.uid;
-
-      await signIn(email);
-
-      // Send Google user data to your backend
-
-      // Navigate to the desired screen
-    } catch (e) {
-      print('Error during Google sign-in: $e');
-      Fluttertoast.showToast(
-        msg: 'Error signing in with Google: $e',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-  }
   void _togglePasswordView() {
     setState(() {
       _isHidden = !_isHidden;
     });
   }
+
+
+
+
 
 
 }

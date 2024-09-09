@@ -8,6 +8,8 @@ import 'Controllers/availavldayscontroller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
+import 'LandingPage/LandingScreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
