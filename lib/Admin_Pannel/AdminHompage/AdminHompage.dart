@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../log_in.dart';
+import '../Appointments/Screen/AllAppointments.dart';
 
 class AdminMyHomePage extends StatefulWidget {
   const AdminMyHomePage({super.key});
@@ -40,7 +41,7 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
             children: [
               const SizedBox(height: 10),
               Container(
-                height: screenHeight * 0.350,
+                height: screenHeight * 0.300,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: const DecorationImage(
@@ -82,94 +83,33 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/150",
-                    text: "pH",
-                    textValue: "7.5",
-                    text2: "Temp",
-                    text3: "24°C",
-                    color: const Color.fromRGBO(208, 242, 230, 1),
-                    onTap: () {
-                      //...
-                    },
-                  ),
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/151",
-                    text: "TDS",
-                    textValue: "500 ppm",
-                    text2: "Temp",
-                    text3: "24°C",
-                    color: const Color.fromRGBO(242, 223, 228, 1.0),
-                    onTap: () {
-                      //...
-                    },
-                  ),
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/152",
-                    text: "DO",
-                    textValue: "8 mg/L",
-                    text2: "Temp",
-                    text3: "24°C",
-                    color: const Color.fromRGBO(174, 171, 245, 1.0),
-                    onTap: () {
-                      //...
-                    },
-                  ),
+
+
+
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/153",
-                    text: "EC",
-                    textValue: "1.2 mS/cm",
-                    text2: "Temp",
-                    text3: "24°C",
-                    color: const Color.fromRGBO(162, 242, 170, 1),
-                    onTap: () {
-                      //...
-                    },
-                  ),
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/154",
-                    text: "ORP",
-                    textValue: "250 mV",
-                    text2: "Temp",
-                    text3: "24°C",
-                    color: const Color.fromRGBO(240, 200, 127, 1.0),
-                    onTap: () {
-                      //...
-                    },
-                  ),
+
+
                   _buildCustomButton(
                     image: "https://via.placeholder.com/157",
                     text: "NH3",
                     textValue: "0.5 mg/L",
                     text2: "Temp",
                     text3: "24°C",
-                    color: const Color.fromRGBO(212, 119, 181, 1.0),
+                    color: const Color.fromRGBO(212, 119, 100, 1.0),
                     onTap: () {
+
+                      Get.to(() => const allAppointment(), transition: Transition.leftToRight);
+
                       //...
                     },
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/157",
-                    text: "Auninda",
-                    textValue: "Signout",
-                    text2: "Signout",
-                    text3: " ",
-                    color: const Color.fromRGBO(212, 119, 181, 1.0),
-                    onTap: () {
-                      // Sign out code here...
-                    },
-                  ),
-                ],
-              ),
+
               ElevatedButton(
                 onPressed: () async {
                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

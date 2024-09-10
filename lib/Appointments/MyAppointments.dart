@@ -193,7 +193,7 @@ class _MyappointmentState extends State<Myappointment> {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.blueAccent),
                                       ),
-                                       SizedBox(height: 10),
+                                      SizedBox(height: 10),
                                       ClipRRect(
                                         borderRadius:
                                         BorderRadius.circular(10),
@@ -230,7 +230,8 @@ class _MyappointmentState extends State<Myappointment> {
                                             );
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors.white, backgroundColor: Colors.red, // Text color
+                                            primary: Colors.red, // Background color
+                                            onPrimary: Colors.white, // Text color
                                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Button padding
                                             textStyle: const TextStyle(
                                               fontSize: 18,
