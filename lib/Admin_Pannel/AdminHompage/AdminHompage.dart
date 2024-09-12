@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../log_in.dart';
 import '../Appointments/Screen/AllAppointments.dart';
+import '../Create_Appointment/Screen/SearchPatienDalegate.dart';
+import '../Create_Appointment/Screen/Serach_patient.dart';
 
 class AdminMyHomePage extends StatefulWidget {
   const AdminMyHomePage({super.key});
@@ -19,7 +21,10 @@ class AdminMyHomePage extends StatefulWidget {
 class _AdminMyHomePageState extends State<AdminMyHomePage> {
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return WillPopScope(
       onWillPop: () async {
@@ -28,7 +33,10 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme
+              .of(context)
+              .colorScheme
+              .primary,
           title: const Text(
             "Auto logger",
             style: TextStyle(
@@ -83,9 +91,6 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-
-
-
                 ],
               ),
               Row(
@@ -101,10 +106,25 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
                     text3: "24°C",
                     color: const Color.fromRGBO(212, 119, 100, 1.0),
                     onTap: () {
-
-                      Get.to(() => const allAppointment(), transition: Transition.leftToRight);
+                      Get.to(() => const allAppointment(),
+                          transition: Transition.leftToRight);
 
                       //...
+                    },
+                  ),
+
+
+                  _buildCustomButton(
+
+                    text2: "Create Appointment",
+                    color: const Color.fromRGBO(300, 150, 100, 1.0),
+                    onTap: () {
+                      Get.to(() =>  SearchPatientPage(),
+                          transition: Transition.leftToRight);
+
+
+
+
                     },
                   ),
                 ],
@@ -112,7 +132,8 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
 
               ElevatedButton(
                 onPressed: () async {
-                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                  SharedPreferences sharedPreferences = await SharedPreferences
+                      .getInstance();
                   sharedPreferences.remove("adminuserinfo");
 
                   // Navigate to the login screen
@@ -138,7 +159,8 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Return false to prevent exit
+                Navigator.of(context).pop(
+                    false); // Return false to prevent exit
               },
               child: const Text('Cancel'),
             ),
@@ -155,12 +177,12 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
   }
 
   Widget _buildCustomButton({
-    required String image,
-    required String text,
-    required String textValue,
-    required String text2,
-    required String text3,
-    required Color color,
+    String? image, // Optional
+    String? text, // Optional
+    String? textValue, // Optional
+    String? text2, // Optional
+    String? text3, // Optional
+    Color color = Colors.blue, // Default color if not provided
     required void Function() onTap,
   }) {
     return GestureDetector(
@@ -177,61 +199,67 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text(
-                  text,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 22),
-                ),
-                const SizedBox(height: 2),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.blueGrey,
-                        offset: Offset(5.0, 5.0), //(x,y)
-                        blurRadius: 8.0,
-                      ),
-                    ],
+                if (text != null) // Only display if not null
+                  Text(
+                    text,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 10),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      textValue,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 19),
+                const SizedBox(height: 2),
+                if (textValue != null) // Only display if not null
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.blueGrey,
+                          offset: Offset(5.0, 5.0), //(x,y)
+                          blurRadius: 8.0,
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        textValue,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 10),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  text2,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 22),
-                ),
-                const SizedBox(height: 2),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.blueGrey,
-                        offset: Offset(5.0, 5.0), //(x,y)
-                        blurRadius: 8.0,
-                      ),
-                    ],
+                if (text2 != null) // Only display if not null
+                  const SizedBox(height: 2),
+                if (text2 != null)
+                  Text(
+                    text2,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 10),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      text3,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 19),
+                if (text3 != null) // Only display if not null
+                  const SizedBox(height: 2),
+                if (text3 != null)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.blueGrey,
+                          offset: Offset(5.0, 5.0), //(x,y)
+                          blurRadius: 8.0,
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        text3,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 10),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -239,4 +267,5 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
       ),
     );
   }
+
 }
