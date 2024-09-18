@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../log_in.dart';
 import '../Appointments/Screen/AllAppointments.dart';
 import '../Create_Appointment/Screen/SearchPatienDalegate.dart';
-import '../Create_Appointment/Screen/Serach_patient.dart';
 
 class AdminMyHomePage extends StatefulWidget {
   const AdminMyHomePage({super.key});
@@ -119,8 +118,8 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
                     text2: "Create Appointment",
                     color: const Color.fromRGBO(300, 150, 100, 1.0),
                     onTap: () {
-                      Get.to(() =>  SearchPatientPage(),
-                          transition: Transition.leftToRight);
+                      Get.to(() =>  PatientSearchScreen(),
+                          transition: Transition.leftToRight);              // Open the sea
 
 
 
