@@ -38,7 +38,7 @@ class LandingPage extends StatelessWidget {
                 // Button to navigate to the next page
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blueAccent, // Button color
+                    backgroundColor: Colors.blueAccent, // Button color
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   ),
                   onPressed: () {
