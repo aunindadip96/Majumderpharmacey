@@ -18,6 +18,9 @@ class DropdownController extends GetxController {
   var noDoctorsFound = false.obs;
   var selectedDate = Rxn<DateTime>();
 
+  RxList<RxBool> loadingListDate = <RxBool>[].obs;
+
+
 
   // Holds the selected doctor's specialist ID
   var selectedDoctorSpecialistId = Rxn<int>();
@@ -100,4 +103,13 @@ class DropdownController extends GetxController {
       return !selectedDoctorDates.contains(DateFormat('yyyy-MM-dd').format(date));
     }).toList(); // Filter out forbidden dates
   }
+
+  void setLoadingStates(int length) {
+    loadingListDate.clear();
+    for (int i = 0; i < length; i++) {
+      loadingListDate.add(RxBool(false));
+    }
+  }
+
+
 }

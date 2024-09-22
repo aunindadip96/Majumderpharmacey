@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
-import '../../../Apicalls/Catagorywisedoclist.dart';
-import '../../../Controllers/availavldayscontroller.dart';
-import '../../../Modelclasses/modelclassfordoctorlist.dart';
-import '../../../Modelclasses/viewSpecialistModel.dart';
-import '../../Appointments/ModelClass/allappointmentsModel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../Controlaer/dropdown_contollaer.dart';
 import '../Model_Class/patient_info_model.dart';
 
@@ -29,15 +25,14 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
   Timer? _timer;
 
-  final dropdownController = Get.put(DropdownController()); // Initialize the controller
+  final dropdownController = Get.put(DropdownController());
 
   @override
   void initState() {
     super.initState();
-    _fetchAllPatients(); // Fetch patient list on initialization
+    _fetchAllPatients();
   }
 
-  // Function to fetch the complete patient list
   Future<void> _fetchAllPatients() async {
     setState(() {
       _isLoading = true;
@@ -69,7 +64,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     }
   }
 
-  // Function to filter the patient list based on the query
   void _filterPatientList(String query) {
     final cleanedQuery = query.replaceFirst("+91", "").trim();
 
@@ -91,11 +85,14 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     });
   }
 
-  // Function to show the patient form in a BottomSheet
-
-
   void _showPatientForm({PatienInfo? patient}) {
-    // Reset the form fields and state
+    // Initialize controllers with initial values or empty strings.
+    TextEditingController patientNameController = TextEditingController(text: patient?.patient ?? '');
+    TextEditingController phoneController = TextEditingController(text: patient?.phone ?? '');
+    TextEditingController emailController = TextEditingController(text: patient?.email ?? '');
+    TextEditingController addressController = TextEditingController(text: patient?.address ?? '');
+
+    // Reset the form fields and state when showing the form.
     dropdownController.resetDropdowns();
 
     showModalBottomSheet(
@@ -115,20 +112,21 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Use controllers in TextFormFields to capture input.
               TextFormField(
-                initialValue: patient?.patient ?? '',
+                controller: patientNameController,
                 decoration: const InputDecoration(labelText: 'Patient Name'),
               ),
               TextFormField(
-                initialValue: patient?.phone ?? '',
+                controller: phoneController,
                 decoration: const InputDecoration(labelText: 'Phone'),
               ),
               TextFormField(
-                initialValue: patient?.email ?? '',
+                controller: emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
               ),
               TextFormField(
-                initialValue: patient?.address ?? '',
+                controller: addressController,
                 decoration: const InputDecoration(labelText: 'Address'),
               ),
               const SizedBox(height: 16),
@@ -163,14 +161,12 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
               // Doctor Dropdown with GetX
               Obx(() {
-
-
-
                 if (dropdownController.isDoctorLoading.value) {
                   return const CircularProgressIndicator();
                 } else if (dropdownController.noDoctorsFound.value) {
                   return const Text('No doctors found.');
                 } else {
+                  // Create a list of DropdownMenuItems for doctors
                   final doctorItems = dropdownController.doctors.map((doctor) {
                     return DropdownMenuItem<String>(
                       value: doctor.id.toString(),
@@ -178,62 +174,107 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     );
                   }).toList();
 
+                  // Check if the selectedDoctor is valid, otherwise set to null
+                  final selectedDoctorValue = dropdownController.selectedDoctor.value?.id?.toString();
+                  final isValidSelectedDoctor = doctorItems.any((item) => item.value == selectedDoctorValue);
+
                   return DropdownButtonFormField<String>(
-                    value: dropdownController.selectedDoctor.value?.id.toString(),
+                    value: isValidSelectedDoctor ? selectedDoctorValue : null, // Reset if invalid
                     decoration: const InputDecoration(
                       labelText: 'Select Doctor',
                       border: OutlineInputBorder(),
                     ),
                     items: doctorItems,
                     onChanged: (value) {
-                      final selectedDoctor = dropdownController.doctors
-                          .firstWhere((doctor) => doctor.id.toString() == value);
-                      dropdownController.onDoctorSelected(selectedDoctor);
+                      if (value != null) {
+                        final selectedDoctor = dropdownController.doctors
+                            .firstWhere((doctor) => doctor.id.toString() == value);
+                        dropdownController.onDoctorSelected(selectedDoctor);
 
-                      print('Selected Doctor Details:');
-                      print('ID: ${selectedDoctor.id}');
-                      print('Name: ${selectedDoctor.name}');
-                      print('Schedule Days: ${dropdownController.selectedDoctorScheduleDays}');
-                      print('Schedule Days: ${dropdownController.selectedDoctorDates}');
-
+                        print('Selected Doctor Details:');
+                        print('ID: ${selectedDoctor.id}');
+                        print('Name: ${selectedDoctor.name}');
+                        print('Schedule Days: ${dropdownController.selectedDoctorScheduleDays}');
+                        print('Forbidden Days: ${dropdownController.selectedDoctorDates}');
+                      } else {
+                        dropdownController.selectedDoctor.value = null; // Reset if no value selected
+                      }
                     },
                   );
                 }
               }),
 
-              // Button to open the calendar
-              Obx(() {
+              SizedBox(height: 10),
 
+              // Date Selection Button and Display
+              Obx(() {
                 DateTime now = DateTime.now();
                 DateTime firstSelectableDate = now;
+                bool dateFound = false;
 
-                for (int i = 0; i < 7; i++) {if (dropdownController.selectedDoctorScheduleDays.contains(DateFormat('EEEE').format(firstSelectableDate)) || dropdownController.selectedDoctorScheduleDays.contains(DateFormat('yyyy-MM-dd').format(firstSelectableDate)))
-                {
-                  break;
-                }
-                firstSelectableDate = firstSelectableDate.add(const Duration(days: 1));
+                // Find the first selectable date based on the doctor's schedule and forbidden dates.
+                for (int i = 0; i < 90; i++) {
+                  String dayName = DateFormat('EEEE').format(firstSelectableDate);
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(firstSelectableDate);
+
+                  // Check if the day is in the schedule and not in forbidden dates
+                  bool isDaySelectable = dropdownController.selectedDoctorScheduleDays.contains(dayName);
+                  bool isDayForbidden = dropdownController.selectedDoctorDates.contains(formattedDate);
+
+                  if (isDaySelectable && !isDayForbidden) {
+                    dateFound = true;
+                    break;
+                  }
+
+                  firstSelectableDate = firstSelectableDate.add(const Duration(days: 1));
                 }
 
-                // Check if a doctor is selected
+                // Check if a doctor is selected.
                 if (dropdownController.selectedDoctor.value != null) {
                   return ElevatedButton(
                     onPressed: () async {
-                      // Show the date picker
+                      if (!dateFound) {
+                        // Show toast if no available date is found within 90 days
+                        Fluttertoast.showToast(
+                          msg: "No available dates within the next 90 days.",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                        return; // Exit early if no date is found
+                      }
+
+                      // Show the date picker with selectable days predicate.
                       DateTime? pickedDate = await showDatePicker(
                         context: context,
-                        initialDate: dropdownController.selectedDate.value ?? DateTime.now(),
-                        firstDate: DateTime.now(),
+                        initialDate: firstSelectableDate,
+                        firstDate: firstSelectableDate,
                         lastDate: DateTime.now().add(Duration(days: 90)),
+                        selectableDayPredicate: (DateTime date) {
+                          String dayName = DateFormat('EEEE').format(date);
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+                          // Check if the day is selectable.
+                          bool isDaySelectable = dropdownController.selectedDoctorScheduleDays.contains(dayName);
+
+                          // Check if the day is forbidden.
+                          bool isDayForbidden = dropdownController.selectedDoctorDates.contains(formattedDate);
+
+                          return isDaySelectable && !isDayForbidden;
+                        },
                       );
+
                       if (pickedDate != null) {
-                        // Update the selected date in the controller
+                        // Update the selected date in the controller.
                         dropdownController.selectedDate.value = pickedDate;
                       }
                     },
                     child: const Text('Select Date'),
                   );
                 } else {
-                  return Container(); // Return an empty container if no doctor is selected
+                  return Container(); // Return an empty container if no doctor is selected.
                 }
               }),
 
@@ -260,14 +301,41 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Handle save logic here
+                      // Retrieve values from the form fields
+                      String patientName = patientNameController.text;
+                      String phone = phoneController.text;
+                      String email = emailController.text;
+                      String address = addressController.text;
+                      String? selectedCategory = dropdownController.selectedCategory.value;
+                      String? selectedDoctor = dropdownController.selectedDoctor.value?.id?.toString();
+                      DateTime? selectedDate = dropdownController.selectedDate.value;
+
+                      // Print the captured values to the console for debugging
+                      print('Patient Name: $patientName');
+                      print('Phone: $phone');
+                      print('Email: $email');
+                      print('Address: $address');
+                      print('Selected Category: $selectedCategory');
+                      print('Selected Doctor: $selectedDoctor');
+                      print('Selected Date: $selectedDate');
+
+                      // Perform your save logic here with the retrieved values
+
+                      // Close the modal after saving
                       Navigator.pop(context);
                     },
                     child: const Text('Save'),
                   ),
                   ElevatedButton(
-                    onPressed: dropdownController.resetDropdowns,
-                    child: const Text('Clear'),
+                    onPressed: () {
+                      // Reset form fields
+                      patientNameController.clear();
+                      phoneController.clear();
+                      emailController.clear();
+                      addressController.clear();
+                      dropdownController.resetDropdowns();
+                    },
+                    child: const Text('Reset'),
                   ),
                 ],
               ),
@@ -278,66 +346,100 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Patient'),
+        title: const Text('Patient Search'),
       ),
-      body: Column(
-        children: [
-          // Search TextField
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: const Text(
-                    '+91',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter Patient ID or Phone Number',
-                    ),
-                    onChanged: _filterPatientList,
-                  ),
-                ),
-              ],
-            ),
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
 
-          // Search Results List
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _noResultsFound
-                ? const Center(child: Text('No results found.'))
-                : ListView.builder(
-              itemCount: _searchResults.length,
-              itemBuilder: (context, index) {
-                final patient = _searchResults[index];
-                return ListTile(
-                  title: Text(patient.patient),
-                  subtitle: Text(patient.phone),
-                  onTap: () {
-                    setState(() {
-                      _selectedPatient = patient;
-                      _showForm = true;
-                    });
-                    _showPatientForm(patient: patient);
-                  },
-                );
+
+
+
+              controller: _searchController,
+
+
+              keyboardType: TextInputType.number, // Sets the keyboard to number input
+              inputFormatters: < TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly, // Restricts input to digits only
+              ],
+
+
+              decoration: const InputDecoration(
+                labelText: 'Search Patient by ID or Phone',
+
+
+
+
+                border: OutlineInputBorder(),
+
+
+              ),
+              onChanged: (query) {
+                _filterPatientList(query);
               },
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : _noResultsFound
+                ? Column(
+              children: [
+                const Text('No results found.'),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _showForm = true;
+                      _selectedPatient = null;
+                    });
+                    _showPatientForm();
+                  },
+                  child: const Text('Create Appointment Manually'),
+                ),
+              ],
+            )
+                : Expanded(
+              child: ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final patient = _searchResults[index];
+                  return ListTile(
+                    title: Text(patient.patient),
+                    subtitle: Text(patient.phone),
+                    onTap: () {
+                      setState(() {
+                        _selectedPatient = patient;
+                        _showForm = true;
+                      });
+                      _showPatientForm(patient: patient);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+
+        },
+        child: const Icon(Icons.add),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _searchController.dispose();
+    super.dispose();
   }
 }
