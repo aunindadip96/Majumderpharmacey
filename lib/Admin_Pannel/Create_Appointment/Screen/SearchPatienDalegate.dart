@@ -49,6 +49,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
+        print(data);
         setState(() {
           _patientList =
               data.map((jsonItem) => PatienInfo.fromJson(jsonItem)).toList();
@@ -105,6 +106,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
     // Reset the form fields and state when showing the form.
     dropdownController.resetDropdowns();
+
+
+
 
     showModalBottomSheet(
       context: context,
@@ -340,46 +344,67 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     onPressed: _isLoading
                         ? null // Disable the button when loading
                         : () {
+                      print(patient!.id.toString()+"PatientID");
 
-                      String patientName = patientNameController.text;
-                      String phone = phoneController.text;
-                      String email = emailController.text;
-                      String address = addressController.text;
-                      String? selectedCategory =
-                          dropdownController.selectedCategory.value;
-                      String? selectedDoctor = dropdownController
-                          .selectedDoctor.value?.id
-                          ?.toString();
-                      DateTime? selectedDate =
-                          dropdownController.selectedDate.value;
-                      String? weekday = dropdownController
-                          .selectedDate.value?.weekday
-                          .toString();
+                      if (patient!.id.toString().isEmpty){
 
-                      // Print the captured values to the console for debugging
-                      print('Patient Name: $patientName');
-                      print('Phone: $phone');
-                      print('Email: $email');
-                      print('Address: $address');
-                      print('Selected Category: $selectedCategory');
-                      print('Selected Doctor: $selectedDoctor');
-                      print('Selected Date: $selectedDate');
-                      print('Selected day: $weekday');
+                        String patientName = patientNameController.text;
+                        String phone = phoneController.text;
+                        String email = emailController.text;
+                        String address = addressController.text;
+                        String? selectedCategory =
+                            dropdownController.selectedCategory.value;
+                        String? selectedDoctor = dropdownController
+                            .selectedDoctor.value?.id
+                            ?.toString();
+                        DateTime? selectedDate =
+                            dropdownController.selectedDate.value;
+                        String? weekday = dropdownController
+                            .selectedDate.value?.weekday
+                            .toString();
 
-                      // Perform your save logic here with the retrieved values
+                        // Print the captured values to the console for debugging
+                        print('Patient Name: $patientName');
+                        print('Phone: $phone');
+                        print('Email: $email');
+                        print('Address: $address');
+                        print('Selected Category: $selectedCategory');
+                        print('Selected Doctor: $selectedDoctor');
+                        print('Selected Date: $selectedDate');
+                        print('Selected day: $weekday');
 
-                      // Close the modal after saving
+                        // Perform your save logic here with the retrieved values
 
-                      CreatePatient(
-                          patientName,
-                          phone,
-                          address,
-                          email,
-                          dropdownController.selectedCategoryId.toString(),
-                          dropdownController.selectedDoctor.value!.id
-                              .toString(),
-                          dropdownController.selectedDate.toString(),
-                          weekday);
+                        // Close the modal after saving
+
+                        CreatePatient(
+                            patientName,
+                            phone,
+                            address,
+                            email,
+                            dropdownController.selectedCategoryId.toString(),
+                            dropdownController.selectedDoctor.value!.id.toString(),
+                            dropdownController.selectedDate.toString(),
+                            weekday);
+
+                      }
+
+                      else
+                      {
+
+                        Adminpostappointment adminpostappointment = Adminpostappointment();
+
+                        adminpostappointment.AdminmakeAppointmEnt(patient!.id.toString(), dropdownController.selectedDoctor.value!.id
+                            .toString(), dropdownController.selectedCategoryId.toString(),dropdownController
+                            .selectedDate.value?.weekday
+                            .toString(),
+                          dropdownController.selectedDate
+                              .toString()
+                              .replaceAll("00:00:00.000", " "), );
+
+                      }
+
+
 
                       // Your existing logic to capture and process the form data
 
@@ -455,7 +480,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                               });
                               _showPatientForm();
                             },
-                            child: const Text('Create Appointment Manually'),
+                            child: const Text('Create   Manually'),
                           ),
                         ],
                       )
@@ -481,18 +506,8 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _searchController.dispose();
-    super.dispose();
+    );
   }
 
   Future<void> CreatePatient(
@@ -508,6 +523,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     setState(() {
       _isLoading = true; // Use _isLoading here
     });
+
+
+
 
     final random = Random();
     final externalId = (random.nextInt(900000) + 100000).toString(); // Generates a number between 100000 and 999999
@@ -581,6 +599,16 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
       });
     }
   }
+
+
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
 
 
 
