@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../../Apicalls/Postappointment.dart';
+import '../../../Modelclasses/SignUpModelclass.dart';
+import '../Api_Call/make_appointment.dart';
 import '../Controlaer/dropdown_contollaer.dart';
 import '../Model_Class/patient_info_model.dart';
 
@@ -22,6 +26,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
   TextEditingController _searchController = TextEditingController();
   PatienInfo? _selectedPatient;
   bool _showForm = false;
+  bool isLoading = false; // Add a loading state variable
 
   Timer? _timer;
 
@@ -78,8 +83,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     setState(() {
       _searchResults = _patientList
           .where((patient) =>
-      patient.patientId.toLowerCase().contains(cleanedQuery.toLowerCase()) ||
-          patient.phone.toLowerCase().contains(cleanedQuery.toLowerCase()))
+              patient.patientId
+                  .toLowerCase()
+                  .contains(cleanedQuery.toLowerCase()) ||
+              patient.phone.toLowerCase().contains(cleanedQuery.toLowerCase()))
           .toList();
       _noResultsFound = _searchResults.isEmpty;
     });
@@ -87,10 +94,14 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
   void _showPatientForm({PatienInfo? patient}) {
     // Initialize controllers with initial values or empty strings.
-    TextEditingController patientNameController = TextEditingController(text: patient?.patient ?? '');
-    TextEditingController phoneController = TextEditingController(text: patient?.phone ?? '');
-    TextEditingController emailController = TextEditingController(text: patient?.email ?? '');
-    TextEditingController addressController = TextEditingController(text: patient?.address ?? '');
+    TextEditingController patientNameController =
+        TextEditingController(text: patient?.patient ?? '');
+    TextEditingController phoneController =
+        TextEditingController(text: patient?.phone ?? '');
+    TextEditingController emailController =
+        TextEditingController(text: patient?.email ?? '');
+    TextEditingController addressController =
+        TextEditingController(text: patient?.address ?? '');
 
     // Reset the form fields and state when showing the form.
     dropdownController.resetDropdowns();
@@ -131,7 +142,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Category Dropdown with GetX
               Obx(() {
                 if (dropdownController.isCategoryLoading.value) {
                   return const CircularProgressIndicator();
@@ -144,12 +154,17 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     ),
                     items: dropdownController.categories
                         .map((category) => DropdownMenuItem<String>(
-                      value: category.id.toString(),
-                      child: Text(category.specialist.toString()),
-                    ))
+                              value: category.id.toString(),
+                              child: Text(category.specialist.toString()),
+                            ))
                         .toList(),
                     onChanged: (value) {
+                      // Update the selected category
                       dropdownController.selectedCategory.value = value;
+                      dropdownController.selectedCategoryId.value =
+                          int.parse(value!); // Store the selected category ID
+
+                      // Fetch doctors for the selected category
                       if (value != null) {
                         dropdownController.fetchDoctors(value);
                       }
@@ -157,6 +172,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                   );
                 }
               }),
+
               const SizedBox(height: 16),
 
               // Doctor Dropdown with GetX
@@ -175,11 +191,15 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                   }).toList();
 
                   // Check if the selectedDoctor is valid, otherwise set to null
-                  final selectedDoctorValue = dropdownController.selectedDoctor.value?.id?.toString();
-                  final isValidSelectedDoctor = doctorItems.any((item) => item.value == selectedDoctorValue);
+                  final selectedDoctorValue =
+                      dropdownController.selectedDoctor.value?.id?.toString();
+                  final isValidSelectedDoctor = doctorItems
+                      .any((item) => item.value == selectedDoctorValue);
 
                   return DropdownButtonFormField<String>(
-                    value: isValidSelectedDoctor ? selectedDoctorValue : null, // Reset if invalid
+                    value: isValidSelectedDoctor
+                        ? selectedDoctorValue
+                        : null, // Reset if invalid
                     decoration: const InputDecoration(
                       labelText: 'Select Doctor',
                       border: OutlineInputBorder(),
@@ -188,16 +208,20 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     onChanged: (value) {
                       if (value != null) {
                         final selectedDoctor = dropdownController.doctors
-                            .firstWhere((doctor) => doctor.id.toString() == value);
+                            .firstWhere(
+                                (doctor) => doctor.id.toString() == value);
                         dropdownController.onDoctorSelected(selectedDoctor);
 
                         print('Selected Doctor Details:');
                         print('ID: ${selectedDoctor.id}');
                         print('Name: ${selectedDoctor.name}');
-                        print('Schedule Days: ${dropdownController.selectedDoctorScheduleDays}');
-                        print('Forbidden Days: ${dropdownController.selectedDoctorDates}');
+                        print(
+                            'Schedule Days: ${dropdownController.selectedDoctorScheduleDays}');
+                        print(
+                            'Forbidden Days: ${dropdownController.selectedDoctorDates}');
                       } else {
-                        dropdownController.selectedDoctor.value = null; // Reset if no value selected
+                        dropdownController.selectedDoctor.value =
+                            null; // Reset if no value selected
                       }
                     },
                   );
@@ -214,19 +238,25 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
                 // Find the first selectable date based on the doctor's schedule and forbidden dates.
                 for (int i = 0; i < 90; i++) {
-                  String dayName = DateFormat('EEEE').format(firstSelectableDate);
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(firstSelectableDate);
+                  String dayName =
+                      DateFormat('EEEE').format(firstSelectableDate);
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(firstSelectableDate);
 
                   // Check if the day is in the schedule and not in forbidden dates
-                  bool isDaySelectable = dropdownController.selectedDoctorScheduleDays.contains(dayName);
-                  bool isDayForbidden = dropdownController.selectedDoctorDates.contains(formattedDate);
+                  bool isDaySelectable = dropdownController
+                      .selectedDoctorScheduleDays
+                      .contains(dayName);
+                  bool isDayForbidden = dropdownController.selectedDoctorDates
+                      .contains(formattedDate);
 
                   if (isDaySelectable && !isDayForbidden) {
                     dateFound = true;
                     break;
                   }
 
-                  firstSelectableDate = firstSelectableDate.add(const Duration(days: 1));
+                  firstSelectableDate =
+                      firstSelectableDate.add(const Duration(days: 1));
                 }
 
                 // Check if a doctor is selected.
@@ -254,13 +284,18 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                         lastDate: DateTime.now().add(Duration(days: 90)),
                         selectableDayPredicate: (DateTime date) {
                           String dayName = DateFormat('EEEE').format(date);
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(date);
 
                           // Check if the day is selectable.
-                          bool isDaySelectable = dropdownController.selectedDoctorScheduleDays.contains(dayName);
+                          bool isDaySelectable = dropdownController
+                              .selectedDoctorScheduleDays
+                              .contains(dayName);
 
                           // Check if the day is forbidden.
-                          bool isDayForbidden = dropdownController.selectedDoctorDates.contains(formattedDate);
+                          bool isDayForbidden = dropdownController
+                              .selectedDoctorDates
+                              .contains(formattedDate);
 
                           return isDaySelectable && !isDayForbidden;
                         },
@@ -299,16 +334,27 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     },
                     child: const Text('Cancel'),
                   ),
+
+
                   ElevatedButton(
-                    onPressed: () {
-                      // Retrieve values from the form fields
+                    onPressed: _isLoading
+                        ? null // Disable the button when loading
+                        : () {
+
                       String patientName = patientNameController.text;
                       String phone = phoneController.text;
                       String email = emailController.text;
                       String address = addressController.text;
-                      String? selectedCategory = dropdownController.selectedCategory.value;
-                      String? selectedDoctor = dropdownController.selectedDoctor.value?.id?.toString();
-                      DateTime? selectedDate = dropdownController.selectedDate.value;
+                      String? selectedCategory =
+                          dropdownController.selectedCategory.value;
+                      String? selectedDoctor = dropdownController
+                          .selectedDoctor.value?.id
+                          ?.toString();
+                      DateTime? selectedDate =
+                          dropdownController.selectedDate.value;
+                      String? weekday = dropdownController
+                          .selectedDate.value?.weekday
+                          .toString();
 
                       // Print the captured values to the console for debugging
                       print('Patient Name: $patientName');
@@ -318,14 +364,32 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                       print('Selected Category: $selectedCategory');
                       print('Selected Doctor: $selectedDoctor');
                       print('Selected Date: $selectedDate');
+                      print('Selected day: $weekday');
 
                       // Perform your save logic here with the retrieved values
 
                       // Close the modal after saving
-                      Navigator.pop(context);
+
+                      CreatePatient(
+                          patientName,
+                          phone,
+                          address,
+                          email,
+                          dropdownController.selectedCategoryId.toString(),
+                          dropdownController.selectedDoctor.value!.id
+                              .toString(),
+                          dropdownController.selectedDate.toString(),
+                          weekday);
+
+                      // Your existing logic to capture and process the form data
+
                     },
-                    child: const Text('Save'),
+                    child: _isLoading
+                        ? const CircularProgressIndicator() // Show progress indicator
+                        : const Text('Save'),
                   ),
+
+
                   ElevatedButton(
                     onPressed: () {
                       // Reset form fields
@@ -334,6 +398,8 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                       emailController.clear();
                       addressController.clear();
                       dropdownController.resetDropdowns();
+                      dropdownController.selectedDate.value =
+                          null; // Reset the selected date
                     },
                     child: const Text('Reset'),
                   ),
@@ -346,8 +412,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -359,28 +423,18 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
         child: Column(
           children: [
             TextField(
-
-
-
-
               controller: _searchController,
 
-
-              keyboardType: TextInputType.number, // Sets the keyboard to number input
-              inputFormatters: < TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly, // Restricts input to digits only
+              keyboardType:
+                  TextInputType.number, // Sets the keyboard to number input
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter
+                    .digitsOnly, // Restricts input to digits only
               ],
-
 
               decoration: const InputDecoration(
                 labelText: 'Search Patient by ID or Phone',
-
-
-
-
                 border: OutlineInputBorder(),
-
-
               ),
               onChanged: (query) {
                 _filterPatientList(query);
@@ -390,47 +444,45 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : _noResultsFound
-                ? Column(
-              children: [
-                const Text('No results found.'),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _showForm = true;
-                      _selectedPatient = null;
-                    });
-                    _showPatientForm();
-                  },
-                  child: const Text('Create Appointment Manually'),
-                ),
-              ],
-            )
-                : Expanded(
-              child: ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  final patient = _searchResults[index];
-                  return ListTile(
-                    title: Text(patient.patient),
-                    subtitle: Text(patient.phone),
-                    onTap: () {
-                      setState(() {
-                        _selectedPatient = patient;
-                        _showForm = true;
-                      });
-                      _showPatientForm(patient: patient);
-                    },
-                  );
-                },
-              ),
-            ),
+                    ? Column(
+                        children: [
+                          const Text('No results found.'),
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _showForm = true;
+                                _selectedPatient = null;
+                              });
+                              _showPatientForm();
+                            },
+                            child: const Text('Create Appointment Manually'),
+                          ),
+                        ],
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            final patient = _searchResults[index];
+                            return ListTile(
+                              title: Text(patient.patient),
+                              subtitle: Text(patient.phone),
+                              onTap: () {
+                                setState(() {
+                                  _selectedPatient = patient;
+                                  _showForm = true;
+                                });
+                                _showPatientForm(patient: patient);
+                              },
+                            );
+                          },
+                        ),
+                      ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-        },
+        onPressed: () {},
         child: const Icon(Icons.add),
       ),
     );
@@ -442,4 +494,95 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     _searchController.dispose();
     super.dispose();
   }
+
+  Future<void> CreatePatient(
+      String name,
+      String email,
+      String mobile,
+      String address,
+      String catagoryID,
+      String docID,
+      String day,
+      String? weekday,
+      ) async {
+    setState(() {
+      _isLoading = true; // Use _isLoading here
+    });
+
+    final random = Random();
+    final externalId = (random.nextInt(900000) + 100000).toString(); // Generates a number between 100000 and 999999
+
+    Signup signup = Signup(
+      patient_id: externalId,
+      patient: name,
+      address: address,
+      phone: mobile,
+      email: email,
+      username: name,
+      password: mobile,
+      external_id: externalId,
+    );
+
+    print('Creating patient with data: ${signup.toJson()}');
+
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/createpatientlist");
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {"Content-type": "application/json"},
+        body: jsonEncode(signup.toJson()),
+      );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        var body = json.decode(response.body);
+        var patientKey = body['patientLogin']['patient_key'];
+        print('Patient created successfully with patientKey: $patientKey');
+
+        // Check if the required parameters are valid before calling the function
+        if (patientKey != null && catagoryID.isNotEmpty && docID.isNotEmpty && weekday != null) {
+          Adminpostappointment adminpostappointment = Adminpostappointment();
+
+          print('Calling AdminmakeAppointmEnt with patientKey: $patientKey');
+          adminpostappointment.AdminmakeAppointmEnt(
+            patientKey.toString(),
+            docID.toString(),
+            catagoryID.toString(),
+
+            weekday.toString(),
+            dropdownController.selectedDate
+                .toString()
+                .replaceAll("00:00:00.000", " "),
+          );
+          print('AdminmakeAppointmEnt called successfully.');
+        } else {
+          print('Invalid parameters passed to AdminmakeAppointmEnt.');
+        }
+
+      } else {
+        print('Failed to create patient. Error: ${response.body}');
+        Fluttertoast.showToast(
+          msg: "This account is already in use",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (error) {
+      print('Error during patient creation: $error');
+    } finally {
+      setState(() {
+        _isLoading = false; // Reset loading state
+      });
+    }
+  }
+
+
+
+
 }

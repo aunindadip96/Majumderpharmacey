@@ -17,6 +17,7 @@ class DropdownController extends GetxController {
   var isDoctorLoading = false.obs;
   var noDoctorsFound = false.obs;
   var selectedDate = Rxn<DateTime>();
+  var selectedCategoryId = RxnInt(); // New observable to store the selected category ID
 
   RxList<RxBool> loadingListDate = <RxBool>[].obs;
 
