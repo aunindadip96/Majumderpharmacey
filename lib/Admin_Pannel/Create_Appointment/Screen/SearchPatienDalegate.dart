@@ -107,9 +107,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     // Reset the form fields and state when showing the form.
     dropdownController.resetDropdowns();
 
-
-
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -338,82 +335,74 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     },
                     child: const Text('Cancel'),
                   ),
-
-
                   ElevatedButton(
-                    onPressed: _isLoading
-                        ? null // Disable the button when loading
-                        : () {
-                      print(patient!.id.toString()+"PatientID");
-
-                      if (patient!.id.toString().isEmpty){
-
+                    onPressed: () {
+                      // Check if patient is null before accessing its properties.
+                      if (patient == null) {
+                        // Retrieve values from the form fields.
                         String patientName = patientNameController.text;
                         String phone = phoneController.text;
                         String email = emailController.text;
                         String address = addressController.text;
-                        String? selectedCategory =
-                            dropdownController.selectedCategory.value;
-                        String? selectedDoctor = dropdownController
-                            .selectedDoctor.value?.id
-                            ?.toString();
-                        DateTime? selectedDate =
-                            dropdownController.selectedDate.value;
-                        String? weekday = dropdownController
-                            .selectedDate.value?.weekday
-                            .toString();
+                        String? selectedCategory = dropdownController.selectedCategory.value;
+                        String? selectedDoctor = dropdownController.selectedDoctor.value?.id.toString();
+                        DateTime? selectedDate = dropdownController.selectedDate.value;
+                        String? weekday = selectedDate?.weekday.toString();
 
-                        // Print the captured values to the console for debugging
-                        print('Patient Name: $patientName');
-                        print('Phone: $phone');
-                        print('Email: $email');
-                        print('Address: $address');
-                        print('Selected Category: $selectedCategory');
-                        print('Selected Doctor: $selectedDoctor');
-                        print('Selected Date: $selectedDate');
-                        print('Selected day: $weekday');
+                        // Ensure selectedDoctor and selectedDate are not null.
+                        if (selectedDoctor == null) {
+                          Fluttertoast.showToast(
+                            msg: "Please select a doctor.",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          return;
+                        }
 
-                        // Perform your save logic here with the retrieved values
+                        if (selectedDate == null) {
+                          Fluttertoast.showToast(
+                            msg: "Please select a date.",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          return;
+                        }
 
-                        // Close the modal after saving
-
+                        // Perform your save logic here with the retrieved values.
                         CreatePatient(
-                            patientName,
-                            phone,
-                            address,
-                            email,
-                            dropdownController.selectedCategoryId.toString(),
-                            dropdownController.selectedDoctor.value!.id.toString(),
-                            dropdownController.selectedDate.toString(),
-                            weekday);
-
-                      }
-
-                      else
-                      {
-
+                          patientName,
+                          phone,
+                          address,
+                          email,
+                          dropdownController.selectedCategoryId.toString(),
+                          selectedDoctor,
+                          selectedDate.toString(),
+                          weekday,
+                        );
+                      } else {
+                        // Handle case when patient is not null (i.e., updating an existing patient).
                         Adminpostappointment adminpostappointment = Adminpostappointment();
 
-                        adminpostappointment.AdminmakeAppointmEnt(patient!.id.toString(), dropdownController.selectedDoctor.value!.id
-                            .toString(), dropdownController.selectedCategoryId.toString(),dropdownController
-                            .selectedDate.value?.weekday
-                            .toString(),
-                          dropdownController.selectedDate
-                              .toString()
-                              .replaceAll("00:00:00.000", " "), );
-
+                        adminpostappointment.AdminmakeAppointmEnt(
+                          patient.id.toString(),
+                          dropdownController.selectedDoctor.value!.id.toString(),
+                          dropdownController.selectedCategoryId.toString(),
+                          dropdownController.selectedDate.value?.weekday.toString(),
+                          dropdownController.selectedDate.toString().replaceAll("00:00:00.000", " "),
+                        );
                       }
 
-
-
-                      // Your existing logic to capture and process the form data
-
+                      // Close the modal after saving.
+                      Navigator.pop(context);
                     },
-                    child: _isLoading
-                        ? const CircularProgressIndicator() // Show progress indicator
-                        : const Text('Save'),
+                    child: const Text('Save'),
                   ),
-
 
                   ElevatedButton(
                     onPressed: () {
@@ -506,29 +495,26 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
           ],
         ),
       ),
-
     );
   }
 
   Future<void> CreatePatient(
-      String name,
-      String email,
-      String mobile,
-      String address,
-      String catagoryID,
-      String docID,
-      String day,
-      String? weekday,
-      ) async {
+    String name,
+    String email,
+    String mobile,
+    String address,
+    String catagoryID,
+    String docID,
+    String day,
+    String? weekday,
+  ) async {
     setState(() {
       _isLoading = true; // Use _isLoading here
     });
 
-
-
-
     final random = Random();
-    final externalId = (random.nextInt(900000) + 100000).toString(); // Generates a number between 100000 and 999999
+    final externalId = (random.nextInt(900000) + 100000)
+        .toString(); // Generates a number between 100000 and 999999
 
     Signup signup = Signup(
       patient_id: externalId,
@@ -561,7 +547,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
         print('Patient created successfully with patientKey: $patientKey');
 
         // Check if the required parameters are valid before calling the function
-        if (patientKey != null && catagoryID.isNotEmpty && docID.isNotEmpty && weekday != null) {
+        if (patientKey != null &&
+            catagoryID.isNotEmpty &&
+            docID.isNotEmpty &&
+            weekday != null) {
           Adminpostappointment adminpostappointment = Adminpostappointment();
 
           print('Calling AdminmakeAppointmEnt with patientKey: $patientKey');
@@ -569,7 +558,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
             patientKey.toString(),
             docID.toString(),
             catagoryID.toString(),
-
             weekday.toString(),
             dropdownController.selectedDate
                 .toString()
@@ -579,7 +567,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
         } else {
           print('Invalid parameters passed to AdminmakeAppointmEnt.');
         }
-
       } else {
         print('Failed to create patient. Error: ${response.body}');
         Fluttertoast.showToast(
@@ -600,17 +587,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     }
   }
 
-
-
   @override
   void dispose() {
     _timer?.cancel();
     _searchController.dispose();
     super.dispose();
   }
-
-
-
-
-
 }
