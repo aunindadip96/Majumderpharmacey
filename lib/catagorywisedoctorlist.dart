@@ -6,18 +6,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'Apicalls/Catagorywisedoclist.dart';
 import 'Controllers/availavldayscontroller.dart';
-import 'Modelclasses/creatappointmentmodelclass.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'HomePage.dart';
 import 'Modelclasses/modelclassfordoctorlist.dart';
-import 'log_in.dart';
-import 'package:http/http.dart' as http;
 import 'Apicalls/Notifications_API.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:doctorappointment/MyAppointments.dart';
-import 'dart:convert';
-import 'dart:io';
 import 'Apicalls/Postappointment.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -74,7 +67,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
         DateTime startDate, Function(DateTime) selectableDayPredicate) {
       DateTime date = startDate;
       while (!selectableDayPredicate(date)) {
-        date = date.add(Duration(days: 1));
+        date = date.add(const Duration(days: 1));
       }
       return date;
     }
@@ -99,10 +92,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                         fit: BoxFit.fill,
                       ),
                     ),
-                    Text(
-                      "Something Went Wrong ",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const Text("Something Went Wrong ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ]),
                 );
@@ -125,43 +115,26 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        "Sorrry no Doctor is,",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87),
-                      ),
+                      const Text("Sorry no Doctor is,", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black87),),
                       const SizedBox(
                         height: 5,
                       ),
-                      const Text(
-                        "Available",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87),
-                      ),
+                      const Text("Available", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black87),),
                       const SizedBox(
                         height: 30,
                       ),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(40.00),
-                        child: Container(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text(
-                              "Back to Hompage ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue, // Change this to your desired color
+                        ),
+                        child: const Text(
+                          "Back to Homepage ", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
                         ),
                       ),
+
                     ],
                   ),
                 );
@@ -178,56 +151,42 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                         height: MediaQuery.of(context).size.height * .3,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage(
-                                  "lib/assets/Images/sorry_no_doc.jpg"),
+                              image: AssetImage("lib/assets/Images/sorry_no_doc.jpg"),
                               fit: BoxFit.contain),
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        "Sorrry no Doctor is,",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87),
+                      const Text("Sorry no Doctor is,", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      const Text(
-                        "Available",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87),
+                      const Text("Available", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(
                         height: 30,
                       ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(40.00),
-                        child: Container(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text(
-                              "Back to Hompage ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, // Change this to your desired color
+                          ),
+
+                          child: const Text("Back to Homepage ", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                     ],
                   ),
                 );
-              }
-              ;
+              };
 
               if (snapshot.data.toString() == "[]") {
                 return Scaffold(
@@ -249,7 +208,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                         height: 10,
                       ),
                       const Text(
-                        "Sorrry no Doctor is,",
+                        "Sorry no Doctor is,",
                         style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -271,7 +230,10 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(40.00),
                         child: Container(
+
+                          color: Colors.green,
                           child: ElevatedButton(
+
                             onPressed: () {
                               Navigator.of(context).pop();
                               /*Navigator.push(
@@ -280,9 +242,9 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                               );*/
                             },
                             child: const Text(
-                              "Back to Hompage ",
+                              "Back to Homepage ",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -324,269 +286,134 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0)),
+                                              borderRadius: BorderRadius.circular(10.0)),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
+                                            borderRadius: BorderRadius.circular(20.0),
                                             child: const Image(
-                                              image: AssetImage(
-                                                "lib/assets/Images/pic2.jpg",
-                                              ),
+                                              image: AssetImage("lib/assets/Images/pic2.jpg",),
                                               fit: BoxFit.fitHeight,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
+                                        const SizedBox(width: 15,),
                                         Center(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                          child:
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "Name: " +
-                                                    snapshot.data[index].name,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              Text(
-                                                "Specealist: " +
-                                                    snapshot
-                                                        .data[index].specialist,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              const Text("Available Days :",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              for (var i = 0;
-                                                  i <
-                                                      snapshot.data[index]
-                                                          .schedule.length;
-                                                  i++)
-                                                Text(
-                                                  snapshot.data[index]
-                                                          .schedule[i].day +
-                                                      "," +
-                                                      " " +
-                                                      DateFormat('h:mm a')
-                                                          .format(DateTime.parse(
-                                                              "1900-01-01 " +
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .schedule[
-                                                                          i]
-                                                                      .startingTime)) +
-                                                      " " +
-                                                      "-" +
-                                                      DateFormat('h:mm a')
-                                                          .format(DateTime.parse(
-                                                              "1900-01-01 " +
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .schedule[
-                                                                          i]
-                                                                      .endingTime)),
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.left,
-                                                  softWrap: false,
-                                                ),
-                                              SizedBox(
-                                                height: 3,
-                                              ),
+                                              Text("Name: " + snapshot.data[index].name, style: const TextStyle(fontWeight: FontWeight.bold),),
+                                              const SizedBox(height: 3),
+                                              Text("Specealist: " + snapshot.data[index].specialist, style: TextStyle(fontWeight: FontWeight.bold),),
+                                              const SizedBox(height: 3,),
+                                              const Text("Available Days :", style: TextStyle(fontWeight: FontWeight.bold)),
+                                              const SizedBox(height: 3,),
+                                              for (var i = 0; i < snapshot.data[index].schedule.length; i++)
+                                                Text(snapshot.data[index].schedule[i].day + "," + " " +
+                                                    DateFormat('h:mm a').format(DateTime.parse("1900-01-01 " + snapshot.data[index].schedule[i].startingTime)) +
+                                                    " " + "-" + DateFormat('h:mm a').format(DateTime.parse("1900-01-01 " + snapshot.data[index].schedule[i].endingTime)),
+                                                  style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.left, softWrap: false,),
+                                              const SizedBox(height: 3,),
                                               Center(
-                                                  child: ElevatedButton(
-                                                onPressed: () async {
-                                                  Sucesscontroller
-                                                      .loadingList[index]
-                                                      .value = true;
-                                                  await Future.delayed(
-                                                      Duration(seconds: 2));
+                                                  child:
+                                                  ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.blue,),
 
-                                                  for (var i = 0;
-                                                      i <
-                                                          snapshot.data[index]
-                                                              .schedule.length;
-                                                      i++)
-                                                    daysList.add(snapshot
-                                                        .data[index]
-                                                        .schedule[i]
-                                                        .day);
-                                                  DateTime now = DateTime.now();
-                                                  DateTime firstSelectableDate =
-                                                      now;
-
-                                                  for (int i = 0; i < 7; i++) {
-                                                    if (daysList.contains(
-                                                            DateFormat('EEEE')
-                                                                .format(
-                                                                    firstSelectableDate)) ||
-                                                        daysList.contains(DateFormat(
-                                                                'yyyy-MM-dd')
-                                                            .format(
-                                                                firstSelectableDate))) {
-                                                      break;
-                                                    }
-                                                    firstSelectableDate =
-                                                        firstSelectableDate.add(
-                                                            Duration(days: 1));
+                                                  onPressed: () async
+                                                  {
+                                                  Sucesscontroller.loadingList[index].value = true;
+                                                  await Future.delayed(const Duration(seconds: 2));
+                                                  for (var i = 0; i < snapshot.data[index].schedule.length; i++) {
+                                                    daysList.add(snapshot.data[index].schedule[i].day);
                                                   }
-                                                  Sucesscontroller.DocName =
-                                                      RxString(snapshot
-                                                          .data[index].name);
-                                                  String doctorID = snapshot
-                                                      .data[index].id
-                                                      .toString();
-                                                  String SpecalistID = snapshot
-                                                      .data[index].specialistId
-                                                      .toString();
+                                                  DateTime now = DateTime.now();
+                                                  DateTime firstSelectableDate = now;
 
-                                                  bool isDateSelectable(
-                                                      DateTime? date) {
-                                                    if (date == null) {
+                                                  for (int i = 0; i < 7; i++) {if (daysList.contains(DateFormat('EEEE').format(firstSelectableDate)) || daysList.contains(DateFormat('yyyy-MM-dd').format(firstSelectableDate)))
+                                                  {
+                                                      break;
+                                                  }
+                                                    firstSelectableDate = firstSelectableDate.add(const Duration(days: 1));
+                                                  }
+                                                  Sucesscontroller.DocName = RxString(snapshot.data[index].name);
+                                                  String doctorID = snapshot.data[index].id.toString();
+                                                  String SpecalistID = snapshot.data[index].specialistId.toString();
+
+                                                  bool isDateSelectable(DateTime? date)
+                                                  {
+                                                    if (date == null)
+                                                    {
                                                       return false;
                                                     }
-                                                    final weekday =
-                                                        DateFormat('EEEE')
-                                                            .format(date);
-                                                    final formattedDate =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(date);
+                                                    final weekday = DateFormat('EEEE').format(date);
+                                                    final formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
                                                     // add individual date values to forbiddenDates list
-                                                    List<DateTime>
-                                                        forbiddenDates = [];
-                                                    for (var dateObject
-                                                        in snapshot.data[index]
-                                                            .dates) {
-                                                      if (dateObject is Dates &&
-                                                          dateObject.date
-                                                              is List<String>) {
-                                                        List<String>
-                                                            dateStringList =
-                                                            dateObject.date
-                                                                as List<String>;
-                                                        for (var dateString
-                                                            in dateStringList) {
+                                                    List<DateTime>forbiddenDates = [];
+                                                    for (var dateObject in snapshot.data[index].dates)
+                                                    {
+                                                      if (dateObject is Dates)
+                                                      {
+                                                        List<String>dateStringList = dateObject.date;
+                                                        for (var dateString in dateStringList)
+                                                        {
                                                           try {
-                                                            DateTime date =
-                                                                DateTime.parse(
-                                                                    dateString);
-                                                            forbiddenDates
-                                                                .add(date);
+                                                            DateTime date = DateTime.parse(dateString);
+                                                            forbiddenDates.add(date);
                                                           } catch (e) {
                                                             Fluttertoast.showToast(
-                                                                msg:
-                                                                    'Sorry,Something Went Wrong',
-                                                                toastLength: Toast
-                                                                    .LENGTH_SHORT,
-                                                                gravity:
-                                                                    ToastGravity
-                                                                        .CENTER,
-                                                                timeInSecForIosWeb:
-                                                                    1,
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .black,
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
+                                                                msg: 'Sorry,Something Went Wrong',
+                                                                toastLength: Toast.LENGTH_SHORT,
+                                                                gravity: ToastGravity.CENTER,
+                                                                timeInSecForIosWeb: 1,
+                                                                backgroundColor: Colors.black,
+                                                                textColor: Colors.white,
                                                                 fontSize: 16.0);
                                                           }
                                                         }
                                                       } else {
                                                         Fluttertoast.showToast(
-                                                            msg:
-                                                                'Sorry,Something Went Wrong',
-                                                            toastLength: Toast
-                                                                .LENGTH_SHORT,
-                                                            gravity:
-                                                                ToastGravity
-                                                                    .CENTER,
-                                                            timeInSecForIosWeb:
-                                                                1,
-                                                            backgroundColor:
-                                                                Colors.black,
-                                                            textColor:
-                                                                Colors.white,
+                                                            msg: 'Sorry,Something Went Wrong',
+                                                            toastLength: Toast.LENGTH_SHORT,
+                                                            gravity: ToastGravity.CENTER,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.black,
+                                                            textColor: Colors.white,
                                                             fontSize: 16.0);
                                                       }
                                                     }
 
-                                                    if (forbiddenDates
-                                                            .contains(date) ||
-                                                        forbiddenDates.contains(
-                                                            DateTime(
-                                                                date.year,
-                                                                date.month,
-                                                                date.day))) {
+                                                    if (forbiddenDates.contains(date) || forbiddenDates.contains(DateTime(date.year, date.month, date.day)))
+                                                    {
                                                       return false;
                                                     }
-                                                    return daysList.contains(
-                                                            weekday) ||
-                                                        daysList.contains(
-                                                            formattedDate);
+                                                    return daysList.contains(weekday) || daysList.contains(formattedDate);
                                                   }
 
-                                                  Sucesscontroller
-                                                      .loadingList[index]
-                                                      .value = false;
-                                                  await bookbutton(
-                                                      DateTime.now(),
-                                                      firstSelectableDate,
-                                                      doctorID,
-                                                      SpecalistID,
-                                                      isDateSelectable);
+                                                  Sucesscontroller.loadingList[index].value = false;
+                                                  await bookbutton(DateTime.now(), firstSelectableDate, doctorID, SpecalistID, isDateSelectable);
                                                 },
-                                                child: Obx(() {
-                                                  return Sucesscontroller
-                                                          .loadingList[index]
-                                                          .value
-                                                      ? Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: CircularProgressIndicator(
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
+                                                child: Obx(()
+                                                {
+                                                  return Sucesscontroller.loadingList[index].value ?
+                                                  const Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children:
+                                                    [
+                                                      Padding(
+                                                        padding: EdgeInsets.all(8.0),
+                                                          child: CircularProgressIndicator(color: Colors.white),
+                                                      ),
                                                             SizedBox(width: 8),
-                                                            Text(
-                                                                "Checking available dates")
+                                                            Text("Checking available dates")
                                                           ],
                                                         )
-                                                      : Text(
-                                                          "Available Dates ");
+                                                      : const Text("Available Dates ");
                                                 }),
-                                              ))
+                                              )
+                                              )
                                             ],
                                           ),
                                         ),
@@ -649,34 +476,30 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
           RxString(DateFormat('yyyy-MM-dd').format(selectedDate).toString());
       Datetoappointment = DateFormat('yyyy-MM-dd').format(selectedDate);
       daynumber = selectedDate.weekday;
-      Sucesscontroller.appointday =
-          RxString(DateFormat('EEEE').format(selectedDate));
-      Sucesscontroller.date =
-          RxString(DateFormat('yyyy-MM-dd').format(selectedDate));
+      Sucesscontroller.appointday = RxString(DateFormat('EEEE').format(selectedDate));
+      Sucesscontroller.date = RxString(DateFormat('yyyy-MM-dd').format(selectedDate));
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Appointment Booked!'),
-            content: Text(
-              'Do you want to make an appointment on  $Datetoappointment with  '
+            content:  Text('Do you want to make an appointment on  $Datetoappointment with  '
               '${Sucesscontroller.DocName.toString()}',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             actions: <Widget>[
               ElevatedButton(
-                child: const Text('No'),
+                child:  Text('No'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               ElevatedButton(
-                child: const Text('Yes'),
+                child:  Text('Yes'),
                 onPressed: () {
                   postappointment objtopost = postappointment();
-                  objtopost.placeAppointment(User['patient_key'].toString(),
-                      Docid, specalistid, daynumber.toString());
+                  objtopost.placeAppointment(User['patient_key'].toString(), Docid, specalistid, daynumber.toString());
                   Navigator.of(context).pop();
                 },
               ),
