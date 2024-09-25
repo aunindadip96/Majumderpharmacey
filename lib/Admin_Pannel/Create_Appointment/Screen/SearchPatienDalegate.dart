@@ -84,9 +84,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     setState(() {
       _searchResults = _patientList
           .where((patient) =>
-              patient.patientId
-                  .toLowerCase()
-                  .contains(cleanedQuery.toLowerCase()) ||
+
               patient.phone.toLowerCase().contains(cleanedQuery.toLowerCase()))
           .toList();
       _noResultsFound = _searchResults.isEmpty;
@@ -166,10 +164,8 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                           int.parse(value!); // Store the selected category ID
 
                       // Fetch doctors for the selected category
-                      if (value != null) {
-                        dropdownController.fetchDoctors(value);
-                      }
-                    },
+                      dropdownController.fetchDoctors(value);
+                                        },
                   );
                 }
               }),
@@ -519,11 +515,11 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     Signup signup = Signup(
       patient_id: externalId,
       patient: name,
-      address: address,
-      phone: mobile,
-      email: email,
+      address: mobile,
+      phone: email,
+      email: address,
       username: name,
-      password: mobile,
+      password: email,
       external_id: externalId,
     );
 
