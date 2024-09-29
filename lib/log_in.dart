@@ -140,7 +140,7 @@ class _loginState extends State<login> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  "lib/assets/Images/Doc.png", // Add the path to your Google icon
+                                  "lib/assets/Images/google.png", // Add the path to your Google icon
                                   height: 24,
                                   width: 24,
                                 ),
@@ -177,7 +177,7 @@ class _loginState extends State<login> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  "lib/assets/Images/Doc.png", // Add the path to your Google icon
+                                  "lib/assets/Images/google.png", // Add the path to your Google icon
                                   height: 24,
                                   width: 24,
                                 ),

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../log_in.dart';
 import '../Appointments/Screen/AllAppointments.dart';
 import '../Create_Appointment/Screen/SearchPatienDalegate.dart';
+import '../Toadys Appointments/todays_appointment.dart';
 
 class AdminMyHomePage extends StatefulWidget {
   const AdminMyHomePage({super.key});
@@ -126,6 +127,23 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
 
                     },
                   ),
+
+
+
+                  _buildCustomButton(
+
+                    text2: "Today's Appointment",
+                    color: const Color.fromRGBO(300, 150, 100, 1.0),
+                    onTap: () {
+                      Get.to(() =>  AllAppointmentToday(),
+                          transition: Transition.leftToRight);              // Open the sea
+
+
+
+
+                    },
+                  ),
+
                 ],
               ),
 
