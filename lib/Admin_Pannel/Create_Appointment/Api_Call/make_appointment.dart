@@ -52,10 +52,7 @@ class Adminpostappointment {
 
           print(response.body.toString());
 
-          Noti.showBigTextNotification(
-              title: "Doctor's Appointment",
-              body: "Your Appointment is Created ",
-              fln: flutterLocalNotificationsPlugin);
+
 
           successController.appointday = " ".obs;
 

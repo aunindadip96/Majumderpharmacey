@@ -38,34 +38,118 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
     _fetchAllPatients();
   }
 
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+
+
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Text("Create Appointments",
+          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.brown,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // TextField for searching patients by phone
+            TextField(
+              controller: _searchController,
+              keyboardType: TextInputType.number, // Sets the keyboard to number input
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly, // Restricts input to digits only
+              ],
+              decoration: const InputDecoration(
+                labelText: 'Search Patient by Phone',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (query) {
+                _filterPatientList(query); // Filter patients as user types
+              },
+            ),
+            const SizedBox(height: 16),
+            _isLoading
+                ? const CircularProgressIndicator() // Show loading indicator while fetching
+                : _noResultsFound
+                ? Column(
+              children: [
+                const Text('No results found.'),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _showForm = true;
+                      _selectedPatient = null;
+                    });
+                    _showPatientForm(); // Show form to create patient manually
+                  },
+                  child: const Text('Create Manually'),
+                ),
+              ],
+            )
+                : Expanded(
+              child: ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final patient = _searchResults[index];
+                  return ListTile(
+                    title: Text(patient.patient),
+                    subtitle: Text(patient.phone),
+                    onTap: () {
+                      setState(() {
+                        _selectedPatient = patient; // Select patient on tap
+                        _showForm = true;
+                      });
+                      _showPatientForm(patient: patient); // Show patient form
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+  }
+
+
+  // Fetch all patients from the API
   Future<void> _fetchAllPatients() async {
     setState(() {
-      _isLoading = true;
+      _isLoading = true; // Start loading
+      _noResultsFound = false; // Reset the no results flag
     });
 
     try {
-      final response = await http
-          .get(Uri.parse('https://pharmacy.symbexbd.com/api/patientlist'));
+      final response = await http.get(Uri.parse('https://pharmacy.symbexbd.com/api/patientlist'));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        print(data);
         setState(() {
-          _patientList =
-              data.map((jsonItem) => PatienInfo.fromJson(jsonItem)).toList();
+          _patientList = data.map((jsonItem) => PatienInfo.fromJson(jsonItem)).toList();
+          _searchResults = _patientList; // Initialize search results
         });
       } else {
         setState(() {
-          _noResultsFound = true;
+          _noResultsFound = true; // Handle no patients case
         });
       }
     } catch (e) {
       setState(() {
-        _noResultsFound = true;
+        _noResultsFound = true; // Handle any errors
       });
     } finally {
       setState(() {
-        _isLoading = false;
+        _isLoading = false; // Stop loading
       });
     }
   }
@@ -85,7 +169,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
       _searchResults = _patientList
           .where((patient) =>
 
-              patient.phone.toLowerCase().contains(cleanedQuery.toLowerCase()))
+          patient.phone.toLowerCase().contains(cleanedQuery.toLowerCase()))
           .toList();
       _noResultsFound = _searchResults.isEmpty;
     });
@@ -94,13 +178,13 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
   void _showPatientForm({PatienInfo? patient}) {
     // Initialize controllers with initial values or empty strings.
     TextEditingController patientNameController =
-        TextEditingController(text: patient?.patient ?? '');
+    TextEditingController(text: patient?.patient ?? '');
     TextEditingController phoneController =
-        TextEditingController(text: patient?.phone ?? '');
+    TextEditingController(text: patient?.phone ?? '');
     TextEditingController emailController =
-        TextEditingController(text: patient?.email ?? '');
+    TextEditingController(text: patient?.email ?? '');
     TextEditingController addressController =
-        TextEditingController(text: patient?.address ?? '');
+    TextEditingController(text: patient?.address ?? '');
 
     // Reset the form fields and state when showing the form.
     dropdownController.resetDropdowns();
@@ -153,9 +237,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                     ),
                     items: dropdownController.categories
                         .map((category) => DropdownMenuItem<String>(
-                              value: category.id.toString(),
-                              child: Text(category.specialist.toString()),
-                            ))
+                      value: category.id.toString(),
+                      child: Text(category.specialist.toString()),
+                    ))
                         .toList(),
                     onChanged: (value) {
                       // Update the selected category
@@ -165,7 +249,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
                       // Fetch doctors for the selected category
                       dropdownController.fetchDoctors(value);
-                                        },
+                    },
                   );
                 }
               }),
@@ -189,7 +273,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
                   // Check if the selectedDoctor is valid, otherwise set to null
                   final selectedDoctorValue =
-                      dropdownController.selectedDoctor.value?.id?.toString();
+                  dropdownController.selectedDoctor.value?.id?.toString();
                   final isValidSelectedDoctor = doctorItems
                       .any((item) => item.value == selectedDoctorValue);
 
@@ -218,7 +302,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                             'Forbidden Days: ${dropdownController.selectedDoctorDates}');
                       } else {
                         dropdownController.selectedDoctor.value =
-                            null; // Reset if no value selected
+                        null; // Reset if no value selected
                       }
                     },
                   );
@@ -236,9 +320,9 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                 // Find the first selectable date based on the doctor's schedule and forbidden dates.
                 for (int i = 0; i < 90; i++) {
                   String dayName =
-                      DateFormat('EEEE').format(firstSelectableDate);
+                  DateFormat('EEEE').format(firstSelectableDate);
                   String formattedDate =
-                      DateFormat('yyyy-MM-dd').format(firstSelectableDate);
+                  DateFormat('yyyy-MM-dd').format(firstSelectableDate);
 
                   // Check if the day is in the schedule and not in forbidden dates
                   bool isDaySelectable = dropdownController
@@ -282,7 +366,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                         selectableDayPredicate: (DateTime date) {
                           String dayName = DateFormat('EEEE').format(date);
                           String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(date);
+                          DateFormat('yyyy-MM-dd').format(date);
 
                           // Check if the day is selectable.
                           bool isDaySelectable = dropdownController
@@ -316,7 +400,7 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                 return Text(
                   selectedDate != null
                       ? 'Selected Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}'
-                      : 'No date selected',
+                      : ' ',
                   style: const TextStyle(fontSize: 16),
                 );
               }),
@@ -325,80 +409,108 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel'),
+                  Container(
+
+
+                    child: Padding(
+                      padding:const EdgeInsets.symmetric(vertical: 10),
+                      child: ElevatedButton(
+
+
+
+
+
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent, // Button color
+                          padding: const EdgeInsets.symmetric(vertical: 16), // Padding inside the button
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // Rounded corners
+                          )),
+
+                        child: const Text('Cancel',style:TextStyle(
+                          fontSize: 16,fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),),
+                      ),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Check if patient is null before accessing its properties.
-                      if (patient == null) {
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10), // Add vertical padding
+                    child: ElevatedButton(
+
+                      onPressed: () {
                         // Retrieve values from the form fields.
-                        String patientName = patientNameController.text;
-                        String phone = phoneController.text;
-                        String email = emailController.text;
-                        String address = addressController.text;
+                        String patientName = patientNameController.text.trim();
+                        String phone = phoneController.text.trim();
+                        String email = emailController.text.trim();
+                        String address = addressController.text.trim();
                         String? selectedCategory = dropdownController.selectedCategory.value;
                         String? selectedDoctor = dropdownController.selectedDoctor.value?.id.toString();
                         DateTime? selectedDate = dropdownController.selectedDate.value;
-                        String? weekday = selectedDate?.weekday.toString();
 
-                        // Ensure selectedDoctor and selectedDate are not null.
-                        if (selectedDoctor == null) {
+                        // Check if any field is empty.
+                        if (patientName.isEmpty || phone.isEmpty || email.isEmpty || address.isEmpty || selectedDoctor == null || selectedDate == null) {
                           Fluttertoast.showToast(
-                            msg: "Please select a doctor.",
+                            msg: "Please fill up the whole form.",
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: Colors.red,
                             textColor: Colors.white,
                             fontSize: 16.0,
                           );
-                          return;
+                          return; // Exit early if any field is empty.
                         }
 
-                        if (selectedDate == null) {
-                          Fluttertoast.showToast(
-                            msg: "Please select a date.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0,
+                        if (patient == null) {
+                          // If the patient is new, call CreatePatient method.
+                          String? weekday = selectedDate.weekday.toString();
+
+                          CreatePatient(
+                            patientName,
+                            phone,
+                            address,
+                            email,
+                            dropdownController.selectedCategoryId.toString(),
+                            selectedDoctor,
+                            selectedDate.toString(),
+                            weekday,
                           );
-                          return;
+                        } else {
+                          // If the patient already exists, update the appointment.
+                          Adminpostappointment adminpostappointment = Adminpostappointment();
+
+                          adminpostappointment.AdminmakeAppointmEnt(
+                            patient.id.toString(),
+                            dropdownController.selectedDoctor.value!.id.toString(),
+                            dropdownController.selectedCategoryId.toString(),
+                            dropdownController.selectedDate.value?.weekday.toString(),
+                            dropdownController.selectedDate.toString().replaceAll("00:00:00.000", " "),
+                          );
                         }
 
-                        // Perform your save logic here with the retrieved values.
-                        CreatePatient(
-                          patientName,
-                          phone,
-                          address,
-                          email,
-                          dropdownController.selectedCategoryId.toString(),
-                          selectedDoctor,
-                          selectedDate.toString(),
-                          weekday,
-                        );
-                      } else {
-                        // Handle case when patient is not null (i.e., updating an existing patient).
-                        Adminpostappointment adminpostappointment = Adminpostappointment();
-
-                        adminpostappointment.AdminmakeAppointmEnt(
-                          patient.id.toString(),
-                          dropdownController.selectedDoctor.value!.id.toString(),
-                          dropdownController.selectedCategoryId.toString(),
-                          dropdownController.selectedDate.value?.weekday.toString(),
-                          dropdownController.selectedDate.toString().replaceAll("00:00:00.000", " "),
-                        );
-                      }
-
-                      // Close the modal after saving.
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Save'),
+                        // Close the modal after saving and reset date selection.
+                        dropdownController.selectedDate.value = null;
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.brown, // Button color
+                        padding: const EdgeInsets.symmetric(vertical: 16), // Padding inside the button
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // Rounded corners
+                        ),
+                      ),
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
                   ),
+
+
 
                   ElevatedButton(
                     onPressed: () {
@@ -409,9 +521,17 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                       addressController.clear();
                       dropdownController.resetDropdowns();
                       dropdownController.selectedDate.value =
-                          null; // Reset the selected date
+                      null; // Reset the selected date
                     },
-                    child: const Text('Reset'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.greenAccent, // Button color
+                      padding: const EdgeInsets.symmetric(vertical: 16), // Padding inside the button
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                      ),
+                    ),
+
+                    child: const Text('Reset',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 16),),
                   ),
                 ],
               ),
@@ -419,78 +539,6 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Patient Search'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-
-              keyboardType:
-                  TextInputType.number, // Sets the keyboard to number input
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter
-                    .digitsOnly, // Restricts input to digits only
-              ],
-
-              decoration: const InputDecoration(
-                labelText: 'Search Patient by ID or Phone',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (query) {
-                _filterPatientList(query);
-              },
-            ),
-            const SizedBox(height: 16),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : _noResultsFound
-                    ? Column(
-                        children: [
-                          const Text('No results found.'),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _showForm = true;
-                                _selectedPatient = null;
-                              });
-                              _showPatientForm();
-                            },
-                            child: const Text('Create   Manually'),
-                          ),
-                        ],
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: _searchResults.length,
-                          itemBuilder: (context, index) {
-                            final patient = _searchResults[index];
-                            return ListTile(
-                              title: Text(patient.patient),
-                              subtitle: Text(patient.phone),
-                              onTap: () {
-                                setState(() {
-                                  _selectedPatient = patient;
-                                  _showForm = true;
-                                });
-                                _showPatientForm(patient: patient);
-                              },
-                            );
-                          },
-                        ),
-                      ),
-          ],
-        ),
-      ),
     );
   }
 

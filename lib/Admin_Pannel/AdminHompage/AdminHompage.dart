@@ -33,12 +33,9 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme
-              .of(context)
-              .colorScheme
-              .primary,
+          backgroundColor:Colors.brown,
           title: const Text(
-            "Auto logger",
+            "Logged IN As Admin",
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
