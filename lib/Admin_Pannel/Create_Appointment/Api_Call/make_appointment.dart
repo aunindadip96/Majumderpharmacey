@@ -3,23 +3,27 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
-import '../Controllers/availavldayscontroller.dart';
-import '../HomePage.dart';
-import '../Modelclasses/creatappointmentmodelclass.dart';
-import '../catagorywisedoctorlist.dart';
-import 'Notifications_API.dart';
+import '../../../Apicalls/Notifications_API.dart';
+import '../../../Controllers/availavldayscontroller.dart';
+import '../../../Modelclasses/creatappointmentmodelclass.dart';
+import '../../../catagorywisedoctorlist.dart';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class postappointment {
-  final sucesscontroller successController = Get.find();
+import '../../Appointments/Screen/AllAppointments.dart';
+import '../Controlaer/dropdown_contollaer.dart';
 
-  Future<void> placeAppointment(
-      String patientiD, doctorID, specalistID, daynumber) async {
+class Adminpostappointment {
+  final sucesscontroller successController = Get.find();
+  final dropdownController = Get.put(DropdownController());
+
+  Future<void> AdminmakeAppointmEnt(
+      String patientiD, doctorID, specalistID, daynumber,date) async {
     creatappointmentmodelclass obj = creatappointmentmodelclass(
         p_id: patientiD,
         d_id: doctorID,
         s_id: specalistID,
-        appointment_date: successController.date.toString(),
+        appointment_date:date,
         d_number: daynumber,
         token: " ");
 
@@ -41,29 +45,32 @@ class postappointment {
 
         if(response.body=="401")
         {
+          print(response.body.toString());
+
           EasyLoading.showError("You already have an appointment with this doctor  ");
           EasyLoading.dismiss();
 
 
         }
         else{
-          Noti.showBigTextNotification(
-              title: "Doctor's Appointment",
-              body: "Your Appointment is Created ",
-              fln: flutterLocalNotificationsPlugin);
 
-          successController.appointday = " ".obs;
+          print(response.body.toString());
 
-          Future.delayed(const Duration(seconds: 2), () {
+
+
+          dropdownController.selectedDate.value=null;
+          Future.delayed(const Duration(seconds: 1), () {
             EasyLoading.showSuccess("Your appointment is Created");
 
-            Get.offAll(MyHomePage());
 
             EasyLoading.dismiss();
           });
 
-          final data = jsonDecode(response.body);
-          successController.Tokennum = RxString(data['token']);
+          Get.to(() => const allAppointment(),
+              transition: Transition.leftToRight);
+
+
+
         }
 
       }
@@ -71,15 +78,15 @@ class postappointment {
 
 
       else {
+
+        print(response.body.toString());
         EasyLoading.showError("Something Went Wrong");
         EasyLoading.dismiss();
-        Get.offAll(MyHomePage());
 
       }
     } catch (e) {
       EasyLoading.showError("Something Went Wrong");
       EasyLoading.dismiss();
-      Get.offAll(MyHomePage());
 
     }
   }

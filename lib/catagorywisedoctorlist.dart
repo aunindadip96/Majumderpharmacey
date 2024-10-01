@@ -67,7 +67,7 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
         DateTime startDate, Function(DateTime) selectableDayPredicate) {
       DateTime date = startDate;
       while (!selectableDayPredicate(date)) {
-        date = date.add(Duration(days: 1));
+        date = date.add(const Duration(days: 1));
       }
       return date;
     }
@@ -318,7 +318,9 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
                                                   style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.left, softWrap: false,),
                                               const SizedBox(height: 3,),
                                               Center(
-                                                  child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.blue,),
+                                                  child:
+                                                  ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.blue,),
+
                                                   onPressed: () async
                                                   {
                                                   Sucesscontroller.loadingList[index].value = true;

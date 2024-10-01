@@ -4,8 +4,8 @@ import 'package:doctorappointment/HomePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Admin_Pannel/AdminHompage/AdminHompage.dart';
 import 'log_in.dart';
 
 class splashscreeen extends StatefulWidget {
@@ -17,24 +17,40 @@ class splashscreeen extends StatefulWidget {
 
 class _splashscreeenState extends State<splashscreeen> {
   var Userdata;
+  var adminUserInfo;
 
   @override
   void initState() {
-    validation().whenComplete(() async {
-      Timer(Duration(seconds: 4),
-          () => Get.to(Userdata == null ? const login() : const MyHomePage()));
-    });
-
     super.initState();
+    validation().whenComplete(() {
+      Timer(Duration(seconds: 4), () {
+        if (adminUserInfo != null) {
+          // Navigate to Admin Home Page if adminUserInfo is not null
+          Get.to(() => const AdminMyHomePage(), transition: Transition.leftToRight);
+        } else if (Userdata != null) {
+          // Navigate to User Home Page if Userdata is not null
+          Get.to(() => const MyHomePage(), transition: Transition.leftToRight);
+        } else {
+          // Navigate to Login Page if both are null
+          Get.to(() => const login(), transition: Transition.leftToRight);
+        }
+      });
+    });
   }
 
-  Future validation() async {
+  Future<void> validation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var userJson = sharedPreferences.getString('user');
 
-    var user = jsonDecode(userJson!);
+    // Retrieve user and admin user info from SharedPreferences
+    var userJson = sharedPreferences.getString('user');
+    var adminUserJson = sharedPreferences.getString('adminuserinfo');
+
+    // Decode JSON data
+    Userdata = userJson != null ? jsonDecode(userJson) : null;
+    adminUserInfo = adminUserJson != null ? jsonDecode(adminUserJson) : null;
+
     setState(() {
-      Userdata = user;
+      // Update state if needed
     });
   }
 
