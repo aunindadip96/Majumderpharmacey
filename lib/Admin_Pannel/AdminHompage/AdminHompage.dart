@@ -21,10 +21,7 @@ class AdminMyHomePage extends StatefulWidget {
 class _AdminMyHomePageState extends State<AdminMyHomePage> {
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return WillPopScope(
       onWillPop: () async {
@@ -33,9 +30,9 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor:Colors.brown,
+          backgroundColor: Colors.brown,
           title: const Text(
-            "Logged IN As Admin",
+            "Logged In As Admin",
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
@@ -50,7 +47,7 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: const DecorationImage(
-                    image: AssetImage("lib/assets/Images/pic2.jpg"),
+                    image: AssetImage("lib/assets/Images/admin.jpg"),
                     fit: BoxFit.fill,
                   ),
                   borderRadius: BorderRadius.circular(20),
@@ -69,15 +66,15 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
                         style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                            color: Colors.white),
                       ),
                       Center(
                         child: Text(
-                          "Let's Find Your Doctor",
+                          "Manage Your Appointments",
                           style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black),
+                              color: Colors.white),
                         ),
                       ),
                     ],
@@ -87,14 +84,11 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                ],
+                children: [],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-
-
                   _buildCustomButton(
                     image: "https://via.placeholder.com/157",
                     text: "NH3",
@@ -109,45 +103,28 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
                       //...
                     },
                   ),
-
-
                   _buildCustomButton(
-
                     text2: "Create Appointment",
                     color: const Color.fromRGBO(300, 150, 100, 1.0),
                     onTap: () {
-                      Get.to(() =>  PatientSearchScreen(),
-                          transition: Transition.leftToRight);              // Open the sea
-
-
-
-
+                      Get.to(() => PatientSearchScreen(),
+                          transition: Transition.leftToRight); // Open the sea
                     },
                   ),
-
-
-
                   _buildCustomButton(
-
                     text2: "Today's Appointment",
                     color: const Color.fromRGBO(300, 150, 100, 1.0),
                     onTap: () {
-                      Get.to(() =>  AllAppointmentToday(),
-                          transition: Transition.leftToRight);              // Open the sea
-
-
-
-
+                      Get.to(() => AllAppointmentToday(),
+                          transition: Transition.leftToRight); // Open the sea
                     },
                   ),
-
                 ],
               ),
-
               ElevatedButton(
                 onPressed: () async {
-                  SharedPreferences sharedPreferences = await SharedPreferences
-                      .getInstance();
+                  SharedPreferences sharedPreferences =
+                      await SharedPreferences.getInstance();
                   sharedPreferences.remove("adminuserinfo");
 
                   // Navigate to the login screen
@@ -164,30 +141,31 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
 
   Future<bool> _showExitConfirmationDialog() async {
     return (await showDialog<bool>(
-      context: context,
-      barrierDismissible: false, // Prevent dismissing by tapping outside
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Exit App'),
-          content: const Text('Are you sure you want to exit the app?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(
-                    false); // Return false to prevent exit
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                SystemNavigator.pop(); // Close the app
-              },
-              child: const Text('Exit'),
-            ),
-          ],
-        );
-      },
-    )) ?? false;
+          context: context,
+          barrierDismissible: false, // Prevent dismissing by tapping outside
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Exit App'),
+              content: const Text('Are you sure you want to exit the app?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(false); // Return false to prevent exit
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    SystemNavigator.pop(); // Close the app
+                  },
+                  child: const Text('Exit'),
+                ),
+              ],
+            );
+          },
+        )) ??
+        false;
   }
 
   Widget _buildCustomButton({
@@ -281,5 +259,4 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
       ),
     );
   }
-
 }

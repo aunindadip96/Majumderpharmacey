@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../Apicalls/Postappointment.dart';
 import '../../../Modelclasses/SignUpModelclass.dart';
+import '../../AdminHompage/AdminHompage.dart';
 import '../Api_Call/make_appointment.dart';
 import '../Controlaer/dropdown_contollaer.dart';
 import '../Model_Class/patient_info_model.dart';
@@ -49,8 +50,8 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
-          },
+            Get.to(() => const AdminMyHomePage(),
+                transition: Transition.leftToRight);          },
         ),
         title: const Text("Create Appointments",
           style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
@@ -82,16 +83,31 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                 : _noResultsFound
                 ? Column(
               children: [
-                const Text('No results found.'),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _showForm = true;
-                      _selectedPatient = null;
-                    });
-                    _showPatientForm(); // Show form to create patient manually
-                  },
-                  child: const Text('Create Manually'),
+                const Text('Sorry,No Patient Found',style: TextStyle(fontSize: 22,
+                    fontWeight:FontWeight.bold ),),
+                Container(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown, // Button color
+                          padding: const EdgeInsets.symmetric(vertical: 16), // Padding inside the button
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // Rounded corners
+                          )),
+
+
+                      onPressed: () {
+                        setState(() {
+                          _showForm = true;
+                          _selectedPatient = null;
+                        });
+                        _showPatientForm(); // Show form to create patient manually
+                      },
+                      child: const Text('Create Patient ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.white),),
+                    ),
+                  ),
                 ),
               ],
             )
@@ -100,16 +116,34 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
                   final patient = _searchResults[index];
-                  return ListTile(
-                    title: Text(patient.patient),
-                    subtitle: Text(patient.phone),
-                    onTap: () {
-                      setState(() {
-                        _selectedPatient = patient; // Select patient on tap
-                        _showForm = true;
-                      });
-                      _showPatientForm(patient: patient); // Show patient form
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(5.0, 5.0),
+                            blurRadius: 8.0,
+                          ),
+                        ],
+                      ),
+
+                      child: ListTile(
+                        title: Text(patient.patient),
+                        subtitle: Text(patient.phone,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 17),),
+                        onTap: () {
+                          setState(() {
+                            _selectedPatient = patient; // Select patient on tap
+                            _showForm = true;
+                          });
+                          _showPatientForm(patient: patient); // Show patient form
+                        },
+                      ),
+                    ),
                   );
                 },
               ),
@@ -206,24 +240,118 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Use controllers in TextFormFields to capture input.
+
+
               TextFormField(
                 controller: patientNameController,
-                decoration: const InputDecoration(labelText: 'Patient Name'),
+                decoration: InputDecoration(
+                  labelText: 'Patient Name',
+                  filled: true, // Enable filling the background
+                  fillColor: Colors.white30, // Set the background color to grey
+                  border: OutlineInputBorder( // Add an outline border
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  enabledBorder: OutlineInputBorder( // Border when the field is enabled
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  focusedBorder: OutlineInputBorder( // Border when the field is focused
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the focused border color
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), // Adjust padding
+                ),
               ),
+
+              SizedBox(height: 15,),
+
+
+
               TextFormField(
                 controller: phoneController,
-                decoration: const InputDecoration(labelText: 'Phone'),
+                keyboardType:TextInputType.number,
+                decoration: InputDecoration(
+
+                  labelText: 'Phone',
+                  filled: true, // Enable filling the background
+                  fillColor:Colors.white30, // Set the background color to grey
+                  border: OutlineInputBorder( // Add an outline border
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  enabledBorder: OutlineInputBorder( // Border when the field is enabled
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  focusedBorder: OutlineInputBorder( // Border when the field is focused
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the focused border color
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), // Adjust padding
+                ),
               ),
+
+              SizedBox(height: 15,),
+
+
+
               TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  filled: true, // Enable filling the background
+                  fillColor: Colors.white30, // Set the background color to grey
+                  border: OutlineInputBorder( // Add an outline border
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  enabledBorder: OutlineInputBorder( // Border when the field is enabled
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  focusedBorder: OutlineInputBorder( // Border when the field is focused
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the focused border color
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), // Adjust padding
+                ),
               ),
+
+              SizedBox(height: 15,),
+
+
+
+
+
+
+
+
+
               TextFormField(
                 controller: addressController,
-                decoration: const InputDecoration(labelText: 'Address'),
+                decoration: InputDecoration(
+                  labelText: 'Address',
+                  filled: true, // Enable filling the background
+                  fillColor: Colors.white30, // Set the background color to grey
+                  border: OutlineInputBorder( // Add an outline border
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  enabledBorder: OutlineInputBorder( // Border when the field is enabled
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the border color
+                  ),
+                  focusedBorder: OutlineInputBorder( // Border when the field is focused
+                    borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                    borderSide: BorderSide(color: Colors.black), // Set the focused border color
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10), // Adjust padding
+                ),
               ),
-              const SizedBox(height: 16),
+
+
+              const SizedBox(height: 15),
 
               Obx(() {
                 if (dropdownController.isCategoryLoading.value) {
@@ -342,68 +470,101 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
 
                 // Check if a doctor is selected.
                 if (dropdownController.selectedDoctor.value != null) {
-                  return ElevatedButton(
-                    onPressed: () async {
-                      if (!dateFound) {
-                        // Show toast if no available date is found within 90 days
-                        Fluttertoast.showToast(
-                          msg: "No available dates within the next 90 days.",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
+                  return Container(
+                    width: double.infinity,
+                    child: ElevatedButton(
+
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown, // Button color
+                          padding: const EdgeInsets.symmetric(vertical: 16), // Padding inside the button
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // Rounded corners
+                          )),
+
+
+                      onPressed: () async {
+                        if (!dateFound) {
+                          // Show toast if no available date is found within 90 days
+                          Fluttertoast.showToast(
+                            msg: "No available dates within the next 90 days.",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          return; // Exit early if no date is found
+                        }
+
+                        // Show the date picker with selectable days predicate.
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: firstSelectableDate,
+                          firstDate: firstSelectableDate,
+                          lastDate: DateTime.now().add(Duration(days: 90)),
+                          selectableDayPredicate: (DateTime date) {
+                            String dayName = DateFormat('EEEE').format(date);
+                            String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(date);
+
+                            // Check if the day is selectable.
+                            bool isDaySelectable = dropdownController
+                                .selectedDoctorScheduleDays
+                                .contains(dayName);
+
+                            // Check if the day is forbidden.
+                            bool isDayForbidden = dropdownController
+                                .selectedDoctorDates
+                                .contains(formattedDate);
+
+                            return isDaySelectable && !isDayForbidden;
+                          },
                         );
-                        return; // Exit early if no date is found
-                      }
 
-                      // Show the date picker with selectable days predicate.
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: firstSelectableDate,
-                        firstDate: firstSelectableDate,
-                        lastDate: DateTime.now().add(Duration(days: 90)),
-                        selectableDayPredicate: (DateTime date) {
-                          String dayName = DateFormat('EEEE').format(date);
-                          String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(date);
-
-                          // Check if the day is selectable.
-                          bool isDaySelectable = dropdownController
-                              .selectedDoctorScheduleDays
-                              .contains(dayName);
-
-                          // Check if the day is forbidden.
-                          bool isDayForbidden = dropdownController
-                              .selectedDoctorDates
-                              .contains(formattedDate);
-
-                          return isDaySelectable && !isDayForbidden;
-                        },
-                      );
-
-                      if (pickedDate != null) {
-                        // Update the selected date in the controller.
-                        dropdownController.selectedDate.value = pickedDate;
-                      }
-                    },
-                    child: const Text('Select Date'),
+                        if (pickedDate != null) {
+                          // Update the selected date in the controller.
+                          dropdownController.selectedDate.value = pickedDate;
+                        }
+                      },
+                      child: const Text('Select Date',
+                        style:TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.white) ,),
+                    ),
                   );
                 } else {
                   return Container(); // Return an empty container if no doctor is selected.
                 }
               }),
 
-              // Display selected date
+
               Obx(() {
                 DateTime? selectedDate = dropdownController.selectedDate.value;
-                return Text(
-                  selectedDate != null
-                      ? 'Selected Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}'
-                      : ' ',
-                  style: const TextStyle(fontSize: 16),
-                );
+
+                // Check if a date is selected
+                if (selectedDate != null) {
+                  return Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 10), // Adjust the vertical margin as needed
+                    padding: const EdgeInsets.all(16), // Add some padding inside the container
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white), // Set the border color to white
+                      borderRadius: BorderRadius.circular(8), // Rounded corners
+                      color: Colors.brown, // Background color of the container
+                    ),
+                    child: Text(
+                      'Selected Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold, // Make the text bold
+                        color: Colors.white, // Text color set to white
+                      ),
+                    ),
+                  );
+                } else {
+                  // Return an empty Container when no date is selected
+                  return Container(); // or SizedBox.shrink() if you prefer
+                }
               }),
+
 
               const SizedBox(height: 16),
               Row(
@@ -481,6 +642,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                           );
                         } else {
                           // If the patient already exists, update the appointment.
+
+
+                          print(dropdownController.selectedDate.value.toString()+"caught");
+
                           Adminpostappointment adminpostappointment = Adminpostappointment();
 
                           adminpostappointment.AdminmakeAppointmEnt(
@@ -488,13 +653,20 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                             dropdownController.selectedDoctor.value!.id.toString(),
                             dropdownController.selectedCategoryId.toString(),
                             dropdownController.selectedDate.value?.weekday.toString(),
-                            dropdownController.selectedDate.toString().replaceAll("00:00:00.000", " "),
+                            dropdownController.selectedDate.value.toString().replaceAll("00:00:00.000", " "),
+
+
                           );
                         }
 
                         // Close the modal after saving and reset date selection.
+/*
                         dropdownController.selectedDate.value = null;
-                        Navigator.pop(context);
+*/
+
+
+
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.brown, // Button color
@@ -524,10 +696,10 @@ class _PatientSearchScreenState extends State<PatientSearchScreen> {
                       null; // Reset the selected date
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent, // Button color
+                      backgroundColor: Colors.green, // Button color
                       padding: const EdgeInsets.symmetric(vertical: 16), // Padding inside the button
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                        borderRadius: BorderRadius.circular(10 ), // Rounded corners
                       ),
                     ),
 

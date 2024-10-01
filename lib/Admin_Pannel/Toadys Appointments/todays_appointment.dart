@@ -1,17 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import '../../../Apicalls/Delete_Appointmerns.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-
 import '../../Modelclasses/Viewappointmentmodelclass.dart';
+import '../AdminHompage/AdminHompage.dart';
 import '../Appointments/Api/DeleteAppointment.dart';
 import '../Appointments/Api/Post_Payment_request.dart';
-import '../Appointments/Api/appointmentAPi.dart';
 import '../Appointments/ModelClass/Payment_Model.dart';
 import '../Appointments/ModelClass/allappointmentsModel.dart';
-
 
 class AllAppointmentToday extends StatefulWidget {
   const AllAppointmentToday({super.key});
@@ -21,55 +18,46 @@ class AllAppointmentToday extends StatefulWidget {
 }
 
 class _AllAppointmentTodayState extends State<AllAppointmentToday> {
-  int currentPage = 1;
-  bool isLoadingMore = false;
-  bool hasMore = true;
+  bool isLoading = true;
   List<Appointment> appointments = [];
-  final ScrollController _scrollController = ScrollController();
   String selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // Default to today's date
 
   @override
   void initState() {
     super.initState();
-    _fetchInitialAppointments();
-    _scrollController.addListener(_scrollListener);
+    _fetchAppointments();
   }
 
-  Future<void> _fetchInitialAppointments() async {
+  Future<void> _fetchAppointments() async {
     setState(() {
-      isLoadingMore = true;
+      isLoading = true;
     });
-    List<Appointment> newAppointments = await dailyappointment(selectedDate);
+
+    List<Appointment> newAppointments = await fetchAppointments();
+
     setState(() {
-      appointments.addAll(newAppointments);
-      isLoadingMore = false;
-      hasMore = newAppointments.length > 0; // If no more results, stop pagination
+      appointments = newAppointments;
+      isLoading = false;
     });
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && hasMore && !isLoadingMore) {
-      currentPage++;
-      _fetchInitialAppointments();
+  Future<List<Appointment>> fetchAppointments() async {
+    var url = Uri.parse("https://pharmacy.symbexbd.com/api/allappointments");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      final list = jsonData as List<dynamic>;
+
+      return list
+          .map((e) => Appointment.fromJson(e))
+          .where((element) => element.appointmentDate.toString()
+          .replaceAll("T00:00:00.000000Z", " ")
+          .contains(selectedDate))
+          .toList();
+    } else {
+      throw Exception('Failed to load appointments');
     }
-  }
-
-  Future<List<Appointment>> dailyappointment(String date) async {
-    var url = Uri.parse("https://pharmacy.symbexbd.com/api/allappointments?page=$currentPage");
-    var data = await http.get(url);
-    var jsonData = json.decode(data.body);
-    final list = jsonData as List<dynamic>;
-    return list
-        .map((e) => Appointment.fromJson(e))
-        .where((element) => element.appointmentDate.toString()
-        .replaceAll("T00:00:00.000000Z", " ").contains(date.toString()))
-        .toList();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -80,26 +68,33 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
+            Get.to(() => const AdminMyHomePage(), transition: Transition.leftToRight);
           },
         ),
-        title: const Text("Todays Appointment "),
+        title: const Text(
+          "Today's Appointments",
+          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Center(
+              child: Text(
+                DateFormat('dd MMM yyyy').format(DateTime.parse(selectedDate)),
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+        backgroundColor: Colors.brown,
       ),
-      body: appointments.isEmpty && !isLoadingMore
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : appointments.isEmpty
           ? const Center(child: Text("No Appointments Found"))
           : ListView.builder(
-        controller: _scrollController,
-        itemCount: appointments.length + (hasMore ? 1 : 0),
+        itemCount: appointments.length,
         itemBuilder: (context, index) {
-          if (index == appointments.length) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
           final appointment = appointments[index];
           final doctor = appointment.doctor;
           final patient = appointment.patient;
@@ -136,7 +131,6 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                       "Token: ${appointment.token}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-
                     const SizedBox(height: 8),
                     Text(
                       "Doctor: ${doctor.doctorName}",
@@ -150,7 +144,6 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                       "Doctor Phone: ${doctor.phone}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-
                     const SizedBox(height: 8),
                     Text(
                       "Patient: ${patient.patientName}",
@@ -164,7 +157,6 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                       "Patient Phone: ${patient.phone}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-
                     if (appointment.appointmentStatus == null)
                       _buildPendingActions(appointment, patient, doctor),
                     if (appointment.appointmentStatus == 1)
@@ -197,15 +189,15 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
             ElevatedButton(
               onPressed: () {
                 _showPaymentConfirmation(
-                    appointment.id.toString(),
-                    appointment.token,
-                    appointment.appointmentDate.replaceAll('T00:00:00.000000Z', ''),
-                    appointment.docFee.toString(),
-                    appointment.appIncome.toString(),
-                    patient.patientName.toString(),
-                    doctor.doctorName.toString(),
-                    doctor.id.toString(),
-                    patient.id.toString()
+                  appointment.id.toString(),
+                  appointment.token,
+                  appointment.appointmentDate.replaceAll('T00:00:00.000000Z', ''),
+                  appointment.docFee.toString(),
+                  appointment.appIncome.toString(),
+                  patient.patientName.toString(),
+                  doctor.doctorName.toString(),
+                  doctor.id.toString(),
+                  patient.id.toString(),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -221,9 +213,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
             ),
             ElevatedButton(
               onPressed: () {
-
                 _showDeleteConfirmation(appointment.id.toString());
-
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -403,7 +393,8 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
       },
     );
   }
-  void _showDeleteConfirmation( String appointmentId) {
+
+  void _showDeleteConfirmation(String appointmentId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -421,14 +412,13 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
               onPressed: () {
                 admindeleteappointment delete = admindeleteappointment();
                 delete.Admindelete(appointmentId);
-                Navigator.of(context).pop(); // Dismiss after confirming
+                Navigator.of(context).pop(); // Dismiss the dialog
               },
-              child: const Text("Delete", style: TextStyle(color: Colors.red)),
+              child: const Text("Delete"),
             ),
           ],
         );
       },
     );
   }
-
 }

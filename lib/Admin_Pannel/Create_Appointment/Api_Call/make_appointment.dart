@@ -10,8 +10,12 @@ import '../../../catagorywisedoctorlist.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../../Appointments/Screen/AllAppointments.dart';
+import '../Controlaer/dropdown_contollaer.dart';
+
 class Adminpostappointment {
   final sucesscontroller successController = Get.find();
+  final dropdownController = Get.put(DropdownController());
 
   Future<void> AdminmakeAppointmEnt(
       String patientiD, doctorID, specalistID, daynumber,date) async {
@@ -54,17 +58,19 @@ class Adminpostappointment {
 
 
 
-          successController.appointday = " ".obs;
-
-          Future.delayed(const Duration(seconds: 2), () {
+          dropdownController.selectedDate.value=null;
+          Future.delayed(const Duration(seconds: 1), () {
             EasyLoading.showSuccess("Your appointment is Created");
 
 
             EasyLoading.dismiss();
           });
 
-          final data = jsonDecode(response.body);
-          successController.Tokennum = RxString(data['token']);
+          Get.to(() => const allAppointment(),
+              transition: Transition.leftToRight);
+
+
+
         }
 
       }
