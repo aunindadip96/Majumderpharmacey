@@ -44,7 +44,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
   Future<List<Appointment>> fetchAppointments() async {
     var url = Uri.parse("https://pharmacy.symbexbd.com/api/allappointments");
     var response = await http.get(url);
-
+    print(selectedDate.toString()+"fasist");
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
       final list = jsonData as List<dynamic>;
@@ -53,7 +53,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
           .map((e) => Appointment.fromJson(e))
           .where((element) => element.appointmentDate.toString()
           .replaceAll("T00:00:00.000000Z", " ")
-          .contains(selectedDate))
+          .contains(selectedDate.toString()))
           .toList();
     } else {
       throw Exception('Failed to load appointments');
@@ -91,7 +91,10 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : appointments.isEmpty
-          ? const Center(child: Text("No Appointments Found"))
+          ? const Center(child: Text(
+        "No Appointments for today",
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ))
           : ListView.builder(
         itemCount: appointments.length,
         itemBuilder: (context, index) {
@@ -171,6 +174,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
           );
         },
       ),
+
     );
   }
 

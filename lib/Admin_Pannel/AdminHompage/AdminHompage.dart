@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import for SystemNavigator
@@ -82,55 +81,68 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildCustomButton(
-                    image: "https://via.placeholder.com/157",
-                    text: "NH3",
-                    textValue: "0.5 mg/L",
-                    text2: "Temp",
-                    text3: "24°C",
-                    color: const Color.fromRGBO(212, 119, 100, 1.0),
-                    onTap: () {
-                      Get.to(() => const allAppointment(),
-                          transition: Transition.leftToRight);
+              GridView.builder(
+                shrinkWrap: true, // Prevents grid from scrolling independently
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4, // Number of grid items (3 buttons + sign out)
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Number of columns
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1.0, // Ratio of width to height
+                ),
+                itemBuilder: (context, index) {
+                  // Return different buttons based on index
+                  switch (index) {
+                    case 0:
+                      return _buildGradientButton(
+                        label: "All Appointments",
+                        gradientColors: [Colors.indigo, Colors.black],
+                        onTap: () {
+                          Get.to(() => const allAppointment(),
+                              transition: Transition.leftToRight);
+                        },
+                      );
+                    case 1:
+                      return _buildGradientButton(
+                        label: "Create Appointment",
+                        gradientColors: [Colors.cyanAccent, Colors.green],
+                        onTap: () {
+                          Get.to(() => PatientSearchScreen(),
+                              transition: Transition.leftToRight);
+                        },
+                      );
+                    case 2:
+                      return _buildGradientButton(
+                        label: "Today's Appointment",
+                        gradientColors: [Colors.deepPurple, Colors.red],
+                        onTap: () {
+                          Get.to(() => AllAppointmentToday(),
+                              transition: Transition.leftToRight);
+                        },
+                      );
+                    case 3:
+                      return _buildGradientButton(
+                        label: "Sign Out",
+                        gradientColors: [Colors.blue, Colors.brown],
+                        onTap: () async {
+                          bool confirmSignOut = await _showSignOutConfirmationDialog();
 
-                      //...
-                    },
-                  ),
-                  _buildCustomButton(
-                    text2: "Create Appointment",
-                    color: const Color.fromRGBO(300, 150, 100, 1.0),
-                    onTap: () {
-                      Get.to(() => PatientSearchScreen(),
-                          transition: Transition.leftToRight); // Open the sea
-                    },
-                  ),
-                  _buildCustomButton(
-                    text2: "Today's Appointment",
-                    color: const Color.fromRGBO(300, 150, 100, 1.0),
-                    onTap: () {
-                      Get.to(() => AllAppointmentToday(),
-                          transition: Transition.leftToRight); // Open the sea
-                    },
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  SharedPreferences sharedPreferences =
-                      await SharedPreferences.getInstance();
-                  sharedPreferences.remove("adminuserinfo");
+                          if (confirmSignOut) {
+                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                            sharedPreferences.remove("adminuserinfo");
 
-                  // Navigate to the login screen
-                  Get.offAll(const login());
+                            // Navigate to the login screen
+                            Get.offAll(const login());
+                          }
+                          // If 'No' is pressed, the dialog will automatically dismiss
+                        },
+                      );
+
+                    default:
+                      return Container(); // Default empty container
+                  }
                 },
-                child: const Text("Sign Out"),
               ),
             ],
           ),
@@ -139,120 +151,97 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
     );
   }
 
+
+  Future<bool> _showSignOutConfirmationDialog() async {
+    return (await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Sign Out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Return false (No)
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Return true (Yes)
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    )) ?? false;
+  }
+
+
   Future<bool> _showExitConfirmationDialog() async {
     return (await showDialog<bool>(
-          context: context,
-          barrierDismissible: false, // Prevent dismissing by tapping outside
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Exit App'),
-              content: const Text('Are you sure you want to exit the app?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pop(false); // Return false to prevent exit
-                  },
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    SystemNavigator.pop(); // Close the app
-                  },
-                  child: const Text('Exit'),
-                ),
-              ],
-            );
-          },
-        )) ??
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit App'),
+          content: const Text('Are you sure you want to exit the app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false); // Return false to prevent exit
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                SystemNavigator.pop(); // Close the app
+              },
+              child: const Text('Exit'),
+            ),
+          ],
+        );
+      },
+    )) ??
         false;
   }
 
-  Widget _buildCustomButton({
-    String? image, // Optional
-    String? text, // Optional
-    String? textValue, // Optional
-    String? text2, // Optional
-    String? text3, // Optional
-    Color color = Colors.blue, // Default color if not provided
+  Widget _buildGradientButton({
+    required String label,
+    List<Color>? gradientColors, // Optional gradient colors
     required void Function() onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: Container(
-          height: 160,
-          width: 120,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(10.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: gradientColors ??
+                [Colors.blue, Colors.purple], // Default gradient if null
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                if (text != null) // Only display if not null
-                  Text(
-                    text,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 10),
-                  ),
-                const SizedBox(height: 2),
-                if (textValue != null) // Only display if not null
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.blueGrey,
-                          offset: Offset(5.0, 5.0), //(x,y)
-                          blurRadius: 8.0,
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        textValue,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 10),
-                      ),
-                    ),
-                  ),
-                if (text2 != null) // Only display if not null
-                  const SizedBox(height: 2),
-                if (text2 != null)
-                  Text(
-                    text2,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 10),
-                  ),
-                if (text3 != null) // Only display if not null
-                  const SizedBox(height: 2),
-                if (text3 != null)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.blueGrey,
-                          offset: Offset(5.0, 5.0), //(x,y)
-                          blurRadius: 8.0,
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        text3,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 10),
-                      ),
-                    ),
-                  ),
-              ],
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(4, 4),
+              blurRadius: 8,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

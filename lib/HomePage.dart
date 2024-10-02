@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: const DecorationImage(
-                        image: AssetImage("lib/assets/Images/google.png"),
+                        image: AssetImage("lib/assets/Images/pic2.jpg"),
                         fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(20),
