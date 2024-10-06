@@ -53,7 +53,8 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
           .map((e) => Appointment.fromJson(e))
           .where((element) => element.appointmentDate.toString()
           .replaceAll("T00:00:00.000000Z", " ")
-          .contains(selectedDate.toString()))
+          .contains(selectedDate.toString())
+      )
           .toList();
     } else {
       throw Exception('Failed to load appointments');
@@ -277,7 +278,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                   const SizedBox(height: 10),
                   Text(
                     "Total Payable: ₹${(totalPayable - discount).toStringAsFixed(2)}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.redAccent),
                   ),
 
                   Text("Patient Name: $patientName"),
@@ -378,10 +379,10 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                     print(payment.toJson());
 
                     AdminMakePayment adminPayment = AdminMakePayment();
-
-                    adminPayment.makePayment(payment);
-
-                    Navigator.of(context).pop(); // Dismiss the dialog
+                    adminPayment.makePayment(payment).then((_) {
+                      Navigator.of(context).pop(); // Dismiss the dialog
+                      _fetchAppointments(); // Refresh the appointments list
+                    });
 
 /*
                     _processPayment(appointmentId, selectedDiscountType); // Pass selected discount type
@@ -415,8 +416,10 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
             TextButton(
               onPressed: () {
                 admindeleteappointment delete = admindeleteappointment();
-                delete.Admindelete(appointmentId);
-                Navigator.of(context).pop(); // Dismiss the dialog
+                delete.Admindelete(appointmentId).then((_) {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                  _fetchAppointments(); // Refresh the appointments list
+                });// Dismiss the dialog
               },
               child: const Text("Delete"),
             ),

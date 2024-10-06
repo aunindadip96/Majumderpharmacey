@@ -28,18 +28,15 @@ class admindeleteappointment {
         EasyLoading.showSuccess("Appointment Deleted Successfully");
 
         Future.delayed(const Duration(seconds: 2), () {
-          Get.offAll(allAppointment());
           EasyLoading.dismiss();
         });
       } else {
         EasyLoading.showError("Failed to delete appointment");
         EasyLoading.dismiss();
-        Get.offAll(allAppointment());
       }
     } catch (e) {
       EasyLoading.showError("Something Went Wrong");
       EasyLoading.dismiss();
-      Get.offAll(allAppointment());
     }
   }
 }

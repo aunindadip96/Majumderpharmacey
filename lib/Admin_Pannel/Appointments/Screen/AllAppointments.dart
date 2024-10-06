@@ -62,6 +62,19 @@ class _allAppointmenttState extends State<allAppointment> {
       });
     }
   }
+  void refreshAppointments() async {
+    setState(() {
+      // Clear the current list of appointments
+      appointments.clear();
+      _filteredAppointments.clear();
+      currentPage = 1; // Reset to the first page
+      hasMore = true; // Reset hasMore flag
+    });
+
+    await _fetchAllAppointments(); // Fetch all appointments again
+  }
+
+
 
   void _filterAppointments() {
     String searchQuery = _searchController.text.toLowerCase();
@@ -108,8 +121,8 @@ class _allAppointmenttState extends State<allAppointment> {
             },
           ),
           title: const Text("All Appointments",
-              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           backgroundColor: Colors.brown,
         ),
         body: Column(
@@ -339,7 +352,7 @@ class _allAppointmenttState extends State<allAppointment> {
                   const SizedBox(height: 10),
                   Text(
                     "Total Payable: ₹${(totalPayable - discount).toStringAsFixed(2)}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.redAccent),
                   ),
 
                   Text("Patient Name: $patientName"),
@@ -438,13 +451,13 @@ class _allAppointmenttState extends State<allAppointment> {
                     );
 
                     print(payment.toJson());
-
                     AdminMakePayment adminPayment = AdminMakePayment();
+                    adminPayment.makePayment(payment).then((_) {
+                      Navigator.of(context).pop(); //// Dismiss the dialog
+                      refreshAppointments();
+                    }).catchError((error) {
 
-                    adminPayment.makePayment(payment);
-
-                    Navigator.of(context).pop(); // Dismiss the dialog
-
+                    });
 /*
                     _processPayment(appointmentId, selectedDiscountType); // Pass selected discount type
 */
@@ -470,15 +483,31 @@ class _allAppointmenttState extends State<allAppointment> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
-                admindeleteappointment delete = admindeleteappointment();
-                delete.Admindelete(appointmentId);
-                Navigator.of(context).pop();
+              onPressed: () async {
+                try {
+                  admindeleteappointment delete = admindeleteappointment();
+
+                  // Call your delete appointment API here
+                  await delete.Admindelete(appointmentId);
+                  Navigator.of(context).pop(); // Close the dialog
+
+                  // After successful deletion, refresh the appointments
+                  setState(() {
+                    appointments.removeWhere((appointment) => appointment.id.toString() == appointmentId.toString());
+                    _filteredAppointments.removeWhere((appointment) => appointment.id .toString()== appointmentId.toString());
+                  });
+
+                  // Optionally show a success message
+                } catch (error) {
+                  // Handle any errors here
+                  print('Error deleting appointment: $error');
+                  // Optionally show an error message
+                }
               },
               child: const Text("Delete"),
             ),
@@ -487,4 +516,6 @@ class _allAppointmenttState extends State<allAppointment> {
       },
     );
   }
+
+
 }
