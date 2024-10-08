@@ -41,7 +41,10 @@ class _todaysappointmentState extends State<todaysappointment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todays Appointment"),
+        backgroundColor: Colors.deepPurple,
+
+        title: Text("Todays Appointment",style: TextStyle(color: Colors.white),), centerTitle: true,
+
       ),
       body: User == null
           ? Center(child: CircularProgressIndicator())
@@ -92,21 +95,29 @@ class _todaysappointmentState extends State<todaysappointment> {
                           height: 30,
                         ),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(40.00),
+                          borderRadius: BorderRadius.circular(40.0),
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
-
                             },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.deepPurple, // Set the button color to deep purple
+                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Customize padding
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40.0), // Ensure the rounded corners
+                              ),
+                            ),
                             child: const Text(
-                              "Back to Homepage ",
+                              "Back to Homepage",
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
+                        )
+
                       ],
                     ),
                   );

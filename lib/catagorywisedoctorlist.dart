@@ -74,7 +74,10 @@ class _catagoryisedoctorlistState extends State<catagoryisedoctorlist> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.catagoryName),
+          backgroundColor: Colors.deepPurple,
+
+          title: Text(widget.catagoryName,
+          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold ),),
           centerTitle: true,
         ),
         body: FutureBuilder(

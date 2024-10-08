@@ -33,12 +33,15 @@ class _MyHomePageState extends State<MyHomePage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Majumdar Pharmacy",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurple,
+          title: const Text(
+            "Majumder Pharmacy",
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
         ),
-      ),
 
       drawer: Drawer(
           child: ListView(

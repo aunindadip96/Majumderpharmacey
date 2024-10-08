@@ -49,7 +49,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
       var jsonData = json.decode(response.body);
       final list = jsonData as List<dynamic>;
 
-      return list
+      return list  
           .map((e) => Appointment.fromJson(e))
           .where((element) => element.appointmentDate.toString()
           .replaceAll("T00:00:00.000000Z", " ")
@@ -321,7 +321,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                   // Discount input field, enabled only if a discount type other than 'No Discount' is selected
                   const Text(
                     "Enter Discount Amount:",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.  bold),
                   ),
                   TextField(
                     keyboardType: TextInputType.number,
@@ -418,7 +418,7 @@ class _AllAppointmentTodayState extends State<AllAppointmentToday> {
                 admindeleteappointment delete = admindeleteappointment();
                 delete.Admindelete(appointmentId).then((_) {
                   Navigator.of(context).pop(); // Dismiss the dialog
-                  _fetchAppointments(); // Refresh the appointments list
+                  _fetchAppointments();  // Refresh the appointments list
                 });// Dismiss the dialog
               },
               child: const Text("Delete"),

@@ -39,17 +39,25 @@ class _MyappointmentState extends State<Myappointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        backgroundColor: Colors.deepPurple,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Get.to(() => const MyHomePage(),
-                transition: Transition.rightToLeftWithFade);
+            Navigator.pop(context);
           },
         ),
-        title: const Text("My Appointments"),
+
+        title: const Text(
+          "My Appointments",
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
       ),
+
       body: User == null
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder(
