@@ -35,7 +35,7 @@ class _myprofildrwaerState extends State<myprofildrwaer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blueAccent,
+      color: Colors.deepPurple,
       width: double.infinity,
       height: 290,
       padding: const EdgeInsets.only(top: 20.0),

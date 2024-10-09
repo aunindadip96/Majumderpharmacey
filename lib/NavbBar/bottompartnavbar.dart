@@ -62,7 +62,7 @@ myDrwaerlist() {
       ),
 
 
-      TextButton.icon(
+      /*TextButton.icon(
         onPressed: ()  {
           Get.to(Myprofile());
 
@@ -85,7 +85,7 @@ myDrwaerlist() {
         ),
       ),
 
-
+*/
 
 
 

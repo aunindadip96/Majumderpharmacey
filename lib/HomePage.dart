@@ -30,7 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Scaffold(
         appBar: AppBar(
@@ -43,33 +46,33 @@ class _MyHomePageState extends State<MyHomePage> {
           centerTitle: true,
         ),
 
-      drawer: Drawer(
+        drawer: Drawer(
           child: ListView(
 
-              children: [
-                const myprofildrwaer(),
-                myDrwaerlist(),
-              ],
-            ),
+            children: [
+              const myprofildrwaer(),
+              myDrwaerlist(),
+            ],
+          ),
 
         ),
 
-      body: RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: WillPopScope(
-          onWillPop: () async {
-            // To disable the back button, simply return false
-            return false;
-          },
-          child: DraggableScrollbar.rrect(heightScrollThumb: 100,
-            alwaysVisibleScrollThumb: false,
-            backgroundColor: Colors.blueAccent,
-            controller: _controller,
-
-
-            child: ListView(
-              physics: BouncingScrollPhysics(),
+        body: RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: WillPopScope(
+            onWillPop: () async {
+              // To disable the back button, simply return false
+              return false;
+            },
+            child: DraggableScrollbar.rrect(heightScrollThumb: 100,
+              alwaysVisibleScrollThumb: false,
+              backgroundColor: Colors.blueAccent,
               controller: _controller,
+
+
+              child: ListView(
+                physics: BouncingScrollPhysics(),
+                controller: _controller,
 
 
                 children: [
@@ -131,14 +134,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
 
 
+              ),
+            ),
 
-        ),
+
           ),
 
-
-      ),
-
-      )
+        )
     );
   }
 }
