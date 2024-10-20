@@ -6,7 +6,7 @@
         />
 
    <application
-        android:label="Majumder Pharmacy"
+        android:label="MDC"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"> <!-- Ensure this line is present -->
@@ -30,7 +30,7 @@
               android:resource="@style/NormalTheme"
                 android:value="you_can_name_it_whatever1"
               />
-            <intent-filter>
+            <intent-filter>1
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>

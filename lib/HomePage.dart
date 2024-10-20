@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
           title: const Text(
-            "Majumder Pharmacy",
+            "Mojumder Doctor Chamber ",
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),

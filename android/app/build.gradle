@@ -60,11 +60,12 @@ android {
             keyPassword "SYMBEX"
         }
         release {
-            storeFile file("C:\\Users\\Symbex-Dip\\StudioProjects\\Majumderpharmacey\\my-release-key.keystore")
-            keyAlias 'my-release-key'
-            keyPassword 'SYMBEX'
-            storePassword 'SYMBEX'
+            keyAlias 'my-key-alias'
+            keyPassword 'SYMBEX'  // Use the correct key password here
+            storeFile file('C:/Users/Symbex-Dip/StudioProjects/Majumderpharmacey/my-release-key.keystore')
+            storePassword 'SYMBEX'  // Use the correct keystore password here
         }
+
     }
 
     buildTypes {

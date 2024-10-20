@@ -241,7 +241,7 @@ class _AdminMyHomePageState extends State<AdminMyHomePage> {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+               fontWeight: FontWeight.bold,
             ),
           ),
         ),
