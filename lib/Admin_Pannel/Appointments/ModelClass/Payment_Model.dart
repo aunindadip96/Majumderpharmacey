@@ -40,7 +40,7 @@ class Payment {
   Map<String, dynamic> toJson() {
     return {
       'appointment_id': appointmentId,
-      'doctor_id': doctorId,
+      'doctor_id': doctorId, 
       'patient_id': patientId,
       'appointment_date': appointmentDate,
       'commission': earnings,

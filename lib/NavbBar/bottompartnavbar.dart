@@ -4,25 +4,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Appointments/MyAppointments.dart';
-import '../MyProfile.dart';
 import '../Appointments/MytodaysAppointment.dart';
 import '../Notice/Notice_Screen.dart';
 import '../log_in.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 
@@ -60,47 +47,14 @@ myDrwaerlist() {
           ),
         ],
       ),
-
-
-      /*TextButton.icon(
-        onPressed: ()  {
-          Get.to(Myprofile());
-
-          },
-        icon: const Icon(Icons.logout,
-          color: Colors.black,),
-        label: Row(
-          children: const [
-            SizedBox(
-                width: 40.0), // add some spacing between the icon and the text
-            Text(
-              "My Profile",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-
-*/
-
-
-
-
-
-
       TextButton.icon(
         onPressed: ()  {
           Get.to(NoticeListScreen());
-
-        },
+          },
         icon: const Icon(Icons.logout,
           color: Colors.black,),
-        label: Row(
-          children: const [
+        label: const Row(
+          children:  [
             SizedBox(
                 width: 40.0), // add some spacing between the icon and the text
             Text(
@@ -147,8 +101,8 @@ myDrwaerlist() {
           Icons.logout,
           color: Colors.black,
         ),
-        label: Row(
-          children: const [
+        label: const Row(
+          children: [
             SizedBox(
               width: 40.0, // Add some spacing between the icon and the text
             ),

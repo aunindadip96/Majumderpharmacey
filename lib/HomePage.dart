@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: const DecorationImage(
-                        image: AssetImage("lib/assets/Images/pic2.jpg"),
+                        image: AssetImage("lib/assets/Images/app_home.jpg"),
                         fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(20),
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             style: TextStyle(
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                                color: Colors.white70),
                           ),
                           Center(
                             child: Text(
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                  color: Colors.white70),
                             ),
                           ),
                         ],
